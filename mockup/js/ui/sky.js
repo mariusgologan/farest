@@ -69,7 +69,7 @@
       const inside = smooth(half, half * .35, Math.abs(Math.atan2(dx, dy) + dir)) * smooth(Math.max(W, H) * 1.1, Math.max(W, H) * .3, dist);
       if (inside < .02) continue;
       const tw = .55 + .45 * Math.sin(t / 900 * d.sp + d.ph);
-      cx.fillStyle = `rgba(${col},${(inside * tw * power * (dark || night ? .8 : .7)).toFixed(3)})`;
+      cx.fillStyle = `rgba(${col},${(inside * tw * power * (dark || night ? .6 : .5)).toFixed(3)})`;
       cx.beginPath(); cx.arc(d.x, d.y, d.r, 0, 6.283); cx.fill();
     }
     if (!document.hidden && !reduce.matches) raf = requestAnimationFrame(frame);
