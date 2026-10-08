@@ -22,7 +22,7 @@
   /* blur levels */
   --blur-1: 14px; --blur-2: 34px; --blur-3: 60px; --blur-ambient: 110px;
   /* motion */
-  --dur-1: 120ms; --dur-2: 220ms; --dur-3: 420ms; --dur-ambient: 3200ms;
+  --dur-1: 120ms; --dur-2: 220ms; --dur-3: 420ms; --dur-ambient: 3200ms; --dur-bars: 900ms;
   --ease: cubic-bezier(.2,.8,.2,1); --ease-ambient: cubic-bezier(.45,0,.25,1);
   /* z layers; overlays add --depth */
   --z-nav: 20; --z-overlay: 100; --z-toast: 1000;

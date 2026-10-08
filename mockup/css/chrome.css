@@ -1,5 +1,5 @@
 /* Auto-hiding menus: slide out and fade; the bars are sticky so layout never shifts. */
-#top, html[data-nav="tabs"] #tabs { transition: transform var(--dur-3) var(--ease), opacity var(--dur-3) var(--ease); will-change: transform; }
+#top, html[data-nav="tabs"] #tabs { transition: transform var(--dur-bars) var(--ease-ambient), opacity var(--dur-bars) var(--ease-ambient); will-change: transform; }
 html[data-bars="hidden"] #top { transform: translateY(-110%); opacity: 0; pointer-events: none; }
 html[data-bars="hidden"][data-nav="tabs"] #tabs { transform: translateY(110%); opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { #top, #tabs { transition: none !important; } }
