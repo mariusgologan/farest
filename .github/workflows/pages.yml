@@ -15,9 +15,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   deploy:
-    # Self-hosted runners. [self-hosted, linux] matches any Linux runner of ours; narrow it with the pool's
-    # custom label (other repos here use [self-hosted, dind]) once the owner confirms which pool may deploy Pages.
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
