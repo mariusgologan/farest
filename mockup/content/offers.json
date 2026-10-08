@@ -1,0 +1,8 @@
+{
+  "note": "Illustrative offers for the mockup; replace with real campaigns.",
+  "items": [
+    { "id": "free-delivery", "icon": "truck", "cta": "/c/windows", "title": { "ro": "Livrare gratuită de la {amount}", "en": "Free delivery from {amount}" }, "text": { "ro": "Comandă online, te sunăm pentru confirmare.", "en": "Order online, we call to confirm." } },
+    { "id": "measure", "icon": "sliders", "cta": "callback", "title": { "ro": "Măsurătoare la domiciliu", "en": "Home measuring" }, "text": { "ro": "Un consultant vine la tine, programezi printr-un telefon.", "en": "A consultant comes to you; book with one call." } },
+    { "id": "calc", "icon": "calc", "cta": "/calculator", "title": { "ro": "Estimare în 3 pași", "en": "Estimate in 3 steps" }, "text": { "ro": "Dimensiuni, sistem, preț orientativ, TVA inclus.", "en": "Size, system, indicative price, VAT included." } }
+  ]
+}

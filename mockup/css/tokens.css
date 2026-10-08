@@ -1,0 +1,73 @@
+/* Design tokens. Primitives -> semantic -> component. Nothing below this file hardcodes a colour, size or duration. */
+@property --amb-a { syntax: '<color>'; inherits: true; initial-value: #005aab; }
+@property --amb-b { syntax: '<color>'; inherits: true; initial-value: #6aa9e0; }
+
+:root {
+  /* primitives (from okf/design/redesign-direction.md) */
+  --blue-50: #eaf2fa; --blue-600: #005aab; --blue-700: #004a8f; --blue-300: #6aa9e0;
+  --red-600: #d6202e;
+  --ink-900: #1b2733; --ink-600: #4a5866; --line-200: #d5dce3; --bg-100: #f6f8fa;
+  --ok: #1e7b34; --warn: #8a5a00; --err: #b3261e;
+
+  /* spacing, 8px grid */
+  --s-1: .25rem; --s-2: .5rem; --s-3: .75rem; --s-4: 1rem; --s-5: 1.5rem; --s-6: 2rem; --s-7: 3rem; --s-8: 4.5rem;
+  /* type */
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fs-sm: .875rem; --fs-md: 1rem; --fs-lg: 1.125rem; --fs-xl: 1.375rem; --fs-2xl: 1.75rem; --fs-3xl: 2.25rem; --fs-4xl: 3rem;
+  --lh: 1.5; --lh-tight: 1.15;
+  /* shape */
+  --r-sm: 8px; --r-md: 14px; --r-lg: 22px; --r-pill: 999px;
+  --hit: 44px;
+  /* blur levels */
+  --blur-1: 14px; --blur-2: 34px; --blur-3: 60px; --blur-ambient: 90px;
+  /* motion */
+  --dur-1: 120ms; --dur-2: 220ms; --dur-3: 420ms; --dur-ambient: 1400ms;
+  --ease: cubic-bezier(.2,.8,.2,1);
+  /* z layers; overlays add --depth */
+  --z-nav: 20; --z-overlay: 100; --z-toast: 1000;
+
+  --density: 1;
+}
+
+/* light scheme (default) */
+:root, :root[data-theme="light"] {
+  color-scheme: light;
+  --bg: var(--bg-100); --text: var(--ink-900); --text-2: var(--ink-600); --line: var(--line-200);
+  --brand: var(--blue-600); --brand-strong: var(--blue-700); --brand-soft: var(--blue-50); --on-brand: #fff;
+  --surface: #fff;
+  --acr-bg: rgb(255 255 255 / .40); --acr-bg-strong: rgb(255 255 255 / .62); --acr-border: rgb(255 255 255 / .75);
+  --frost-a: rgb(255 255 255 / .55); --frost-b: rgb(255 255 255 / .08); --frost-bright: 1.06; --frost-edge: rgb(255 255 255 / .85);
+  --acr-tint: rgb(0 90 171 / .06);
+  --scrim: rgb(14 24 36 / .38);
+  --shadow-rgb: 16 40 70; --shadow-a: .14;
+  --amb-opacity: .55;
+  --noise-opacity: .16;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d141b; --text: #eaf0f6; --text-2: #a6b4c2; --line: #2a3745;
+  --brand: #5aa8f0; --brand-strong: #8cc3f7; --brand-soft: #14283b; --on-brand: #04121f;
+  --surface: #16202a;
+  --acr-bg: rgb(28 40 54 / .38); --acr-bg-strong: rgb(20 30 42 / .66); --acr-border: rgb(255 255 255 / .14);
+  --frost-a: rgb(255 255 255 / .12); --frost-b: rgb(255 255 255 / .02); --frost-bright: .96; --frost-edge: rgb(255 255 255 / .22);
+  --acr-tint: rgb(90 168 240 / .08);
+  --scrim: rgb(0 0 0 / .55);
+  --shadow-rgb: 0 0 0; --shadow-a: .5;
+  --amb-opacity: .38;
+  --noise-opacity: .2;
+  --ok: #5dc47a; --warn: #e0b04a; --err: #ff8a80;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme]) { color-scheme: dark; } }
+
+/* elevation: five levels, shadow tinted by the ambient context */
+:root {
+  --e-1: 0 1px 2px rgb(var(--shadow-rgb) / calc(var(--shadow-a) * .8)), 0 1px 1px rgb(var(--shadow-rgb) / calc(var(--shadow-a) * .5));
+  --e-2: 0 4px 12px rgb(var(--shadow-rgb) / var(--shadow-a)), 0 1px 3px rgb(var(--shadow-rgb) / calc(var(--shadow-a) * .6));
+  --e-3: 0 10px 28px rgb(var(--shadow-rgb) / var(--shadow-a)), 0 3px 8px rgb(var(--shadow-rgb) / calc(var(--shadow-a) * .6));
+  --e-4: 0 22px 54px rgb(var(--shadow-rgb) / calc(var(--shadow-a) * 1.2)), 0 6px 16px rgb(var(--shadow-rgb) / calc(var(--shadow-a) * .7));
+  --e-5: 0 40px 90px rgb(var(--shadow-rgb) / calc(var(--shadow-a) * 1.5)), 0 12px 28px rgb(var(--shadow-rgb) / calc(var(--shadow-a) * .8));
+}
+
+/* illustration tokens */
+:root { --glass-a: #cfe6f7; --glass-b: #8fbbe0; --glass-line: rgb(255 255 255 / .75); }
+:root[data-theme="dark"] { --glass-a: #3a5a78; --glass-b: #1d3347; --glass-line: rgb(255 255 255 / .35); }

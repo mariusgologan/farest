@@ -1,0 +1,8 @@
+- q: { ro: Pot comanda online?, en: Can I order online? }
+  a: { ro: "Da. Adaugi produsele în coș, trimiți comanda, iar un consultant te sună pentru confirmare.", en: "Yes. Add products to the cart, send the order, and a consultant calls you to confirm." }
+- q: { ro: Ce sisteme de profile oferiți?, en: Which profile systems do you offer? }
+  a: { ro: "Trocal, Kömmerling, Gealan și Salamander GreenEvolution, plus profilul Klass pentru bugete mici.", en: "Trocal, Kömmerling, Gealan and Salamander GreenEvolution, plus the Klass profile for tighter budgets." }
+- q: { ro: Cum aleg dimensiunea?, en: How do I choose the size? }
+  a: { ro: "Folosește calculatorul pentru o estimare sau cere o măsurătoare la domiciliu.", en: "Use the calculator for an estimate or ask for a home measurement." }
+- q: { ro: Oferiți service?, en: Do you offer service? }
+  a: { ro: "Da, pentru ferestre și uși PVC. Numărul de service este în pagina Magazine.", en: "Yes, for PVC windows and doors. The service number is on the Shops page." }

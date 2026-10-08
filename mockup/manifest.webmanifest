@@ -1,0 +1,12 @@
+{
+  "name": "FAR EST – Ferestre și uși PVC",
+  "short_name": "FAR EST",
+  "description": "Ferestre și uși PVC direct de la producător.",
+  "lang": "ro",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f8fa",
+  "theme_color": "#005aab",
+  "icons": [ { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" } ]
+}

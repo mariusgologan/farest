@@ -1,0 +1,20 @@
+# Crawl output (large, regenerable with browser/crawl.py) and the peers' working reports; not versioned
+capture/
+analysis/
+design/
+.agents/
+.claude/
+browser/
+okf/
+AGENTS.md
+CLAUDE.md
+docker-compose.yml
+README.md
+
+# OS / editor
+.DS_Store
+*.swp
+.vscode/
+.idea/
+# Local secrets, if ever added
+.env

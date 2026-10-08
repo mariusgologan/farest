@@ -1,0 +1,20 @@
+# Stores. maps_query is a Google Maps place search, not a verified pin:
+# replace it with exact coordinates ("44.43,26.01") or a place name once the owner confirms the listings.
+- id: factory
+  name: { ro: Magazin Fabrica FAR-EST, en: FAR-EST Factory shop }
+  address: { ro: "Șos. de Centură, București (între Domnești și Carrefour Militari)", en: "Centura Ring Road, Bucharest (between Domnești and Carrefour Militari)" }
+  phone: 0728 853 025
+  email: magazin.fabrica@farest.ro
+  maps_query: Far Est Windows Șoseaua de Centură București
+- id: lujerului
+  name: { ro: Magazin FAR-EST Lujerului, en: FAR-EST Lujerului shop }
+  address: { ro: Centrul comercial Supernova Lujerului, en: Supernova Lujerului shopping centre }
+  phone: 0728 853 082
+  email: magazin.militari@farest.ro
+  maps_query: Supernova Lujerului București
+- id: auchan
+  name: { ro: Magazin Auchan Drumul Taberei, en: Auchan Drumul Taberei shop }
+  address: { ro: "Brașov nr. 25, Sector 6", en: "Brașov St. 25, Sector 6" }
+  phone: 0728 853 004
+  email: auchan@farest.ro
+  maps_query: Auchan Drumul Taberei Strada Brașov 25 București

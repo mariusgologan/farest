@@ -1,0 +1,31 @@
+# Not active yet: needs the owner's first commit and the public/private repo decision
+# (Pages from a private repo needs a paid plan, and the site is public anyway) before it can run.
+# Publishes the mockup/ folder; set Settings > Pages > Source = "GitHub Actions".
+name: pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    # Self-hosted runners. [self-hosted, linux] matches any Linux runner of ours; narrow it with the pool's
+    # custom label (other repos here use [self-hosted, dind]) once the owner confirms which pool may deploy Pages.
+    runs-on: [self-hosted, linux]
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: mockup
+      - id: deployment
+        uses: actions/deploy-pages@v4
