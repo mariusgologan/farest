@@ -6,8 +6,8 @@
   /* primitives (from okf/design/redesign-direction.md) */
   --blue-50: #eaf2fa; --blue-600: #005aab; --blue-700: #004a8f; --blue-300: #6aa9e0;
   --red-600: #d6202e;
-  --ink-900: #1b2733; --ink-600: #4a5866; --line-200: #d5dce3; --bg-100: #f6f8fa;
-  --ok: #1e7b34; --warn: #8a5a00; --err: #b3261e;
+  --ink-900: #1b2733; --ink-600: #36424f; --line-200: #d5dce3; --bg-100: #f6f8fa;
+  --ok: #17692b; --warn: #8a5a00; --err: #b3261e;
 
   /* spacing, 8px grid */
   --s-1: .25rem; --s-2: .5rem; --s-3: .75rem; --s-4: 1rem; --s-5: 1.5rem; --s-6: 2rem; --s-7: 3rem; --s-8: 4.5rem;
@@ -46,8 +46,8 @@
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0d141b; --text: #eaf0f6; --text-2: #a6b4c2; --line: #2a3745;
-  --brand: #5aa8f0; --brand-strong: #8cc3f7; --brand-soft: #14283b; --on-brand: #04121f;
+  --bg: #0d141b; --text: #eaf0f6; --text-2: #bdc9d5; --line: #2a3745;
+  --brand: #8fc7f8; --brand-strong: #a6d2fa; --brand-soft: #14283b; --on-brand: #04121f;
   --surface: #16202a;
   --acr-bg: rgb(28 40 54 / .38); --acr-bg-strong: rgb(20 30 42 / .66); --acr-border: rgb(255 255 255 / .14);
   --frost-a: rgb(255 255 255 / .12); --frost-b: rgb(255 255 255 / .02); --frost-bright: .96; --frost-edge: rgb(255 255 255 / .22);
@@ -56,7 +56,7 @@
   --shadow-rgb: 0 0 0; --shadow-a: .5;
   --amb-opacity: .29;
   --noise-opacity: .2;
-  --ok: #5dc47a; --warn: #e0b04a; --err: #ff8a80;
+  --ok: #7fdc9a; --warn: #e0b04a; --err: #ff8a80; --logo-red: #ff8a93;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme]) { color-scheme: dark; } }
 

@@ -175,3 +175,8 @@ html[data-eff="wide"] .prose-band { grid-template-columns: 1fr 1fr; align-items:
 .tile-photo, .wide-photo, .profile-photo { width: 100%; border-radius: var(--r-md); object-fit: cover; }
 .tile-photo { aspect-ratio: 16 / 9; } .wide-photo { aspect-ratio: 16 / 9; margin-bottom: var(--s-3); }
 .profile-photo { max-height: 220px; }
+
+.card-title { font-size: var(--fs-lg); letter-spacing: 0; }
+/* standalone text links (footer, shop details) keep a 24px target */
+.foot a, .lines a, .row > a:not(.btn), .card-body > a:not(.btn) { display: inline-flex; align-items: center; min-height: 24px; }
+.card-body p > a:not(.btn) { display: inline-flex; align-items: center; min-height: 24px; }

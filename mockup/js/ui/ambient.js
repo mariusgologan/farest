@@ -4,7 +4,6 @@
    A hovered/selected swatch (calculator) overrides; time of day shifts the hue. */
 (() => {
   const root = document.documentElement, cfgI = FE.config.ambientImage;
-  const daypart = () => { const h = new Date().getHours() || 24; return FE.config.dayparts.find(d => h >= d.from && h < d.to) || FE.config.dayparts[1]; };
 
   const hex2rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
   const rgb2hex = c => '#' + c.map(v => Math.round(FE.clamp(v, 0, 255)).toString(16).padStart(2, '0')).join('');
@@ -54,15 +53,13 @@
   }
 
   function apply() {
-    const s = FE.store, ctx = FE.config.ambient[s.get('context')] || FE.config.ambient.home, sw = s.get('swatch'), pic = s.get('picture'), dp = daypart();
+    const s = FE.store, ctx = FE.config.ambient[s.get('context')] || FE.config.ambient.home, sw = s.get('swatch'), pic = s.get('picture');
     root.dataset.ambient = s.get('ambient');
     let [a, b] = ctx;
     if (pic) { a = mix(a, pic.a, pic.k); b = mix(b, pic.b, pic.k); }
     if (sw) a = sw;
     root.style.setProperty('--amb-a', a);
     root.style.setProperty('--amb-b', b);
-    root.style.setProperty('--amb-hue', (sw || pic ? 0 : dp.hue) + 'deg');
-    root.dataset.daypart = dp.id;
   }
 
   let token = 0;

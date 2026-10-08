@@ -41,7 +41,7 @@
         <div class="grid tiles">${FE.db.profiles.filter(p => p.site).map(p => h`<button class="tile acrylic lift" data-action="open-profile" data-id="${p.id}" data-pic="${site.systems[p.site] || ''}">
           ${site.systems[p.site] ? h`<img class="tile-photo" src="${site.systems[p.site]}" alt="" loading="lazy">` : ''}<b>${p.name}</b><span class="muted">${t(p.blurb)}</span><span class="row chips">${ui.chip(`${p.mm} mm`)}${p.chambers ? ui.chip(t('profile.chambers', { n: p.chambers })) : ''}</span></button>`)}</div></section>
       <section><div class="row spread"><h2>${t('home.shopsTitle')}</h2><a href="#/shops">${t('home.shopsCta')} ${icon('chevron', 16)}</a></div>
-        <div class="grid cards">${shops.map(sh => h`<article class="card acrylic" data-pic="${site.shops || ''}"><div class="card-body"><h3>${FE.loc(sh.name)}</h3><p class="muted">${FE.loc(sh.address)}</p>
+        <div class="grid cards">${shops.map(sh => h`<article class="card acrylic" data-pic="${site.shops || ''}"><div class="card-body"><h2 class="card-title">${FE.loc(sh.name)}</h2><p class="muted">${FE.loc(sh.address)}</p>
           <p>${icon('phone', 16)} <a href="tel:${sh.phone.replace(/\s/g, '')}">${sh.phone}</a></p>${shopLinks(sh)}</div></article>`)}</div></section>
       <section><h2>${t('home.faq')}</h2><div class="faq">${faq.map(f => h`<details class="acrylic e-1"><summary>${FE.loc(f.q)}</summary><p class="muted">${FE.loc(f.a)}</p></details>`)}</div></section>
       <section class="split-band acrylic thick e-3"><div><h2>${t('home.finalTitle')}</h2><p class="muted">${t('home.finalLead')}</p></div>
@@ -174,7 +174,7 @@
     const { data } = await FE.api.get('/shops');
     set(host, h`<header class="page-head"><h1>${t('shops.title')}</h1><p class="muted">${t('shops.lead')}</p></header>
       <div class="grid cards">${data.map(s => h`<article class="card acrylic lift"><div class="card-body">
-        <h3>${FE.loc(s.name)}</h3><p class="muted">${FE.loc(s.address)}</p>
+        <h2 class="card-title">${FE.loc(s.name)}</h2><p class="muted">${FE.loc(s.address)}</p>
         <p>${icon('phone', 16)} <a href="tel:${s.phone.replace(/\s/g, '')}">${s.phone}</a></p>
         <p>${icon('mail', 16)} <a href="mailto:${s.email}">${s.email}</a></p>
         <p class="muted small">${t('shops.hours')}</p>

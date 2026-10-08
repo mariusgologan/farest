@@ -20,7 +20,7 @@
     const W = ratio >= 1 ? max : Math.round(max * ratio), H = ratio >= 1 ? Math.round(max / ratio) : max;
     const f = 6, gx = f, gy = f, gw = W - 2 * f, gh = H - 2 * f, mid = gy + gh / 2;
     const door = p.kind === 'door' ? `<rect x="${gx}" y="${gy + gh * .66}" width="${gw}" height="${gh * .34}" fill="${hex}" stroke="rgb(0 0 0 / .18)"/>` : '';
-    return h`<svg class="win" viewBox="0 0 ${W} ${H}" role="img" aria-label="${label || p.name || ''}" style="aspect-ratio:${W}/${H}">
+    return h`<svg class="win" viewBox="0 0 ${W} ${H}" ${raw((label || p.name) ? 'role="img"' : 'aria-hidden="true"')} aria-label="${label || p.name || ''}" style="aspect-ratio:${W}/${H}">
       <defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--glass-a)"/><stop offset="1" stop-color="var(--glass-b)"/></linearGradient></defs>
       <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="3" fill="${hex}" stroke="rgb(0 0 0 / .22)"/>
       <rect x="${gx}" y="${gy}" width="${gw}" height="${gh}" rx="1.5" fill="url(#${id})" stroke="rgb(0 0 0 / .25)"/>
@@ -41,7 +41,7 @@
   ui.card = p => h`<article class="card acrylic lift" data-id="${p.id}" data-pic="${p.images[0]?.src || ''}">
     <a class="card-art" href="#/p/${p.id}" aria-label="${p.name}" tabindex="-1">${ui.img(p)}</a>
     <div class="card-body">
-      <h3 class="clamp"><a href="#/p/${p.id}">${p.name}</a></h3>
+      <h2 class="card-title clamp"><a href="#/p/${p.id}">${p.name}</a></h2>
       <div class="row chips">${ui.specs(p)}</div>
       <div class="row spread"><div class="price-block">${ui.price(p.price)}</div>${ui.stock(p.stock)}</div>
       <div class="row card-actions">

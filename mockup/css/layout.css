@@ -20,7 +20,7 @@ html[data-eff="compact"] #view { padding: var(--s-4) var(--s-4) var(--s-6); gap:
 .top { position: sticky; top: 0; z-index: var(--z-nav); display: flex; align-items: center; gap: var(--s-4); padding: var(--s-2) var(--s-5); border-width: 0 0 1px; border-radius: 0; box-shadow: var(--e-2); }
 html[data-eff="compact"] .top { padding: var(--s-2) var(--s-4); }
 .logo { font-size: var(--fs-xl); letter-spacing: .04em; text-decoration: none; color: var(--text); display: flex; gap: 2px; }
-.logo b { color: var(--brand); } .logo span { color: var(--red-600); }
+.logo b { color: var(--brand); } .logo span { color: var(--logo-red, var(--red-600)); }
 .topnav { display: flex; gap: var(--s-1); flex: 1; }
 .navlink, .tab { display: inline-flex; align-items: center; gap: var(--s-2); text-decoration: none; color: var(--text-2); min-height: var(--hit); padding: 0 var(--s-3); border-radius: var(--r-pill); transition: background var(--dur-1), color var(--dur-1); }
 .navlink:hover { background: var(--acr-tint); color: var(--text); }

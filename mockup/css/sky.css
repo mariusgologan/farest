@@ -1,9 +1,0 @@
-/* Window light: a warm halo behind the page. Driven by --sky-* set in js/ui/sky.js and html[data-sky]. */
-#device { --sun: 255, 236, 200; }
-html[data-sky="night"] #device { --sun: 170, 196, 255; }
-.sky { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-html[data-sky="off"] .sky { display: none; }
-.sky-bloom { position: absolute; top: -20%; left: var(--sky-x, 60%); width: 90vmin; height: 90vmin; translate: -50% 0; border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 190, 110, calc(.22 * var(--sky-warm, 0) + .06)), transparent);
-  filter: blur(30px); transition: left var(--dur-ambient) var(--ease); opacity: .8; }
-html[data-sky="night"] .sky-bloom { background: radial-gradient(closest-side, rgba(150, 180, 255, .16), transparent); }

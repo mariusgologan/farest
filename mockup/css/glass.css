@@ -18,3 +18,7 @@
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
   filter: drop-shadow(0 0 3px rgb(var(--edge-lit) / calc(var(--glint) * .7))); }
+
+/* header and tabs sit over photos while scrolling: keep them dense enough for text */
+.top.acrylic, .tabs.acrylic { --acr-bg-strong: rgb(255 255 255 / .88); }
+:root[data-theme="dark"] .top.acrylic, :root[data-theme="dark"] .tabs.acrylic { --acr-bg-strong: rgb(13 20 27 / .9); }

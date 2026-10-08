@@ -34,7 +34,6 @@ FE.content = {
       theme: { label: 'Temă', auto: 'Auto', light: 'Luminos', dark: 'Întunecat' },
       layout: { label: 'Layout', auto: 'Auto', compact: 'Telefon', regular: 'Tabletă', wide: 'Desktop' },
       ambient: { label: 'Lumină ambientală', on: 'Pornită', off: 'Oprită' },
-      time: { label: 'Ora zilei', auto: 'Auto', day: 'Zi', night: 'Noapte' },
       bars: { label: 'Meniuri la derulare', auto: 'Se ascund', always: 'Mereu vizibile' },
       lang: { label: 'Limbă', ro: 'Română', en: 'English' }
     },
@@ -103,7 +102,6 @@ FE.content = {
       theme: { label: 'Theme', auto: 'Auto', light: 'Light', dark: 'Dark' },
       layout: { label: 'Layout', auto: 'Auto', compact: 'Phone', regular: 'Tablet', wide: 'Desktop' },
       ambient: { label: 'Ambient light', on: 'On', off: 'Off' },
-      time: { label: 'Time of day', auto: 'Auto', day: 'Day', night: 'Night' },
       bars: { label: 'Menus while scrolling', auto: 'Auto-hide', always: 'Always visible' },
       lang: { label: 'Language', ro: 'Română', en: 'English' }
     },
