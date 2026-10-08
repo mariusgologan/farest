@@ -180,3 +180,4 @@ html[data-eff="wide"] .prose-band { grid-template-columns: 1fr 1fr; align-items:
 /* standalone text links (footer, shop details) keep a 24px target */
 .foot a, .lines a, .row > a:not(.btn), .card-body > a:not(.btn) { display: inline-flex; align-items: center; min-height: 24px; }
 .card-body p > a:not(.btn) { display: inline-flex; align-items: center; min-height: 24px; }
+.card-title a { display: block; min-height: 24px; }
