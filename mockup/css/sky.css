@@ -1,8 +1,9 @@
-/* Window light: pane-shaped patch, warm bloom, frost, particles. Driven by --sky-* set in js/ui/sky.js and html[data-sky|data-season]. */
+/* Window light: pane-shaped patch, warm halo, soft rays. Driven by --sky-* set in js/ui/sky.js and html[data-sky]. */
+#device { --sun: 255, 236, 200; }
+html[data-sky="night"] #device { --sun: 170, 196, 255; }
 .sky { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
-  --sun: 255, 236, 200; --sky-pane: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120' preserveAspectRatio='none'%3E%3Cg fill='%23000'%3E%3Crect x='2' y='2' width='46' height='56' rx='3'/%3E%3Crect x='52' y='2' width='46' height='56' rx='3'/%3E%3Crect x='2' y='62' width='46' height='56' rx='3'/%3E%3Crect x='52' y='62' width='46' height='56' rx='3'/%3E%3C/g%3E%3C/svg%3E"); }
+  --sky-pane: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120' preserveAspectRatio='none'%3E%3Cg fill='%23000'%3E%3Crect x='2' y='2' width='46' height='56' rx='3'/%3E%3Crect x='52' y='2' width='46' height='56' rx='3'/%3E%3Crect x='2' y='62' width='46' height='56' rx='3'/%3E%3Crect x='52' y='62' width='46' height='56' rx='3'/%3E%3C/g%3E%3C/svg%3E"); }
 html[data-sky="off"] .sky { display: none; }
-html[data-sky="night"] .sky { --sun: 170, 196, 255; }
 
 .sky-light { position: absolute; top: 4%; left: var(--sky-x, 60%); width: 78vmin; height: calc(92vmin * var(--sky-len, 1)); translate: -50% 0;
   transform-origin: 50% 0; transform: skewX(var(--sky-skew, 0deg)) rotate(calc(var(--sky-skew, 0deg) * -.25));
@@ -16,21 +17,20 @@ html[data-theme="dark"] .sky-light { mix-blend-mode: screen; opacity: .4; }
 /* warm sun at low angles, a halo behind the window light */
 .sky-bloom { position: absolute; top: -20%; left: var(--sky-x, 60%); width: 90vmin; height: 90vmin; translate: -50% 0; border-radius: 50%;
   background: radial-gradient(closest-side, rgba(255, 190, 110, calc(.30 * var(--sky-warm, 0) + .10)), transparent);
-  filter: blur(30px); transition: left var(--dur-ambient) var(--ease), opacity var(--dur-ambient); opacity: .8; }
+  filter: blur(30px); transition: left var(--dur-ambient) var(--ease); opacity: .8; }
 html[data-sky="night"] .sky-bloom { background: radial-gradient(closest-side, rgba(150, 180, 255, .16), transparent); }
-html[data-season="summer"][data-sky="day"] .sky-bloom { opacity: 1; width: 120vmin; height: 120vmin; animation: sky-shimmer 9s ease-in-out infinite alternate; }
-@keyframes sky-shimmer { from { filter: blur(30px) brightness(1); } to { filter: blur(36px) brightness(1.18); } }
 
-/* winter: frost grows in from the edges of the glass */
-.sky-frost { position: absolute; inset: 0; opacity: 0; transition: opacity var(--dur-ambient) var(--ease);
-  background: radial-gradient(ellipse at 50% 45%, transparent 52%, rgba(235, 245, 255, .34) 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.018 .05' numOctaves='4' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.6 -.55'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23f)'/%3E%3C/svg%3E");
-  -webkit-mask: radial-gradient(ellipse at 50% 45%, transparent 48%, #000 100%); mask: radial-gradient(ellipse at 50% 45%, transparent 48%, #000 100%); }
-html[data-season="winter"] .sky-frost { opacity: .55; filter: blur(3px); }
-html[data-season="winter"][data-sky="night"] .sky-frost { opacity: .4; }
+/* rays: a fan of long, feathered strips from the light source; each fades along its length and breathes on its own rhythm */
+.sky-over { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; opacity: .4; }
+html[data-sky="off"] .sky-over { display: none; }
+.sky-rays { position: absolute; top: -6%; left: var(--sky-x, 60%); width: 0; height: 0; transition: left var(--dur-ambient) var(--ease); transform: rotate(var(--sky-tilt, 0deg)); }
+.sky-rays i { position: absolute; top: 0; left: calc(var(--r-w) / -2); width: var(--r-w); height: 150vmax; transform-origin: 50% 0; transform: rotate(var(--r-a));
+  background: linear-gradient(180deg, rgba(var(--sun), calc(.95 * var(--r-o) * var(--sky-power, .7))) 0%, rgba(var(--sun), calc(.4 * var(--r-o) * var(--sky-power, .7))) 38%, transparent 78%);
+  -webkit-mask: linear-gradient(90deg, transparent, #000 35%, #000 65%, transparent); mask: linear-gradient(90deg, transparent, #000 35%, #000 65%, transparent);
+  filter: blur(10px); mix-blend-mode: multiply; opacity: 0; animation: sky-breathe var(--r-d) ease-in-out var(--r-s) infinite; }
+html[data-theme="dark"] .sky-rays i { mix-blend-mode: screen; }
+html[data-theme="light"][data-sky="day"] .sky-rays i { background: linear-gradient(180deg, rgba(255, 196, 96, calc(.9 * var(--r-o) * var(--sky-power, .7))) 0%, rgba(255, 210, 130, calc(.35 * var(--r-o) * var(--sky-power, .7))) 38%, transparent 78%); }
+html[data-theme="dark"] .sky-over { opacity: .5; }
+@keyframes sky-breathe { 0%, 100% { opacity: .15; } 50% { opacity: 1; } }
 
-.sky-fx { position: absolute; inset: 0; }
-html[data-season="winter"] .sky-light { --sun: 214, 232, 255; }
-html[data-season="summer"] .sky-light { --sun: 255, 226, 160; }
-
-@media (prefers-reduced-motion: reduce) { .sky-light, .sky-bloom { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .sky-light { animation: none !important; } .sky-rays i { animation: none !important; opacity: .6; } }

@@ -7,7 +7,7 @@ FE.config = {
   maps: { embed: 'https://www.google.com/maps?output=embed&q=', search: 'https://www.google.com/maps/search/?api=1&query=', route: 'https://www.google.com/maps/dir/?api=1&destination=' },
   storageKey: 'farest.mock.v1',
   api: { base: '/api', latency: [120, 380] },
-  defaults: { theme: 'auto', layout: 'auto', ambient: 'on', time: 'auto', season: 'auto', bars: 'auto', lang: 'ro' },
+  defaults: { theme: 'auto', layout: 'auto', ambient: 'on', time: 'auto', bars: 'auto', lang: 'ro' },
   langs: ['ro', 'en'],
   themes: ['auto', 'light', 'dark'],
   ambientModes: ['on', 'off'],
@@ -15,7 +15,6 @@ FE.config = {
   /* menus hide after scrolling down this far (px) and return on any upward movement of this size */
   bars: { hideAfter: 90, downDelta: 6, upDelta: 3, showAbove: 40 },
   timeModes: ['auto', 'day', 'night'],
-  seasonModes: ['auto', 'summer', 'winter'],
   /* forced layouts render inside a frame of this width; "auto" follows the window */
   layouts: {
     compact: { width: 420, cols: 1, nav: 'tabs' },
@@ -41,12 +40,11 @@ FE.config = {
     shops:   ['#d6202e', '#f0a0a6'],
     cart:    ['#005aab', '#d6202e']
   },
-  /* window light: sunrise/sunset hours swing with the season (f = 1 at midsummer, -1 at midwinter); months decide summer/winter,
-     the rest is mild. Particles per 1000 px of screen width, capped. */
+  /* window light: sunrise/sunset hours swing with the season of the year (f = 1 at midsummer, -1 at midwinter);
+     rays: count, spread (deg), and how long one breath of light takes (s) */
   sky: {
     sunrise: { base: 6.5, swing: 1.0 }, sunset: { base: 18.5, swing: 2.0 }, midsummerDay: 172,
-    summerMonths: [5, 6, 7], winterMonths: [11, 0, 1],
-    refreshMs: 60000, snow: { perK: 38, max: 90 }, motes: { perK: 18, max: 40 }
+    refreshMs: 60000, rays: { count: 9, spread: 46, breathe: [9, 19] }
   },
   /* time-of-day nudges the ambient hue rotation (degrees) and strength */
   dayparts: [
