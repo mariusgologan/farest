@@ -1,7 +1,7 @@
 /* Ambient layer: blurred colour fields that follow the context (route, product colour, daypart). */
 .ambient { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
-  filter: hue-rotate(var(--amb-hue, 0deg)); transition: filter var(--dur-ambient) var(--ease); }
-:root { transition: --amb-a var(--dur-ambient) var(--ease), --amb-b var(--dur-ambient) var(--ease); }
+  filter: hue-rotate(var(--amb-hue, 0deg)); transition: filter var(--dur-ambient) var(--ease-ambient); }
+:root { transition: --amb-a var(--dur-ambient) var(--ease-ambient), --amb-b var(--dur-ambient) var(--ease-ambient); }
 .ambient i { position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; filter: blur(var(--blur-ambient)); opacity: var(--amb-opacity); }
 .ambient i:nth-child(1) { background: var(--amb-a); top: -25vmax; left: -15vmax; }
 .ambient i:nth-child(2) { background: var(--amb-b); bottom: -30vmax; right: -20vmax; }
