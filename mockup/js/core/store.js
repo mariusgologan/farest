@@ -1,6 +1,6 @@
 /* Single observable state. Persisted keys survive reload; everything else is session only. */
 (() => {
-  const persisted = ['theme', 'layout', 'ambient', 'time', 'season', 'lang', 'cart'];
+  const persisted = ['theme', 'layout', 'ambient', 'time', 'season', 'bars', 'lang', 'cart'];
   const saved = FE.storage.get(FE.config.storageKey, {});
   const state = { ...FE.config.defaults, cart: [], route: '/', context: 'home', swatch: null, picture: null, ...saved };
   const subs = new Set();

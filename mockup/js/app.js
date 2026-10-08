@@ -74,6 +74,7 @@
   A('set-ambient', (el, ev, d) => store.set({ ambient: d.value }));
   A('set-time', (el, ev, d) => store.set({ time: d.value }));
   A('set-season', (el, ev, d) => store.set({ season: d.value }));
+  A('set-bars', (el, ev, d) => store.set({ bars: d.value }));
   A('set-lang', (el, ev, d) => store.set({ lang: d.value }));
 
   /* hovering a photo card tints the ambient light with that photo; leaving restores the page picture */

@@ -7,10 +7,13 @@ FE.config = {
   maps: { embed: 'https://www.google.com/maps?output=embed&q=', search: 'https://www.google.com/maps/search/?api=1&query=', route: 'https://www.google.com/maps/dir/?api=1&destination=' },
   storageKey: 'farest.mock.v1',
   api: { base: '/api', latency: [120, 380] },
-  defaults: { theme: 'auto', layout: 'auto', ambient: 'on', time: 'auto', season: 'auto', lang: 'ro' },
+  defaults: { theme: 'auto', layout: 'auto', ambient: 'on', time: 'auto', season: 'auto', bars: 'auto', lang: 'ro' },
   langs: ['ro', 'en'],
   themes: ['auto', 'light', 'dark'],
   ambientModes: ['on', 'off'],
+  barModes: ['auto', 'always'],
+  /* menus hide after scrolling down this far (px) and return on any upward movement of this size */
+  bars: { hideAfter: 90, downDelta: 6, upDelta: 3, showAbove: 40 },
   timeModes: ['auto', 'day', 'night'],
   seasonModes: ['auto', 'summer', 'winter'],
   /* forced layouts render inside a frame of this width; "auto" follows the window */

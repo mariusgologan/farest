@@ -36,6 +36,7 @@ FE.content = {
       ambient: { label: 'Lumină ambientală', on: 'Pornită', off: 'Oprită' },
       time: { label: 'Ora zilei', auto: 'Auto', day: 'Zi', night: 'Noapte' },
       season: { label: 'Anotimp', auto: 'Auto', summer: 'Vară', winter: 'Iarnă' },
+      bars: { label: 'Meniuri la derulare', auto: 'Se ascund', always: 'Mereu vizibile' },
       lang: { label: 'Limbă', ro: 'Română', en: 'English' }
     },
     home: {
@@ -105,6 +106,7 @@ FE.content = {
       ambient: { label: 'Ambient light', on: 'On', off: 'Off' },
       time: { label: 'Time of day', auto: 'Auto', day: 'Day', night: 'Night' },
       season: { label: 'Season', auto: 'Auto', summer: 'Summer', winter: 'Winter' },
+      bars: { label: 'Menus while scrolling', auto: 'Auto-hide', always: 'Always visible' },
       lang: { label: 'Language', ro: 'Română', en: 'English' }
     },
     home: {

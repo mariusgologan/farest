@@ -224,6 +224,7 @@
           <div><div class="muted small">${t('settings.ambient.label')}</div>${seg('settings.ambient', FE.config.ambientModes, s.get('ambient'), 'set-ambient')}</div>
           <div><div class="muted small">${t('settings.time.label')}</div>${seg('settings.time', FE.config.timeModes, s.get('time'), 'set-time')}</div>
           <div><div class="muted small">${t('settings.season.label')}</div>${seg('settings.season', FE.config.seasonModes, s.get('season'), 'set-season')}</div>
+          <div><div class="muted small">${t('settings.bars.label')}</div>${seg('settings.bars', FE.config.barModes, s.get('bars'), 'set-bars')}</div>
           <div><div class="muted small">${t('settings.lang.label')}</div>${seg('settings.lang', FE.config.langs, s.get('lang'), 'set-lang')}</div></div>`.toString();
       };
       draw();
