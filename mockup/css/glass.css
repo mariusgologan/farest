@@ -1,7 +1,7 @@
 /* Frosted glass: opaque enough to read as a slab, with a hairline edge. An edge light follows the pointer or finger: it brightens the
    rim of the card nearest to it, with a soft glow, and fades when the pointer moves away (--mx, --my, --glint set by js/ui/glass.js). */
 @property --glint { syntax: "<number>"; inherits: true; initial-value: 0; }
-:root { --rim-w: 2.5px; --edge-lit: 60 140 230; --edge-reach: 170px;
+:root { --rim-w: 1.2px; --edge-lit: 60 140 230; --edge-reach: 170px;
   --acr-bg: rgb(255 255 255 / .62); --acr-bg-strong: rgb(255 255 255 / .80); --frost-a: rgb(255 255 255 / .62); --frost-b: rgb(255 255 255 / .22); }
 :root[data-theme="dark"] { --edge-lit: 215 235 255;
   --acr-bg: rgb(30 42 56 / .62); --acr-bg-strong: rgb(20 30 42 / .82); --frost-a: rgb(255 255 255 / .16); --frost-b: rgb(255 255 255 / .05); }
@@ -17,4 +17,4 @@
   background: radial-gradient(var(--edge-reach) circle at var(--mx, 50%) var(--my, 50%), rgb(var(--edge-lit) / calc(var(--glint) * 1)) 0%, rgb(var(--edge-lit) / calc(var(--glint) * .45)) 50%, transparent 100%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-  filter: drop-shadow(0 0 6px rgb(var(--edge-lit) / calc(var(--glint) * .85))); }
+  filter: drop-shadow(0 0 3px rgb(var(--edge-lit) / calc(var(--glint) * .7))); }
