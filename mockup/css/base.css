@@ -2,6 +2,7 @@
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; font: var(--fs-md)/var(--lh) var(--font); color: var(--text); background: var(--bg); min-height: 100dvh; overflow-x: hidden; }
 h1,h2,h3,h4,p { margin: 0; }
+h1,h2,h3,h4 { font-family: var(--font-display); font-weight: 700; }
 h1 { font-size: var(--fs-3xl); line-height: var(--lh-tight); letter-spacing: -.02em; }
 h2 { font-size: var(--fs-2xl); line-height: var(--lh-tight); letter-spacing: -.01em; }
 h3 { font-size: var(--fs-lg); }
