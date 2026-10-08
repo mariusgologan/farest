@@ -1,6 +1,6 @@
 /* Offline shell. Same-origin only: app files are cache-first, content files stale-while-revalidate.
    Bump VERSION when shipping, old caches are dropped. Paths are relative so any GitHub Pages sub-path works. */
-const VERSION = 'farest-v17';
+const VERSION = 'farest-v18';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon.svg',
   'css/fonts.css', 'css/glass.css', 'js/ui/glass.js', 'css/chrome.css', 'js/ui/chrome.js', 'fonts/inter-latin.woff2', 'fonts/inter-latin-ext.woff2', 'fonts/plus-jakarta-sans-latin.woff2', 'fonts/plus-jakarta-sans-latin-ext.woff2', 'css/tokens.css', 'css/base.css', 'css/surfaces.css', 'css/layout.css', 'css/components.css', 'css/overlays.css',
   'data/config.js', 'data/catalog.js', 'data/content.js',
@@ -13,6 +13,7 @@ self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Prom
 self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
   if (e.request.method !== 'GET' || u.origin !== location.origin) return;
+  if (u.pathname.includes('/corporate/')) return; /* the corporate skin always loads from the network */
   const isContent = u.pathname.includes('/content/');
   e.respondWith(caches.open(VERSION).then(async cache => {
     const hit = await cache.match(e.request);

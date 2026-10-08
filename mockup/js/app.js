@@ -94,5 +94,5 @@
   FE.loadAll().then(() => { applyEnv(); drawShell(); FE.ambient.apply(); return FE.router.start(); })
     .catch(err => { FE.$('#view').removeAttribute('aria-busy'); FE.$('#view').innerHTML = `<div class="empty center stack"><h1>${t('error.load')}</h1><p class="muted">${t('error.loadHint')}</p><code>${FE.esc(err.message)}</code></div>`; });
   applyEnv();
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+  if (FE.config.registerSw !== false && 'serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
