@@ -1,19 +1,20 @@
-/* Glass: a crisp hairline edge that catches the window light on the lit side (angle from --glass-angle, set by js/ui/sky.js),
-   a faint inner glow and a small glint that follows the pointer. Deliberately thin: real glass shows its thickness only at the edge. */
+/* Frosted glass: opaque enough to read as a slab, with a hairline edge. An edge light follows the pointer or finger: it brightens the
+   rim of the card nearest to it, with a soft glow, and fades when the pointer moves away (--mx, --my, --glint set by js/ui/glass.js). */
 @property --glint { syntax: "<number>"; inherits: true; initial-value: 0; }
-:root { --glass-angle: 150deg; --rim-hi: rgb(255 255 255 / .9); --rim-lo: rgb(255 255 255 / .35); --rim-w: 1.5px; --glass-shade: rgb(20 40 70 / .10); --fringe-a: rgb(255 120 120 / .16); --fringe-b: rgb(110 190 255 / .18); }
-:root[data-theme="dark"] { --rim-hi: rgb(255 255 255 / .5); --rim-lo: rgb(255 255 255 / .16); --glass-shade: rgb(0 0 0 / .18); --fringe-a: rgb(255 120 120 / .10); --fringe-b: rgb(110 190 255 / .12); }
+:root { --rim-w: 2.5px; --edge-lit: 60 140 230; --edge-reach: 170px;
+  --acr-bg: rgb(255 255 255 / .62); --acr-bg-strong: rgb(255 255 255 / .80); --frost-a: rgb(255 255 255 / .62); --frost-b: rgb(255 255 255 / .22); }
+:root[data-theme="dark"] { --edge-lit: 215 235 255;
+  --acr-bg: rgb(30 42 56 / .62); --acr-bg-strong: rgb(20 30 42 / .82); --frost-a: rgb(255 255 255 / .16); --frost-b: rgb(255 255 255 / .05); }
 
-.acrylic { transition: --glint var(--dur-3) var(--ease), transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
-  background: radial-gradient(circle at var(--mx, 30%) var(--my, 0%), rgb(255 255 255 / calc(var(--glint) * .16)), transparent 30%),
-    linear-gradient(145deg, var(--frost-a), var(--frost-b) 62%), var(--acr-bg);
-  box-shadow: var(--e-2), inset 0 0 0 1px rgb(255 255 255 / .10), inset 0 0 16px rgb(255 255 255 / .07); }
-.acrylic.thick { background: radial-gradient(circle at var(--mx, 30%) var(--my, 0%), rgb(255 255 255 / calc(var(--glint) * .14)), transparent 30%),
-    linear-gradient(145deg, var(--frost-a), var(--frost-b) 70%), var(--acr-bg-strong); }
-.acrylic:hover { --glint: 1; }
+.acrylic { transition: --glint var(--dur-3) var(--ease), box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+  -webkit-backdrop-filter: blur(48px) saturate(1.3) brightness(var(--frost-bright)); backdrop-filter: blur(48px) saturate(1.3) brightness(var(--frost-bright));
+  box-shadow: var(--e-2), inset 0 0 0 1px rgb(255 255 255 / .12), inset 0 0 22px rgb(255 255 255 / .08); }
+.acrylic.thick { -webkit-backdrop-filter: blur(72px) saturate(1.4) brightness(var(--frost-bright)); backdrop-filter: blur(72px) saturate(1.4) brightness(var(--frost-bright)); }
+.acrylic::before { opacity: calc(var(--noise-opacity) * 1.5); }
 
-/* the rim: a gradient ring, bright where the light hits, dark on the far edge */
+/* edge light: a ring that only lights up near the pointer */
 .acrylic:not(.top):not(.tabs):not(.panel)::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: var(--rim-w); pointer-events: none; z-index: 2;
-  background: linear-gradient(var(--glass-angle), var(--rim-hi) 0%, rgb(255 255 255 / .10) 30%, transparent 55%, var(--rim-lo) 100%);
+  background: radial-gradient(var(--edge-reach) circle at var(--mx, 50%) var(--my, 50%), rgb(var(--edge-lit) / calc(var(--glint) * 1)) 0%, rgb(var(--edge-lit) / calc(var(--glint) * .45)) 50%, transparent 100%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); opacity: .8; }
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  filter: drop-shadow(0 0 6px rgb(var(--edge-lit) / calc(var(--glint) * .85))); }

@@ -40,11 +40,10 @@ FE.config = {
     shops:   ['#d6202e', '#f0a0a6'],
     cart:    ['#005aab', '#d6202e']
   },
-  /* window light: sunrise/sunset hours swing with the season of the year (f = 1 at midsummer, -1 at midwinter);
-     rays: count, spread (deg), and how long one breath of light takes (s) */
+  /* window light: sunrise/sunset hours swing with the season of the year (f = 1 at midsummer, -1 at midwinter); */
   sky: {
     sunrise: { base: 6.5, swing: 1.0 }, sunset: { base: 18.5, swing: 2.0 }, midsummerDay: 172,
-    refreshMs: 60000, rays: { count: 5, spread: 34, width: [4, 11], breathe: [12, 26], sway: 1.6, follow: 4, dust: 22 }
+    refreshMs: 60000
   },
   /* time-of-day nudges the ambient hue rotation (degrees) and strength */
   dayparts: [
