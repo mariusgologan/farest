@@ -1,0 +1,25 @@
+/* Thick glass: every acrylic object gets a bevelled rim that catches the window light (angle from --glass-angle, set by js/ui/sky.js),
+   a glint that follows the pointer, a darker lower edge and a slim refraction fringe. */
+@property --glint { syntax: "<number>"; inherits: true; initial-value: 0; }
+:root { --glass-angle: 150deg; --rim-hi: rgb(255 255 255 / .95); --rim-lo: rgb(120 150 180 / .22); --rim-w: 6px; --glass-shade: rgb(20 40 70 / .10); --fringe-a: rgb(255 120 120 / .16); --fringe-b: rgb(110 190 255 / .18); }
+:root[data-theme="dark"] { --rim-hi: rgb(255 255 255 / .55); --rim-lo: rgb(0 0 0 / .3); --glass-shade: rgb(0 0 0 / .18); --fringe-a: rgb(255 120 120 / .10); --fringe-b: rgb(110 190 255 / .12); }
+
+.acrylic { transition: --glint var(--dur-3) var(--ease), transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
+  background: radial-gradient(circle at var(--mx, 30%) var(--my, 0%), rgb(255 255 255 / calc(var(--glint) * .32)), transparent 34%),
+    linear-gradient(145deg, var(--frost-a), var(--frost-b) 62%), var(--acr-bg);
+  box-shadow: var(--e-2), inset 0 1px 0 var(--frost-edge), inset 0 0 0 1px rgb(255 255 255 / .14),
+    inset 0 calc(var(--rim-w) * 2) calc(var(--rim-w) * 3) calc(var(--rim-w) * -2.2) rgb(255 255 255 / .45),
+    inset 0 calc(var(--rim-w) * -2) calc(var(--rim-w) * 3) calc(var(--rim-w) * -2) var(--glass-shade),
+    inset 2px 0 0 -1px var(--fringe-a), inset -2px 0 0 -1px var(--fringe-b); }
+.acrylic.thick { background: radial-gradient(circle at var(--mx, 30%) var(--my, 0%), rgb(255 255 255 / calc(var(--glint) * .3)), transparent 34%),
+    linear-gradient(145deg, var(--frost-a), var(--frost-b) 70%), var(--acr-bg-strong); }
+.acrylic:hover { --glint: 1; }
+
+/* the rim: a gradient ring, bright where the light hits, dark on the far edge */
+.acrylic:not(.top):not(.tabs):not(.panel)::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: var(--rim-w); pointer-events: none; z-index: 2;
+  background: linear-gradient(var(--glass-angle), var(--rim-hi) 0%, rgb(255 255 255 / .12) 38%, transparent 55%, var(--rim-lo) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); opacity: .75; }
+.acrylic.panel { --rim-w: 8px; }
+.hero.acrylic, .split-band.acrylic, .calc.acrylic { --rim-w: 8px; }
+.float.acrylic, .card.acrylic, .tile.acrylic, .offer.acrylic { --rim-w: 6px; }

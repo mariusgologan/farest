@@ -44,7 +44,7 @@ FE.config = {
      rays: count, spread (deg), and how long one breath of light takes (s) */
   sky: {
     sunrise: { base: 6.5, swing: 1.0 }, sunset: { base: 18.5, swing: 2.0 }, midsummerDay: 172,
-    refreshMs: 60000, rays: { count: 9, spread: 46, breathe: [9, 19] }
+    refreshMs: 60000, rays: { count: 7, spread: 40, width: [2.5, 9], breathe: [10, 22], sway: 2.2, follow: 6, dust: 46 }
   },
   /* time-of-day nudges the ambient hue rotation (degrees) and strength */
   dayparts: [
