@@ -1,0 +1,36 @@
+/* Window light: pane-shaped patch, warm bloom, frost, particles. Driven by --sky-* set in js/ui/sky.js and html[data-sky|data-season]. */
+.sky { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  --sun: 255, 236, 200; --sky-pane: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120' preserveAspectRatio='none'%3E%3Cg fill='%23000'%3E%3Crect x='2' y='2' width='46' height='56' rx='3'/%3E%3Crect x='52' y='2' width='46' height='56' rx='3'/%3E%3Crect x='2' y='62' width='46' height='56' rx='3'/%3E%3Crect x='52' y='62' width='46' height='56' rx='3'/%3E%3C/g%3E%3C/svg%3E"); }
+html[data-sky="off"] .sky { display: none; }
+html[data-sky="night"] .sky { --sun: 170, 196, 255; }
+
+.sky-light { position: absolute; top: 4%; left: var(--sky-x, 60%); width: 78vmin; height: calc(92vmin * var(--sky-len, 1)); translate: -50% 0;
+  transform-origin: 50% 0; transform: skewX(var(--sky-skew, 0deg)) rotate(calc(var(--sky-skew, 0deg) * -.25));
+  background: linear-gradient(165deg, rgba(var(--sun), calc(.85 * var(--sky-power, .7))) 0%, rgba(var(--sun), calc(.35 * var(--sky-power, .7))) 55%, transparent 92%);
+  -webkit-mask: var(--sky-pane) center / 100% 100% no-repeat; mask: var(--sky-pane) center / 100% 100% no-repeat;
+  filter: blur(14px); opacity: .85; transition: left var(--dur-ambient) var(--ease), transform var(--dur-ambient) var(--ease), opacity var(--dur-ambient);
+  animation: sky-drift 46s ease-in-out infinite alternate; }
+html[data-theme="dark"] .sky-light { mix-blend-mode: screen; opacity: .4; }
+@keyframes sky-drift { from { translate: -51% 0; } to { translate: -49% 1.5%; } }
+
+/* warm sun at low angles, a halo behind the window light */
+.sky-bloom { position: absolute; top: -20%; left: var(--sky-x, 60%); width: 90vmin; height: 90vmin; translate: -50% 0; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 190, 110, calc(.30 * var(--sky-warm, 0) + .10)), transparent);
+  filter: blur(30px); transition: left var(--dur-ambient) var(--ease), opacity var(--dur-ambient); opacity: .8; }
+html[data-sky="night"] .sky-bloom { background: radial-gradient(closest-side, rgba(150, 180, 255, .16), transparent); }
+html[data-season="summer"][data-sky="day"] .sky-bloom { opacity: 1; width: 120vmin; height: 120vmin; animation: sky-shimmer 9s ease-in-out infinite alternate; }
+@keyframes sky-shimmer { from { filter: blur(30px) brightness(1); } to { filter: blur(36px) brightness(1.18); } }
+
+/* winter: frost grows in from the edges of the glass */
+.sky-frost { position: absolute; inset: 0; opacity: 0; transition: opacity var(--dur-ambient) var(--ease);
+  background: radial-gradient(ellipse at 50% 45%, transparent 52%, rgba(235, 245, 255, .34) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.018 .05' numOctaves='4' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.6 -.55'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23f)'/%3E%3C/svg%3E");
+  -webkit-mask: radial-gradient(ellipse at 50% 45%, transparent 48%, #000 100%); mask: radial-gradient(ellipse at 50% 45%, transparent 48%, #000 100%); }
+html[data-season="winter"] .sky-frost { opacity: .55; filter: blur(3px); }
+html[data-season="winter"][data-sky="night"] .sky-frost { opacity: .4; }
+
+.sky-fx { position: absolute; inset: 0; }
+html[data-season="winter"] .sky-light { --sun: 214, 232, 255; }
+html[data-season="summer"] .sky-light { --sun: 255, 226, 160; }
+
+@media (prefers-reduced-motion: reduce) { .sky-light, .sky-bloom { animation: none !important; } }

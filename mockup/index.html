@@ -17,10 +17,12 @@
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/overlays.css">
+<link rel="stylesheet" href="css/sky.css">
 </head>
 <body>
 <div id="device">
   <div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="sky" aria-hidden="true"><div class="sky-bloom"></div><div class="sky-light"></div><div class="sky-frost"></div><canvas class="sky-fx"></canvas></div>
   <div id="frame">
     <a class="skip" href="#view" data-action="skip">Skip</a>
     <header id="top" class="top acrylic thick"></header>
@@ -44,6 +46,7 @@
 <script src="js/core/actions.js"></script>
 <script src="js/ui/icons.js"></script>
 <script src="js/ui/ambient.js"></script>
+<script src="js/ui/sky.js"></script>
 <script src="js/ui/toast.js"></script>
 <script src="js/ui/overlay.js"></script>
 <script src="js/ui/components.js"></script>
