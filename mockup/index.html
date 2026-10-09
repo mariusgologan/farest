@@ -7,6 +7,10 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Design mockup for the FAR EST windows and doors webshop.">
 <meta name="theme-color" content="#005aab">
+<script>/* before the first paint: the attributes applyEnv() (js/app.js) sets from data/config.js layouts, so the frame, header and tab bar are laid out once and do not move when the app boots */
+(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem('farest.mock.v1'))||{}}catch(e){}
+var w=innerWidth,l=s.layout||'auto',e=l!=='auto'?l:w>=1100?'wide':w>=700?'regular':'compact',W={compact:420,regular:860,wide:1280};
+d.dataset.layout=l;d.dataset.eff=e;d.dataset.nav=e==='compact'?'tabs':'bar';d.style.setProperty('--cols',{compact:1,regular:2,wide:3}[e]);d.style.setProperty('--frame-w',l==='auto'?'100%':W[l]+'px');})();</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon.svg">
