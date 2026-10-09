@@ -12,8 +12,8 @@
       return FE.router.run();
     },
     async run() {
-      {
-        const path = FE.router.current();
+      const path = FE.router.current();
+      const render = async () => {
         const hit = table.map(r => [r, path.match(r.re)]).find(([, m]) => m);
         const [route, m] = hit || [table[0], [path]];
         const params = m.groups || {};
@@ -28,7 +28,8 @@
         FE.$('#frame').scrollTo({ top: 0 });
         document.title = FE.t('meta.title');
         FE.$('#view').focus({ preventScroll: true });
-      }
+      };
+      await (FE.motion ? FE.motion.navigate(path, render) : render());
     }
   };
 })();

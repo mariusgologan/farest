@@ -35,6 +35,9 @@
     ? `<rect x="${round(x + w / 2 - 8)}" y="${round(y + 4)}" width="16" height="3" rx="1.5" fill="rgb(40 40 40 / .75)"/>`
     : `<rect x="${round(hinge === 'L' ? x + w - 6 : x + 3)}" y="${round(y + ht / 2 - 8)}" width="3" height="16" rx="1.5" fill="rgb(40 40 40 / .78)"/>`;
 
+  /* a movable sash or door leaf is a group the configurator can swing (js/ui/motion.js); `origin` is the hinge edge */
+  const sash = (k, origin) => `<g class="sash" data-k="${k}" style="transform-box:fill-box;transform-origin:${origin}">`;
+
   /* window or balcony door leaves inside a box; item.side mirrors the pattern */
   const leaves = (item, b, id, col) => {
     const t = cfg.type(item.type);
@@ -45,9 +48,9 @@
     let out = `<rect x="${round(b.x)}" y="${round(b.y)}" width="${round(b.w)}" height="${round(b.h)}" rx="2" fill="${frameFill(col, id)}" stroke="rgb(0 0 0 / .32)"/>`;
     parts.forEach((p, i) => {
       const x = b.x + f + i * (cw + gap), mov = p.k !== 'fix', s = mov ? Math.min(6, cw * .06) : 0;
-      if (mov) out += `<rect x="${round(x)}" y="${round(top)}" width="${round(cw)}" height="${round(ht)}" fill="${frameFill(col, id)}" stroke="rgb(0 0 0 / .3)" stroke-width=".8"/>`;
+      if (mov) out += sash(p.k, p.k === 'kipp' ? 'center bottom' : p.h === 'L' ? 'left center' : 'right center') + `<rect x="${round(x)}" y="${round(top)}" width="${round(cw)}" height="${round(ht)}" fill="${frameFill(col, id)}" stroke="rgb(0 0 0 / .3)" stroke-width=".8"/>`;
       out += pane(x + s, top + s, cw - 2 * s, ht - 2 * s, item.glass, col, id);
-      if (mov) out += symbols(p.k, p.h, x + s, top + s, cw - 2 * s, ht - 2 * s) + handle(p.h, x + s, top + s, cw - 2 * s, ht - 2 * s, p.k);
+      if (mov) out += symbols(p.k, p.h, x + s, top + s, cw - 2 * s, ht - 2 * s) + handle(p.h, x + s, top + s, cw - 2 * s, ht - 2 * s, p.k) + '</g>';
     });
     if (sill) out += `<rect x="${round(b.x + f)}" y="${round(top + ht)}" width="${round(b.w - 2 * f)}" height="${sill}" fill="#8b929a"/>`;
     return out;
@@ -98,8 +101,8 @@
     if (t.leaves === 2) {
       const total = Number(item.width) || (t.limits.wmin + t.limits.wmax) / 2, pw = b.w * (t.pui / total), mw = b.w - pw;
       const mx = hinge === 'R' ? b.x + pw : b.x, px = hinge === 'R' ? b.x : b.x + mw;
-      out += doorLeaf({ ...item, glass: item.glass }, mx, b.y, mw, h, id, col, { main: true, hinge }) + doorLeaf(item, px, b.y, pw, h, id, col, { main: false, hinge: hinge === 'R' ? 'L' : 'R' });
-    } else out += doorLeaf(item, b.x, b.y, b.w, h, id, col, { main: true, hinge });
+      out += sash('door', hinge === 'L' ? 'left center' : 'right center') + doorLeaf({ ...item, glass: item.glass }, mx, b.y, mw, h, id, col, { main: true, hinge }) + '</g>' + doorLeaf(item, px, b.y, pw, h, id, col, { main: false, hinge: hinge === 'R' ? 'L' : 'R' });
+    } else out += sash('door', hinge === 'L' ? 'left center' : 'right center') + doorLeaf(item, b.x, b.y, b.w, h, id, col, { main: true, hinge }) + '</g>';
     return out + `<rect x="${round(b.x)}" y="${round(b.y + h)}" width="${round(b.w)}" height="${sill}" fill="${item.threshold === 'aluminium' ? '#aab1b8' : '#8b929a'}"/>`;
   };
 
