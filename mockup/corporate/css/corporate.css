@@ -212,3 +212,10 @@ html[data-eff="compact"] .c-shops tr { display: grid; gap: 2px; padding: var(--s
 html[data-eff="compact"] .c-shops th, html[data-eff="compact"] .c-shops td { display: block; padding: 0; border: 0; }
 html[data-eff="compact"] .c-shops td:last-child { margin-top: var(--s-2); }
 html[data-eff="compact"] .c-refs th, html[data-eff="compact"] .c-refs td { padding: var(--s-2) var(--s-3); }
+
+/* touch targets: 44px on coarse pointers, density unchanged elsewhere */
+@media (pointer: coarse) {
+  .u-bar a, .u-link, .u-lang button, .c-more, .m-link, .c-shops .btn.small, .c-docs a, .c-docs button { min-height: var(--hit); }
+  .u-lang button { min-width: var(--hit); }
+  .c-card li a, .c-card p a, .c-shops td a { display: inline-flex; align-items: center; min-height: var(--hit); }
+}
