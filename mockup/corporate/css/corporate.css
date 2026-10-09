@@ -223,8 +223,8 @@ html[data-eff="compact"] .c-refs th, html[data-eff="compact"] .c-refs td { paddi
 
 /* ---------- mica: large surfaces are a static, slightly tinted pane (no backdrop blur), fine grain, a 1px rim and a very soft shadow; radii and type stay corporate ---------- */
 @media screen {
-  html[data-skin="corporate"] { --cm-fill: color-mix(in srgb, var(--brand-soft) 70%, var(--surface)); --cm-rim: color-mix(in srgb, var(--line) 80%, #fff); --cm-shadow: 0 1px 2px rgb(15 30 50 / .06), 0 6px 18px rgb(15 30 50 / .05); --cm-noise: .22; }
-  html[data-skin="corporate"][data-theme="dark"] { --cm-fill: color-mix(in srgb, var(--brand-soft) 60%, var(--surface)); --cm-rim: rgb(255 255 255 / .1); --cm-shadow: 0 1px 2px rgb(0 0 0 / .4), 0 6px 18px rgb(0 0 0 / .25); --cm-noise: .3; }
+  html[data-skin="corporate"] { --cm-fill: color-mix(in srgb, var(--brand-soft) 58%, transparent); --cm-rim: color-mix(in srgb, var(--line) 80%, #fff); --cm-shadow: 0 1px 2px rgb(15 30 50 / .06), 0 6px 18px rgb(15 30 50 / .05); --cm-noise: .22; }
+  html[data-skin="corporate"][data-theme="dark"] { --cm-fill: color-mix(in srgb, var(--brand-soft) 58%, transparent); --cm-rim: rgb(255 255 255 / .1); --cm-shadow: 0 1px 2px rgb(0 0 0 / .4), 0 6px 18px rgb(0 0 0 / .25); --cm-noise: .3; }
   html[data-skin="corporate"] :is(.c-figs dl, .c-systems, .c-tiles, .c-why, .c-steps, .c-certs, .c-card, .c-config, .foot,
     .cfg-sec, .cfg-panel, .cfg-review, .cfg-project, .cfg-sum, .aside, .prose-band, .split-band, .prose-page) {
     position: relative; isolation: isolate; background: var(--cm-fill); border: 1px solid var(--cm-rim); border-radius: var(--r-lg); box-shadow: var(--cm-shadow); -webkit-backdrop-filter: none; backdrop-filter: none; transition: none; }
