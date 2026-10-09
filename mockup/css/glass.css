@@ -6,11 +6,47 @@
 :root[data-theme="dark"] { --edge-lit: 215 235 255;
   --acr-bg: rgb(30 42 56 / .50); --acr-bg-strong: rgb(20 30 42 / .72); --frost-a: rgb(255 255 255 / .16); --frost-b: rgb(255 255 255 / .05); }
 
-.acrylic { transition: --glint var(--dur-3) var(--ease), box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
-  -webkit-backdrop-filter: blur(40px) saturate(1.35) brightness(var(--frost-bright)); backdrop-filter: blur(40px) saturate(1.35) brightness(var(--frost-bright));
-  box-shadow: var(--e-2), inset 0 0 0 1px rgb(255 255 255 / .12), inset 0 0 22px rgb(255 255 255 / .08); }
-.acrylic.thick { -webkit-backdrop-filter: blur(58px) saturate(1.45) brightness(var(--frost-bright)); backdrop-filter: blur(58px) saturate(1.45) brightness(var(--frost-bright)); }
-.acrylic::before { opacity: calc(var(--noise-opacity) * 1.2); }
+/* Glass objects: a clear pane with depth. A tinted, mostly opaque body keeps text readable (AA over any photo); the frame carries the glass:
+   a bright rim (top and left brighter), a specular streak and corner glint, a bevel at the bottom edge, a faint colour split on the sides,
+   a crisp contact shadow under a soft ambient one. Blur stays light so the photo behind is still recognisable. */
+:root { --glass-blur: 16px; --glass-blur-thick: 20px; --glass-sat: 1.15;
+  --glass-fill: rgb(240 246 255 / .74); --glass-fill-strong: rgb(244 249 255 / .86);
+  --glass-hi: rgb(255 255 255 / .55); --glass-hi-soft: rgb(255 255 255 / .12); --glass-bevel: rgb(var(--shadow-rgb) / .16);
+  --glass-split-l: rgb(110 190 255 / .22); --glass-split-r: rgb(255 150 180 / .16);
+  --glass-rim-t: rgb(255 255 255 / .95); --glass-rim-l: rgb(255 255 255 / .8); --glass-rim-r: rgb(255 255 255 / .42); --glass-rim-b: rgb(255 255 255 / .3);
+  --glass-contact: 0 1px 1px rgb(var(--shadow-rgb) / .22), 0 2px 4px rgb(var(--shadow-rgb) / .1); }
+:root[data-theme="dark"] { --glass-fill: rgb(22 32 44 / .76); --glass-fill-strong: rgb(15 23 32 / .86);
+  --glass-hi: rgb(255 255 255 / .2); --glass-hi-soft: rgb(255 255 255 / .05); --glass-bevel: rgb(0 0 0 / .4);
+  --glass-split-l: rgb(110 190 255 / .2); --glass-split-r: rgb(255 150 180 / .14);
+  --glass-rim-t: rgb(255 255 255 / .42); --glass-rim-l: rgb(255 255 255 / .32); --glass-rim-r: rgb(255 255 255 / .14); --glass-rim-b: rgb(255 255 255 / .08);
+  --glass-contact: 0 1px 1px rgb(0 0 0 / .5), 0 2px 5px rgb(0 0 0 / .3); }
+
+.acrylic { --fill: var(--glass-fill); --blur: var(--glass-blur);
+  --glass-shadow: var(--glass-contact), var(--elev, var(--e-2)), inset 0 1px 0 var(--glass-hi), inset 1px 0 0 var(--glass-split-l), inset -1px 0 0 var(--glass-split-r), inset 0 -2px 3px -1px var(--glass-bevel);
+  transition: --glint var(--dur-3) var(--ease), box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+  border-color: var(--glass-rim-t) var(--glass-rim-r) var(--glass-rim-b) var(--glass-rim-l);
+  background: radial-gradient(circle at 0 0, var(--glass-hi) 0, transparent 26%) no-repeat,
+    linear-gradient(118deg, var(--glass-hi) 0, var(--glass-hi-soft) 22%, transparent 40%), var(--fill);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat)) brightness(var(--frost-bright)); backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat)) brightness(var(--frost-bright));
+  box-shadow: var(--glass-shadow); }
+.acrylic.thick { --fill: var(--glass-fill-strong); --blur: var(--glass-blur-thick);
+  background: radial-gradient(circle at 0 0, var(--glass-hi) 0, transparent 26%) no-repeat,
+    linear-gradient(118deg, var(--glass-hi) 0, var(--glass-hi-soft) 22%, transparent 40%), var(--fill); }
+.acrylic::before { opacity: calc(var(--noise-opacity) * .3); }
+.acrylic.e-1 { --elev: var(--e-1); } .acrylic.e-2 { --elev: var(--e-2); } .acrylic.e-3 { --elev: var(--e-3); } .acrylic.e-4 { --elev: var(--e-4); } .acrylic.e-5 { --elev: var(--e-5); }
+.acrylic.lift:hover { --elev: var(--e-4); box-shadow: var(--glass-shadow); }
+
+/* menus: a denser body under the labels, clear glass on the rim and the top highlight only */
+.top.acrylic, .tabs.acrylic { --glass-fill-strong: rgb(246 250 255 / .9); background: var(--fill); }
+:root[data-theme="dark"] .top.acrylic, :root[data-theme="dark"] .tabs.acrylic { --glass-fill-strong: rgb(13 20 27 / .9); }
+.top.acrylic { border-color: transparent transparent var(--glass-rim-b); --glass-shadow: var(--e-2), inset 0 1px 0 var(--glass-hi), inset 0 -2px 3px -1px var(--glass-bevel); }
+.tabs.acrylic { border-color: var(--glass-rim-t) transparent transparent; --glass-shadow: 0 -4px 16px rgb(var(--shadow-rgb) / var(--shadow-a)), inset 0 1px 0 var(--glass-hi); }
+
+/* no transparency wanted, or more contrast: solid fill, no blur, no sheen */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .acrylic, .acrylic.thick, .top.acrylic, .tabs.acrylic { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; border-color: var(--line); }
+  .acrylic::before { display: none; }
+}
 
 /* edge light: a ring that only lights up near the pointer */
 .acrylic::after, .navlink::after, .tab::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: var(--rim-w); pointer-events: none; z-index: 2;
@@ -32,6 +68,3 @@
 .navlink[data-lit], .tab[data-lit] { transition: background var(--dur-1), color var(--dur-1), --glint 250ms ease-out; }
 @media (prefers-reduced-motion: reduce) { .acrylic, .navlink, .tab { transition: none !important; } }
 
-/* header and tabs sit over photos while scrolling: keep them dense enough for text */
-.top.acrylic, .tabs.acrylic { --acr-bg-strong: rgb(255 255 255 / .88); }
-:root[data-theme="dark"] .top.acrylic, :root[data-theme="dark"] .tabs.acrylic { --acr-bg-strong: rgb(13 20 27 / .9); }
