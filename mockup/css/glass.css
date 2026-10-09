@@ -6,40 +6,34 @@
 :root[data-theme="dark"] { --edge-lit: 215 235 255;
   --acr-bg: rgb(30 42 56 / .50); --acr-bg-strong: rgb(20 30 42 / .72); --frost-a: rgb(255 255 255 / .16); --frost-b: rgb(255 255 255 / .05); }
 
-/* Glass objects: a clear pane with depth. A tinted, mostly opaque body keeps text readable (AA over any photo); the frame carries the glass:
-   a bright rim (top and left brighter), a specular streak and corner glint, a bevel at the bottom edge, a faint colour split on the sides,
-   a crisp contact shadow under a soft ambient one. Blur stays light so the photo behind is still recognisable. */
-:root { --glass-blur: 16px; --glass-blur-thick: 20px; --glass-sat: 1.15;
-  --glass-fill: rgb(240 246 255 / .74); --glass-fill-strong: rgb(244 249 255 / .86);
-  --glass-hi: rgb(255 255 255 / .55); --glass-hi-soft: rgb(255 255 255 / .12); --glass-bevel: rgb(var(--shadow-rgb) / .16);
-  --glass-split-l: rgb(110 190 255 / .22); --glass-split-r: rgb(255 150 180 / .16);
-  --glass-rim-t: rgb(255 255 255 / .95); --glass-rim-l: rgb(255 255 255 / .8); --glass-rim-r: rgb(255 255 255 / .42); --glass-rim-b: rgb(255 255 255 / .3);
-  --glass-contact: 0 1px 1px rgb(var(--shadow-rgb) / .22), 0 2px 4px rgb(var(--shadow-rgb) / .1); }
-:root[data-theme="dark"] { --glass-fill: rgb(22 32 44 / .76); --glass-fill-strong: rgb(15 23 32 / .86);
-  --glass-hi: rgb(255 255 255 / .2); --glass-hi-soft: rgb(255 255 255 / .05); --glass-bevel: rgb(0 0 0 / .4);
-  --glass-split-l: rgb(110 190 255 / .2); --glass-split-r: rgb(255 150 180 / .14);
-  --glass-rim-t: rgb(255 255 255 / .42); --glass-rim-l: rgb(255 255 255 / .32); --glass-rim-r: rgb(255 255 255 / .14); --glass-rim-b: rgb(255 255 255 / .08);
-  --glass-contact: 0 1px 1px rgb(0 0 0 / .5), 0 2px 5px rgb(0 0 0 / .3); }
+/* Frosted glass: a uniform translucent pane. Heavy blur diffuses whatever is behind, a flat neutral tint (no gradient) keeps text at AA over the
+   brightest and darkest backdrops, fine grain gives the frosted texture, a 1px rim (a touch brighter on top) and an inner highlight line
+   define the edge, and a tight contact shadow sits under the soft ambient one. */
+:root { --glass-blur: 26px; --glass-blur-thick: 30px; --glass-sat: 1.1;
+  --glass-fill: rgb(244 248 252 / .8); --glass-fill-strong: rgb(246 249 253 / .88);
+  --glass-hi: rgb(255 255 255 / .55); --glass-rim: rgb(255 255 255 / .7); --glass-rim-t: rgb(255 255 255 / .95);
+  --glass-contact: 0 1px 2px rgb(var(--shadow-rgb) / .2); }
+:root[data-theme="dark"] { --glass-fill: rgb(20 29 40 / .8); --glass-fill-strong: rgb(14 21 30 / .88);
+  --glass-hi: rgb(255 255 255 / .08); --glass-rim: rgb(255 255 255 / .14); --glass-rim-t: rgb(255 255 255 / .26);
+  --glass-contact: 0 1px 2px rgb(0 0 0 / .5); }
 
 .acrylic { --fill: var(--glass-fill); --blur: var(--glass-blur);
-  --glass-shadow: var(--glass-contact), var(--elev, var(--e-2)), inset 0 1px 0 var(--glass-hi), inset 1px 0 0 var(--glass-split-l), inset -1px 0 0 var(--glass-split-r), inset 0 -2px 3px -1px var(--glass-bevel);
+  --glass-shadow: var(--glass-contact), var(--elev, var(--e-2)), inset 0 1px 0 var(--glass-hi);
   transition: --glint var(--dur-3) var(--ease), box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
-  border-color: var(--glass-rim-t) var(--glass-rim-r) var(--glass-rim-b) var(--glass-rim-l);
-  background: radial-gradient(circle at 0 0, var(--glass-hi) 0, transparent 26%) no-repeat,
-    linear-gradient(118deg, var(--glass-hi) 0, var(--glass-hi-soft) 22%, transparent 40%), var(--fill);
-  -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat)) brightness(var(--frost-bright)); backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat)) brightness(var(--frost-bright));
+  border-color: var(--glass-rim-t) var(--glass-rim) var(--glass-rim) var(--glass-rim);
+  background: var(--fill);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat)); backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat));
   box-shadow: var(--glass-shadow); }
-.acrylic.thick { --fill: var(--glass-fill-strong); --blur: var(--glass-blur-thick);
-  background: radial-gradient(circle at 0 0, var(--glass-hi) 0, transparent 26%) no-repeat,
-    linear-gradient(118deg, var(--glass-hi) 0, var(--glass-hi-soft) 22%, transparent 40%), var(--fill); }
+.acrylic.thick { --fill: var(--glass-fill-strong); --blur: var(--glass-blur-thick); background: var(--fill);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat)); backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat)); }
 .acrylic::before { opacity: calc(var(--noise-opacity) * .3); }
 .acrylic.e-1 { --elev: var(--e-1); } .acrylic.e-2 { --elev: var(--e-2); } .acrylic.e-3 { --elev: var(--e-3); } .acrylic.e-4 { --elev: var(--e-4); } .acrylic.e-5 { --elev: var(--e-5); }
 .acrylic.lift:hover { --elev: var(--e-4); box-shadow: var(--glass-shadow); }
 
-/* menus: a denser body under the labels, clear glass on the rim and the top highlight only */
-.top.acrylic, .tabs.acrylic { --glass-fill-strong: rgb(246 250 255 / .9); background: var(--fill); }
-:root[data-theme="dark"] .top.acrylic, :root[data-theme="dark"] .tabs.acrylic { --glass-fill-strong: rgb(13 20 27 / .9); }
-.top.acrylic { border-color: transparent transparent var(--glass-rim-b); --glass-shadow: var(--e-2), inset 0 1px 0 var(--glass-hi), inset 0 -2px 3px -1px var(--glass-bevel); }
+/* menus: the same pane, denser under the labels, rim on the free edge only */
+.top.acrylic, .tabs.acrylic { --glass-fill-strong: rgb(246 249 253 / .92); }
+:root[data-theme="dark"] .top.acrylic, :root[data-theme="dark"] .tabs.acrylic { --glass-fill-strong: rgb(13 20 27 / .92); }
+.top.acrylic { border-color: transparent transparent var(--glass-rim); --glass-shadow: var(--e-2), inset 0 1px 0 var(--glass-hi); }
 .tabs.acrylic { border-color: var(--glass-rim-t) transparent transparent; --glass-shadow: 0 -4px 16px rgb(var(--shadow-rgb) / var(--shadow-a)), inset 0 1px 0 var(--glass-hi); }
 
 /* no transparency wanted, or more contrast: solid fill, no blur, no sheen */
