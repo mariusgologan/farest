@@ -10,3 +10,30 @@
   .btn:active { transform: none; }
 }
 #c-bar .price { display: inline-block; }
+
+/* ---------- scroll-linked effects: CSS scroll-driven animations, no JS; the scroller is #frame ---------- */
+@supports (animation-timeline: view()) {
+  #frame { scroll-timeline: --frame block; }
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes logo-shrink { to { transform: scale(.86); } }
+    @keyframes hero-drift { from { transform: scale(1.1) translateY(0); } to { transform: scale(1.1) translateY(5%); } }
+    @keyframes art-drift { to { transform: translateY(18px); } }
+    @keyframes sec-in { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+    #top .logo { transform-origin: left center; animation: logo-shrink linear both; animation-timeline: scroll(nearest); animation-range: 0 120px; }
+    .hero-photo { animation: hero-drift linear both; animation-timeline: --frame; animation-range: 0 500px; }
+    .c-hero-art { animation: art-drift linear both; animation-timeline: scroll(nearest); animation-range: 0 500px; }
+    #view > section:not(.hero), .c-sec { animation: sec-in linear both; animation-timeline: view(); animation-range: entry 0% entry 35%; }
+  }
+}
+
+/* ---------- tilt on fine pointers (js/ui/motion.js sets the transform) ---------- */
+.tilt { transition: transform 160ms ease-out; will-change: transform; }
+
+/* ---------- loading: shimmer on the price card, and a block while a view waits for its data ---------- */
+@keyframes shimmer-sweep { to { background-position: -200% 0; } }
+.cfg-loading { background: linear-gradient(100deg, var(--acr-bg) 30%, var(--acr-bg-strong) 50%, var(--acr-bg) 70%) 0 0 / 200% 100%; animation: shimmer-sweep 1.4s linear infinite; }
+#view[aria-busy="true"]:empty::before { content: ""; display: block; min-height: 360px; border-radius: var(--r-lg); background: linear-gradient(100deg, var(--acr-bg) 30%, var(--acr-bg-strong) 50%, var(--acr-bg) 70%) 0 0 / 200% 100%; animation: shimmer-sweep 1.4s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .cfg-loading, #view[aria-busy="true"]:empty::before { animation: none; } }
+
+/* ---------- colour-matched accent on the product page (--accent-hint is set from the main photo, contrast-clamped) ---------- */
+.buybox a:not(.btn), .pdp-spec a:not(.btn) { color: var(--accent-hint, var(--brand)); }
