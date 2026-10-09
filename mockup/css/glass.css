@@ -20,8 +20,16 @@
   filter: drop-shadow(0 0 3px rgb(var(--edge-lit) / calc(var(--glint) * .7))); }
 
 /* menu items: a smaller rim; --glint is reset per item so it does not inherit the bar's value */
-.navlink, .tab { position: relative; --glint: 0; --edge-reach: 100px; transition: background var(--dur-1), color var(--dur-1), --glint var(--dur-3) var(--ease); }
+.navlink, .tab { position: relative; --glint: 0; --edge-reach: 70px; transition: background var(--dur-1), color var(--dur-1), --glint var(--dur-3) var(--ease); }
 .navlink::after, .tab::after { z-index: 0; }
+/* menus: a softer edge light (peak about 40% of the cards', long tail, 1px rim, short glow); it fades in over 250ms and out over 800ms (data-lit is set by glass.js while the pointer is near) */
+.top::after, .tabs::after, .panel::after, .navlink::after, .tab::after { padding: 1px;
+  background: radial-gradient(calc(var(--edge-reach) * 1.5) circle at var(--mx, 50%) var(--my, 50%), rgb(var(--edge-lit) / calc(var(--glint) * .4)) 0%, rgb(var(--edge-lit) / calc(var(--glint) * .22)) 40%, rgb(var(--edge-lit) / calc(var(--glint) * .07)) 72%, transparent 100%);
+  filter: drop-shadow(0 0 2px rgb(var(--edge-lit) / calc(var(--glint) * .25))); }
+.top.acrylic, .tabs.acrylic, .panel.acrylic { transition: --glint 800ms ease-out, box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease); }
+.top.acrylic[data-lit], .tabs.acrylic[data-lit], .panel.acrylic[data-lit] { transition: --glint 250ms ease-out, box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease); }
+.navlink, .tab { transition: background var(--dur-1), color var(--dur-1), --glint 800ms ease-out; }
+.navlink[data-lit], .tab[data-lit] { transition: background var(--dur-1), color var(--dur-1), --glint 250ms ease-out; }
 @media (prefers-reduced-motion: reduce) { .acrylic, .navlink, .tab { transition: none !important; } }
 
 /* header and tabs sit over photos while scrolling: keep them dense enough for text */
