@@ -1,63 +1,95 @@
-/* Corporate home: restrained, structured company page. Replaces FE.views.home; every other view is shared with the default app. */
+/* Corporate home: a manufacturer's company page. Replaces FE.views.home; every other view is shared with the default app.
+   Company figures come from the strings in skin.js (the company's own claims); counts and K values are computed from the catalogue. */
 (() => {
-  const { h, raw, t, money, icon, ui } = FE;
+  const { h, t, icon } = FE;
   const set = (host, tpl) => { host.innerHTML = tpl.toString(); };
+  const list = key => FE.content[FE.store.get('lang')].corp[key];
+  const sec = (cls, id, inner) => h`<section class="c-sec ${cls}" aria-labelledby="${id}"><div class="wrap">${inner}</div></section>`;
+  const head = (id, title, lead) => h`<header class="c-head"><h2 id="${id}">${title}</h2>${lead ? h`<p class="muted">${lead}</p>` : ''}</header>`;
+  const tel = s => String(s).replace(/\s/g, '');
+
+  /* K of finished products (W/m²K) per profile, from the catalogue; premium systems carry the published Ug range instead */
+  function thermal(p) {
+    const k = FE.db.products.filter(x => x.profile === p.id && x.uf).map(x => +x.uf);
+    if (k.length) return `K ${FE.num(Math.min(...k))}–${FE.num(Math.max(...k))}`;
+    return p.tier >= 2 ? `Ug ${FE.num(1)}${FE.store.get('lang') === 'ro' ? ',0' : '.0'}–${FE.num(1.3)}` : '–';
+  }
 
   FE.views.home = async host => {
-    const [{ data: w }, { data: faq }, { data: shops }, { data: cats }] = await Promise.all(['/welcome', '/faq', '/shops', '/categories'].map(u => FE.api.get(u)));
-    const m = w.meta, site = FE.data.site, systems = FE.db.profiles.filter(p => p.site);
-    const COLS = ['system', 'thickness', 'chambers', ...(systems.some(p => p.uf != null) ? ['thermal'] : [])];
+    const { data: w } = await FE.api.get('/welcome'), m = w.meta, site = FE.data.site, c = list('figures');
+    FE.ambient.page = null; FE.ambient.setPicture(null);
+    const fig = [[c.since, FE.config.brand.since], [c.factory, FE.config.brand.factory], [c.glass, FE.num(1000) + '+'], [c.dealers, 61], [c.warranty, 5]];
     const count = id => FE.db.products.filter(p => p.cat === id).length;
     const photoOf = id => FE.db.products.find(p => p.cat === id && p.images[0])?.images[0].src;
-    const metrics = [
-      ['since', FE.config.brand.since, true], ['factory', FE.config.brand.factory, true], ['shops', shops.length],
-      ['brands', systems.length], ['range', FE.db.products.length]];
-    FE.ambient.page = null; FE.ambient.setPicture(null);
-    set(host, h`
-      <section class="c-hero">
+    set(host, h`<div class="c-home">
+      <section class="c-hero"><div class="wrap">
         <div class="c-hero-copy">
-          <p class="c-kicker">${t('corp.kicker')} · ${m.eyebrow}</p>
+          <p class="c-kicker">${m.eyebrow}</p>
           <h1>${m.title}</h1>
           <p class="lead">${m.lead}</p>
-          <div class="row">
-            <a class="btn primary lg" href="#/calculator">${t('corp.offer')}</a>
-            <button class="btn ghost lg" data-action="callback">${icon('phone', 20)} ${m.cta_secondary}</button>
-          </div>
+          <div class="row"><a class="btn primary lg" href="#/calculator">${t('corp.offer')}</a><button type="button" class="btn ghost lg" data-action="callback">${icon('phone', 20)} ${t('corp.hero.cta2')}</button></div>
         </div>
-        ${site.hero ? h`<figure class="c-hero-art"><img src="${site.hero}" alt=""></figure>` : ''}
-      </section>
-      <section class="c-metrics" aria-label="${t('corp.kicker')}">${metrics.map(([k, v, year]) => h`<div><b>${year ? v : FE.num(v)}</b><span>${t(`corp.metrics.${k}`)}</span></div>`)}</section>
-      <section class="c-section">
-        <header class="c-head"><h2>${t('corp.range.title')}</h2><p class="muted">${t('corp.range.lead')}</p></header>
-        <div class="c-range">${cats.map(c => h`<a class="c-line" href="#/c/${c.id}">
-          ${photoOf(c.id) ? h`<img src="${photoOf(c.id)}" alt="" loading="lazy">` : ''}
-          <div><h3>${t(`cat.${c.id}.title`)}</h3><p class="muted">${t(`cat.${c.id}.lead`)}</p></div>
-          <span class="c-more">${t('corp.range.items', { n: count(c.id) })} · ${t('corp.range.see')} ${icon('chevron', 16)}</span></a>`)}</div>
-      </section>
-      <section class="c-section">
-        <header class="c-head"><h2>${t('corp.systems.title')}</h2><p class="muted">${t('corp.systems.lead')}</p></header>
-        <div class="c-table c-systems" data-cols="${COLS.length}">
-          <div class="c-tr c-th" aria-hidden="true">${COLS.map(c => h`<span>${t(`corp.systems.${c}`)}</span>`)}</div>
-          ${systems.map(p => h`<button class="c-tr" data-action="open-profile" data-id="${p.id}">
-            <span><b>${p.name}</b><small class="muted">${t(p.blurb)}</small></span>
-            <span>${p.mm ? `${p.mm} mm` : '–'}</span><span>${p.chambers ?? '–'}</span>${COLS.includes('thermal') ? h`<span>${p.uf != null ? FE.num(p.uf) : '–'}</span>` : ''}</button>`)}
-        </div>
-      </section>
-      <section class="c-section c-split">
-        <div><h2>${t('corp.production.title')}</h2><div class="prose">${raw(w.html)}</div></div>
-        ${site.factory ? h`<figure class="c-photo"><img src="${site.factory}" alt="" loading="lazy"></figure>` : ''}
-      </section>
-      <section class="c-section">
-        <header class="c-head"><h2>${t('corp.locations.title')}</h2><p class="muted">${t('corp.locations.lead')}</p></header>
-        <div class="c-table c-locations">
-          <div class="c-tr c-th"><span>${t('corp.locations.title')}</span><span>${t('corp.locations.address')}</span><span>${t('corp.locations.phone')}</span><span></span></div>
-          ${shops.map(sh => h`<div class="c-tr"><span><b>${FE.loc(sh.name)}</b></span><span>${FE.loc(sh.address)}</span>
-            <span><a href="tel:${sh.phone.replace(/\s/g, '')}">${sh.phone}</a></span>
-            <span class="row"><button class="btn ghost small" data-action="map" data-id="${sh.id}">${icon('pin', 16)} ${t('shops.map')}</button></span></div>`)}
-        </div>
-      </section>
-      <section class="c-section"><h2>${t('home.faq')}</h2><div class="faq">${faq.map(f => h`<details><summary>${FE.loc(f.q)}</summary><p class="muted">${FE.loc(f.a)}</p></details>`)}</div></section>
-      <section class="c-cta"><div><h2>${t('corp.cta.title')}</h2><p>${t('corp.cta.lead')}</p></div>
-        <div class="row"><a class="btn primary lg" href="#/calculator">${t('corp.offer')}</a><button class="btn ghost lg" data-action="callback">${icon('phone', 20)} ${m.cta_secondary}</button></div></section>`);
+        <svg class="c-hero-art" viewBox="0 0 320 360" aria-hidden="true" focusable="false">
+          <rect x="20" y="20" width="280" height="320" rx="6" fill="#f4f6f8"/>
+          <rect x="36" y="36" width="248" height="288" fill="#cfe0ef"/>
+          <path d="M36 36h248L36 324z" fill="#fff" opacity=".28"/>
+          <rect x="36" y="36" width="124" height="288" fill="none" stroke="#f4f6f8" stroke-width="12"/>
+          <rect x="160" y="36" width="124" height="288" fill="none" stroke="#f4f6f8" stroke-width="12"/>
+          <path d="M48 48l100 134L48 312M272 48L172 180l100 132" fill="none" stroke="#0f2a43" stroke-width="2" opacity=".45"/>
+          <rect x="146" y="170" width="28" height="10" rx="2" fill="#0f2a43"/>
+          <rect x="20" y="20" width="280" height="320" rx="6" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2"/>
+        </svg></div></section>
+      <section class="c-figs" aria-label="${m.eyebrow}"><div class="wrap"><dl>${fig.map(([k, v]) => h`<div><dt>${k}</dt><dd>${v}</dd></div>`)}</dl><p class="small">${t('corp.hero.note')}</p></div></section>
+
+      ${sec('', 'h-sys', h`${head('h-sys', t('corp.systems.title'), t('corp.systems.lead'))}
+        <div class="c-systems">${FE.db.profiles.map(p => h`<article class="c-sys${p.tier >= 3 ? ' premium' : ''}">
+          ${site.systems?.[p.site] ? h`<img src="${site.systems[p.site]}" alt="" loading="lazy">` : ''}
+          <div class="c-sys-body"><h3>${p.name}${p.tier >= 3 ? h` <span class="c-tag">${t('corp.systems.premium')}</span>` : ''}</h3>
+            <p class="muted small">${t(p.blurb)}</p>
+            <dl class="c-spec"><div><dt>${t('corp.systems.depth')}</dt><dd>${p.mm ? p.mm + ' mm' : '–'}</dd></div><div><dt>${t('corp.systems.chambers')}</dt><dd>${p.chambers ?? '–'}</dd></div><div><dt>${t('corp.systems.seals')}</dt><dd>${p.seals ?? '–'}</dd></div><div><dt>${t('corp.systems.thermal')}</dt><dd>${thermal(p)}</dd></div></dl>
+            <button type="button" class="c-more" data-action="open-profile" data-id="${p.id}">${t('corp.systems.sheet')} ${icon('chevron', 16)}</button></div></article>`)}</div>
+        <p class="muted small">${t('corp.systems.note')}</p>`)}
+
+      ${sec('alt', 'h-range', h`${head('h-range', t('corp.range.title'))}
+        <div class="c-tiles">${FE.db.categories.map(k => h`<a class="c-tile" href="#/c/${k.id}">
+          ${photoOf(k.id) ? h`<img src="${photoOf(k.id)}" alt="" loading="lazy">` : ''}
+          <div><h3>${t(`cat.${k.id}.title`)}</h3><p class="muted small">${t(`cat.${k.id}.lead`)}</p>
+          <span class="c-more">${t('corp.range.items', { n: count(k.id) })} · ${t('corp.range.see')} ${icon('chevron', 16)}</span></div></a>`)}</div>`)}
+
+      ${sec('band', 'h-cfg', h`<div class="c-config"><div><h2 id="h-cfg">${t('corp.config.title')}</h2><p>${t('corp.config.lead')}</p><a class="btn primary lg" href="#/calculator">${t('corp.config.open')}</a></div>
+        <ul>${list('config').list.map(x => h`<li>${icon('check', 20)}<span>${x}</span></li>`)}</ul></div>`)}
+
+      ${sec('', 'h-why', h`${head('h-why', t('corp.why.title'))}
+        <ul class="c-why">${list('why').items.map(([i, ti, li]) => h`<li>${icon(i, 28)}<h3>${ti}</h3><p class="muted small">${li}</p></li>`)}</ul>`)}
+
+      ${sec('alt', 'h-cert', h`${head('h-cert', t('corp.certs.title'))}
+        <ul class="c-certs">${list('certs').items.map(([a, b]) => h`<li><b>${a}</b><span class="muted small">${b}</span></li>`)}</ul>`)}
+
+      ${sec('', 'h-proc', h`${head('h-proc', t('corp.process.title'))}
+        <ol class="c-steps">${list('process').steps.map(([a, b]) => h`<li><h3>${a}</h3><p class="muted small">${b}</p></li>`)}</ol>`)}
+
+      ${sec('alt', 'h-refs', h`${head('h-refs', t('corp.refs.title'))}
+        <table class="c-refs"><thead><tr><th scope="col">${t('corp.refs.col.name')}</th><th scope="col">${t('corp.refs.col.what')}</th><th scope="col">${t('corp.refs.col.since')}</th></tr></thead>
+          <tbody>${list('refs').rows.map(([a, b, s]) => h`<tr><th scope="row">${a}</th><td>${b}</td><td>${s}</td></tr>`)}</tbody></table>`)}
+
+      ${sec('', 'h-docs', h`${head('h-docs', t('corp.docs.title'))}
+        <ul class="c-docs">
+          <li><a href="#/page/warranty"><span class="c-tag">${t('corp.docs.type.page')}</span><span>${t('corp.docs.warranty')}</span>${icon('chevron', 16)}</a></li>
+          <li><a href="#/page/about"><span class="c-tag">${t('corp.docs.type.page')}</span><span>${t('corp.docs.about')}</span>${icon('chevron', 16)}</a></li>
+          <li><a href="#/calculator/summary"><span class="c-tag">${t('corp.docs.type.pdf')}</span><span>${t('corp.docs.summary')}</span>${icon('chevron', 16)}</a></li>
+          ${FE.db.profiles.filter(p => p.tier >= 3).map(p => h`<li><button type="button" data-action="open-profile" data-id="${p.id}"><span class="c-tag">${t('corp.docs.type.sheet')}</span><span>${t('corp.docs.systemSheet', { name: p.name })}</span>${icon('chevron', 16)}</button></li>`)}
+        </ul>`)}
+
+      ${sec('alt', 'h-contact', h`${head('h-contact', t('corp.contact.title'), t('corp.contact.lead'))}
+        <div class="c-contact">
+          <div class="c-card"><h3>${t('corp.contact.callcenter')}</h3><ul>${FE.db.callCenter.map(n => h`<li><a href="tel:${tel(n)}">${n}</a></li>`)}</ul><p class="muted small">${t('phone.hours')}</p>
+            <h3>${t('corp.contact.service')}</h3><p><a href="tel:${tel(FE.db.service)}">${FE.db.service}</a></p>
+            <button type="button" class="btn primary" data-action="callback">${icon('phone', 18)} ${t('corp.hero.cta2')}</button></div>
+          <table class="c-shops"><caption class="sr-only">${t('corp.contact.shops')}</caption>
+            <thead><tr><th scope="col">${t('corp.contact.shops')}</th><th scope="col">${t('corp.contact.address')}</th><th scope="col">${t('corp.contact.phone')}</th><th scope="col"><span class="sr-only">${t('shops.map')}</span></th></tr></thead>
+            <tbody>${FE.db.shops.map(s => h`<tr><th scope="row">${FE.loc(s.name)}</th><td>${FE.loc(s.address)}</td><td><a href="tel:${tel(s.phone)}">${s.phone}</a></td>
+              <td><button type="button" class="btn ghost small" data-action="map" data-id="${s.id}">${icon('pin', 16)} ${t('shops.map')}</button></td></tr>`)}</tbody></table>
+        </div>`)}
+    </div>`);
   };
 })();
