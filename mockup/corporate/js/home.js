@@ -36,11 +36,11 @@
       </section>
       <section class="c-section">
         <header class="c-head"><h2>${t('corp.systems.title')}</h2><p class="muted">${t('corp.systems.lead')}</p></header>
-        <div class="c-table c-systems" role="table" data-cols="${COLS.length}">
-          <div class="c-tr c-th" role="row">${COLS.map(c => h`<span role="columnheader">${t(`corp.systems.${c}`)}</span>`)}</div>
-          ${systems.map(p => h`<button class="c-tr" role="row" data-action="open-profile" data-id="${p.id}">
-            <span role="cell"><b>${p.name}</b><small class="muted">${t(p.blurb)}</small></span>
-            <span role="cell">${p.mm ? `${p.mm} mm` : '–'}</span><span role="cell">${p.chambers ?? '–'}</span>${COLS.includes('thermal') ? h`<span role="cell">${p.uf != null ? FE.num(p.uf) : '–'}</span>` : ''}</button>`)}
+        <div class="c-table c-systems" data-cols="${COLS.length}">
+          <div class="c-tr c-th" aria-hidden="true">${COLS.map(c => h`<span>${t(`corp.systems.${c}`)}</span>`)}</div>
+          ${systems.map(p => h`<button class="c-tr" data-action="open-profile" data-id="${p.id}">
+            <span><b>${p.name}</b><small class="muted">${t(p.blurb)}</small></span>
+            <span>${p.mm ? `${p.mm} mm` : '–'}</span><span>${p.chambers ?? '–'}</span>${COLS.includes('thermal') ? h`<span>${p.uf != null ? FE.num(p.uf) : '–'}</span>` : ''}</button>`)}
         </div>
       </section>
       <section class="c-section c-split">

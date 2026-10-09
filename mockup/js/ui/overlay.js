@@ -57,9 +57,9 @@
       el.dataset.kind = kind; el.dataset.size = size; el.dataset.layer = id;
       el.innerHTML = `<div class="scrim" data-action="overlay-scrim"></div>
         <section class="panel acrylic thick e-5" role="${kind === 'popover' ? 'dialog' : 'dialog'}" aria-modal="${kind !== 'popover'}" aria-labelledby="${id}-t">
-          <header class="panel-head"><nav class="crumbs" aria-label="${FE.esc(FE.t('a11y.path'))}"></nav>
+          <div class="panel-head"><nav class="crumbs" aria-label="${FE.esc(FE.t('a11y.path'))}"></nav>
             <h2 id="${id}-t" class="panel-title">${FE.esc(title)}</h2>
-            <button class="icon-btn" data-action="overlay-close" data-layer="${id}" aria-label="${FE.esc(FE.t('a11y.close'))}">${FE.icon('close')}</button></header>
+            <button class="icon-btn" data-action="overlay-close" data-layer="${id}" aria-label="${FE.esc(FE.t('a11y.close'))}">${FE.icon('close')}</button></div>
           <div class="panel-body"></div></section>`;
       let resolve; const closed = new Promise(r => resolve = r);
       const layer = { id, kind, title, el, resolve, restore: document.activeElement };

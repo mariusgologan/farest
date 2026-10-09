@@ -13,11 +13,16 @@
 .acrylic::before { opacity: calc(var(--noise-opacity) * 1.2); }
 
 /* edge light: a ring that only lights up near the pointer */
-.acrylic:not(.top):not(.tabs):not(.panel)::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: var(--rim-w); pointer-events: none; z-index: 2;
+.acrylic::after, .navlink::after, .tab::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: var(--rim-w); pointer-events: none; z-index: 2;
   background: radial-gradient(var(--edge-reach) circle at var(--mx, 50%) var(--my, 50%), rgb(var(--edge-lit) / calc(var(--glint) * 1)) 0%, rgb(var(--edge-lit) / calc(var(--glint) * .45)) 50%, transparent 100%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
   filter: drop-shadow(0 0 3px rgb(var(--edge-lit) / calc(var(--glint) * .7))); }
+
+/* menu items: a smaller rim; --glint is reset per item so it does not inherit the bar's value */
+.navlink, .tab { position: relative; --glint: 0; --edge-reach: 100px; transition: background var(--dur-1), color var(--dur-1), --glint var(--dur-3) var(--ease); }
+.navlink::after, .tab::after { z-index: 0; }
+@media (prefers-reduced-motion: reduce) { .acrylic, .navlink, .tab { transition: none !important; } }
 
 /* header and tabs sit over photos while scrolling: keep them dense enough for text */
 .top.acrylic, .tabs.acrylic { --acr-bg-strong: rgb(255 255 255 / .88); }
