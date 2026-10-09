@@ -41,7 +41,7 @@
   --acr-tint: rgb(0 90 171 / .06);
   --scrim: rgb(14 24 36 / .38);
   --shadow-rgb: 16 40 70; --shadow-a: .14;
-  --amb-opacity: .42;
+  --amb-opacity: .6;
   --noise-opacity: .16;
 }
 :root[data-theme="dark"] {
@@ -54,7 +54,7 @@
   --acr-tint: rgb(90 168 240 / .08);
   --scrim: rgb(0 0 0 / .55);
   --shadow-rgb: 0 0 0; --shadow-a: .5;
-  --amb-opacity: .29;
+  --amb-opacity: .45;
   --noise-opacity: .2;
   --ok: #7fdc9a; --warn: #e0b04a; --err: #ff8a80; --logo-red: #ff9aa2;
 }
