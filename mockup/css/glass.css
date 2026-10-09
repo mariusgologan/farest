@@ -60,12 +60,16 @@
 :root { --fade-tint: 246 248 250; --fade-h: 30px; } :root[data-theme="dark"] { --fade-tint: 13 20 27; }
 @media screen {
   #frame::before, #frame::after { content: ""; display: none; position: fixed; left: 0; right: 0; height: var(--fade-h); pointer-events: none; z-index: calc(var(--z-nav) - 1);
-    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: opacity var(--dur-bars) var(--ease-ambient); }
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: opacity var(--dur-bars) var(--ease-ambient), transform var(--dur-bars) var(--ease-ambient), visibility 0s; }
   #frame::before { display: block; top: var(--top-h, 61px); background: linear-gradient(to bottom, rgb(var(--fade-tint) / .6), transparent);
     -webkit-mask-image: linear-gradient(to bottom, #000 10%, transparent); mask-image: linear-gradient(to bottom, #000 10%, transparent); }
   html[data-nav="tabs"] #frame::after { display: block; bottom: var(--tabs-h, 57px); background: linear-gradient(to top, rgb(var(--fade-tint) / .6), transparent);
     -webkit-mask-image: linear-gradient(to top, #000 10%, transparent); mask-image: linear-gradient(to top, #000 10%, transparent); }
-  html[data-bars="hidden"] #frame::before, html[data-bars="hidden"] #frame::after { opacity: 0; }
+  /* hidden: the layer leaves with its bar (same transform, opacity, duration and easing) and is switched off only once the slide is done, so no band is left behind */
+  html[data-bars="hidden"] #frame::before, html[data-bars="hidden"] #frame::after { opacity: 0; visibility: hidden;
+    transition: opacity var(--dur-bars) var(--ease-ambient), transform var(--dur-bars) var(--ease-ambient), visibility 0s linear var(--dur-bars); }
+  html[data-bars="hidden"] #frame::before { transform: translateY(calc(var(--top-h, 61px) * -1.1)); }
+  html[data-bars="hidden"][data-nav="tabs"] #frame::after { transform: translateY(calc(var(--tabs-h, 57px) * 1.1)); }
   /* corporate: flat, a subtle shade only, no blur */
   html[data-skin="corporate"] #frame::before, html[data-skin="corporate"] #frame::after { -webkit-backdrop-filter: none; backdrop-filter: none; --fade-h: 16px; }
   html[data-skin="corporate"] #frame::before { background: linear-gradient(to bottom, rgb(15 30 50 / .1), transparent); -webkit-mask-image: none; mask-image: none; }
