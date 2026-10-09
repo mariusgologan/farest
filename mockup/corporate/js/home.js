@@ -22,13 +22,23 @@
     const count = id => FE.db.products.filter(p => p.cat === id).length;
     const photoOf = id => FE.db.products.find(p => p.cat === id && p.images[0])?.images[0].src;
     set(host, h`<div class="c-home">
-      <section class="c-hero" ${site.hero ? h`style="--hero:url('${new URL(site.hero, document.baseURI).href}')"` : ''}><div class="wrap">
+      <section class="c-hero"><div class="wrap">
         <div class="c-hero-copy">
           <p class="c-kicker">${m.eyebrow}</p>
           <h1>${m.title}</h1>
           <p class="lead">${m.lead}</p>
           <div class="row"><a class="btn primary lg" href="#/calculator">${t('corp.offer')}</a><button type="button" class="btn ghost lg" data-action="callback">${icon('phone', 20)} ${t('corp.hero.cta2')}</button></div>
-        </div></div></section>
+        </div>
+        <svg class="c-hero-art" viewBox="0 0 320 360" aria-hidden="true" focusable="false">
+          <rect x="20" y="20" width="280" height="320" rx="6" fill="#f4f6f8"/>
+          <rect x="36" y="36" width="248" height="288" fill="#cfe0ef"/>
+          <path d="M36 36h248L36 324z" fill="#fff" opacity=".28"/>
+          <rect x="36" y="36" width="124" height="288" fill="none" stroke="#f4f6f8" stroke-width="12"/>
+          <rect x="160" y="36" width="124" height="288" fill="none" stroke="#f4f6f8" stroke-width="12"/>
+          <path d="M48 48l100 134L48 312M272 48L172 180l100 132" fill="none" stroke="#0f2a43" stroke-width="2" opacity=".45"/>
+          <rect x="146" y="170" width="28" height="10" rx="2" fill="#0f2a43"/>
+          <rect x="20" y="20" width="280" height="320" rx="6" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2"/>
+        </svg></div></section>
       <section class="c-figs" aria-label="${m.eyebrow}"><div class="wrap"><dl>${fig.map(([k, v]) => h`<div><dt>${k}</dt><dd>${v}</dd></div>`)}</dl><p class="small">${t('corp.hero.note')}</p></div></section>
 
       ${sec('', 'h-sys', h`${head('h-sys', t('corp.systems.title'), t('corp.systems.lead'))}
