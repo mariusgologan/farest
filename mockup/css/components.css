@@ -174,3 +174,6 @@ html[data-eff="wide"] .prose-band { grid-template-columns: 1fr 1fr; align-items:
 .foot a, .lines a, .row > a:not(.btn), .card-body > a:not(.btn) { display: inline-flex; align-items: center; min-height: 24px; }
 .card-body p > a:not(.btn) { display: inline-flex; align-items: center; min-height: 24px; }
 .card-title a { display: block; min-height: 24px; }
+
+/* coarse pointers: every standalone target reaches 44px (links in running text excepted) */
+@media (pointer: coarse) { .foot a, .lines a, .row > a:not(.btn), .card-body > a:not(.btn), .logo, .seg-btn, .btn.small { min-height: var(--hit); } .logo { align-items: center; padding-inline: var(--s-2); } }

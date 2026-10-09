@@ -22,7 +22,7 @@
   }
 
   /* ---------- shell ---------- */
-  const navItem = (n, cls) => h`<a class="${cls}" href="#${n.route}" data-nav="${n.id}" data-ctx="${n.id}">${icon(n.icon, 22)}<span>${t(`nav.${n.id}`)}</span></a>`;
+  const navItem = (n, cls) => h`<a class="${cls}" href="#${n.route}" aria-label="${t(`nav.${n.id}`)}" data-nav="${n.id}" data-ctx="${n.id}">${icon(n.icon, 22)}<span>${t(`nav.${n.id}`)}</span></a>`;
   function drawShell() {
     FE.$('#top').innerHTML = h`<a class="logo" href="#/" aria-label="${config.brand.name}"><b>FAR</b><span>EST</span></a>
       <nav class="topnav" aria-label="Main">${config.nav.map(n => navItem(n, 'navlink'))}</nav>
