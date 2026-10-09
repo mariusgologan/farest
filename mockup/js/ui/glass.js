@@ -1,18 +1,19 @@
 /* Edge light for glass cards. The pointer (mouse, pen or finger) lights the rim of any card within reach; the closer, the brighter.
    Writes --mx/--my (pointer inside the card) and --glint (0..1) per card; css/glass.css draws it. */
 (() => {
-  const reach = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--edge-reach')) || 150;
+  const reach = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--edge-reach')) || 150, itemReach = 100, items = '.navlink, .tab';
   let x = 0, y = 0, queued = false, lit = new Set();
   function paint() {
     queued = false;
     const now = new Set();
-    for (const g of document.querySelectorAll('.acrylic')) {
+    for (const g of document.querySelectorAll('.acrylic, ' + items)) {
       const r = g.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > innerHeight) continue;
+      if (!r.width || r.bottom < 0 || r.top > innerHeight) continue;
       const dx = Math.max(r.left - x, 0, x - r.right), dy = Math.max(r.top - y, 0, y - r.bottom), d = Math.hypot(dx, dy);
-      if (d > reach) continue;
+      const rr = g.matches(items) ? itemReach : reach;
+      if (d > rr) continue;
       g.style.setProperty('--mx', (x - r.left) + 'px'); g.style.setProperty('--my', (y - r.top) + 'px');
-      g.style.setProperty('--glint', (1 - d / reach).toFixed(2)); now.add(g);
+      g.style.setProperty('--glint', (1 - d / rr).toFixed(2)); now.add(g);
     }
     for (const g of lit) if (!now.has(g)) g.style.setProperty('--glint', '0');
     lit = now;

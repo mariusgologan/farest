@@ -22,7 +22,7 @@ h2 { font-size: var(--fs-2xl); }
 
 /* surfaces: flat, hairline, no blur */
 .acrylic, .acrylic.thick { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; border: 1px solid var(--line); box-shadow: var(--e-2); }
-.acrylic::before, .acrylic::after { display: none !important; }
+.acrylic::before, .acrylic::after, .navlink::after, .tab::after { display: none !important; }
 .lift:hover { transform: none; box-shadow: var(--e-3); border-color: color-mix(in srgb, var(--brand) 40%, var(--line)); }
 .top.acrylic, .tabs.acrylic { background: var(--surface); border-width: 0 0 1px; box-shadow: none; --acr-bg-strong: var(--surface); }
 html[data-nav="tabs"] .tabs.acrylic { border-width: 1px 0 0; }
