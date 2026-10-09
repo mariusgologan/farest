@@ -95,7 +95,7 @@ html[data-eff="regular"] .m-cta { padding: 0 var(--s-3); }
 .foot { max-width: none; padding: 0; margin: 0; background: var(--navy-2); color: #cfdbe6; }
 .foot .muted { color: #a9bccd; } .foot a { color: #e8f0f7; text-underline-offset: 3px; } .foot .logo b { color: #fff; } .foot .logo span { color: #ff8f98; }
 .f-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.3fr; gap: var(--s-6); padding-block: var(--s-7); }
-.f-grid h3 { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: #a9bccd; margin-bottom: var(--s-3); }
+.f-grid h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: #a9bccd; margin-bottom: var(--s-3); }
 .f-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
 .f-brand { display: grid; gap: var(--s-2); align-content: start; }
 .f-legal { border-top: 1px solid rgb(255 255 255 / .14); font-size: .8125rem; color: #a9bccd; }

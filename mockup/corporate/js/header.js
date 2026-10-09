@@ -54,11 +54,11 @@
       <div class="wrap f-grid">
         <div class="f-brand"><a class="logo" href="#/" aria-label="${config.brand.name}"><b>FAR</b><span>EST</span></a>
           <p>${config.brand.legal}</p><p class="muted small">${t('foot.tag', { year: config.brand.since })}</p></div>
-        <div><h3>${f('products')}</h3><ul>
+        <div><h2>${f('products')}</h2><ul>
           <li><a href="#/c/windows">${t('corp.menu.windows')}</a></li><li><a href="#/c/doors">${t('corp.menu.doors')}</a></li><li><a href="#/c/accessories">${t('corp.menu.acc')}</a></li><li><a href="#/calculator">${t('corp.menu.calc')}</a></li></ul></div>
-        <div><h3>${f('company')}</h3><ul>
+        <div><h2>${f('company')}</h2><ul>
           <li><a href="#/page/about">${t('corp.mega.about')}</a></li><li><a href="#/page/warranty">${t('corp.mega.warranty')}</a></li><li><a href="#/shops">${t('corp.mega.shops')}</a></li></ul></div>
-        <div><h3>${f('contact')}</h3><ul>
+        <div><h2>${f('contact')}</h2><ul>
           <li><a href="tel:${tel(phone)}">${phone}</a></li><li class="muted small">${t('phone.hours')}</li>
           <li><a href="tel:${tel(FE.db.service)}">${t('corp.util.service')} ${FE.db.service}</a></li></ul></div>
       </div>
