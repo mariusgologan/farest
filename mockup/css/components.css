@@ -112,7 +112,8 @@ input[type=radio], input[type=checkbox] { accent-color: var(--brand); width: 18p
 .cfg { display: grid; gap: var(--s-4); align-items: start; grid-template-areas: "prev" "main" "sum"; }
 .cfg-side { display: contents; } .cfg-prev { grid-area: prev; } .cfg-main { grid-area: main; } .cfg-sum { grid-area: sum; }
 html[data-eff="regular"] .cfg, html[data-eff="wide"] .cfg { grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr); grid-template-areas: "main side"; }
-html[data-eff="regular"] .cfg-side, html[data-eff="wide"] .cfg-side { display: grid; gap: var(--s-4); grid-area: side; position: sticky; top: var(--s-4); }
+html[data-eff="regular"] .cfg-side, html[data-eff="wide"] .cfg-side { display: grid; gap: var(--s-4); grid-area: side; }
+@media (min-height: 720px) { html[data-eff="regular"] .cfg-side, html[data-eff="wide"] .cfg-side { position: sticky; top: var(--s-4); } }
 html[data-eff="regular"] .cfg-prev, html[data-eff="wide"] .cfg-prev, html[data-eff="regular"] .cfg-sum, html[data-eff="wide"] .cfg-sum { grid-area: auto; }
 .cfg-prev, .cfg-sum { border-radius: var(--r-lg); padding: var(--s-5); display: grid; gap: var(--s-4); }
 .cfg-art { display: grid; place-items: center; min-height: 160px; }
@@ -138,6 +139,12 @@ html[data-eff="compact"] .scheme { height: 190px; }
 input[type=number] { min-height: var(--hit); padding: 0 var(--s-3); border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--acr-bg-strong); font-weight: 400; }
 .error { color: var(--err); }
 .total { margin: var(--s-3) 0; }
+/* compact: price and add button stay in reach above the tab bar while the form is edited */
+.cfg-bar { display: none; }
+html[data-eff="compact"] .cfg-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); position: sticky; bottom: 64px; z-index: 5; margin-top: var(--s-4); padding: var(--s-2) var(--s-3) var(--s-2) var(--s-4); border-radius: var(--r-lg); transition: bottom var(--dur-bars) var(--ease-ambient); background: color-mix(in srgb, var(--surface) 96%, transparent); }
+html[data-eff="compact"] .cfg-bar .price { display: block; font-size: var(--fs-xl); }
+html[data-bars="hidden"] .cfg-bar { bottom: var(--s-3); }
+@media (pointer: coarse) { .cfg .qty .icon-btn, .cfg .seg-btn, .cfg .btn.link { min-width: var(--hit); min-height: var(--hit); } }
 
 /* Toasts */
 #toasts { position: absolute; left: 0; right: 0; bottom: var(--s-5); display: grid; justify-items: center; gap: var(--s-2); z-index: var(--z-toast); pointer-events: none; }

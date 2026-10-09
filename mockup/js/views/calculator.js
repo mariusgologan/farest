@@ -82,7 +82,8 @@
           <p data-bind="desc"></p><dl class="specs" data-bind="lines"></dl>
           <div class="row"><button class="btn primary lg grow" data-action="calc-add">${icon('cart', 20)} ${t(edit ? 'calc.update' : 'calc.add')}</button><button class="btn ghost" data-action="callback">${icon('phone', 18)} ${t('calc.quote')}</button></div>
           <div class="row spread"><button class="btn link small" data-action="calc-reset">${t('calc.reset')}</button><small class="muted">${t('calc.disclaimer')}</small></div></section></aside>
-      </div>`.toString();
+      </div>
+      <div class="cfg-bar acrylic thick e-4"><div aria-hidden="true"><small class="muted">${t('calc.total')}</small><b class="price" data-bind="total-bar">–</b></div><button class="btn primary" data-action="calc-add">${icon('cart', 18)} ${t(edit ? 'calc.update' : 'calc.add')}</button></div>`.toString();
 
     const $ = sel => FE.$(sel, host), $$ = sel => FE.$$(sel, host);
     const num = el => el.value === '' ? NaN : +el.value;
@@ -107,6 +108,7 @@
     };
     const showQuote = () => {
       $('[data-bind=total]').textContent = quote ? money(quote.total) : '–';
+      $('[data-bind=total-bar]').textContent = quote ? money(quote.total) : '–';
       $('[data-bind=lines]').innerHTML = quote ? h`<dt>${t('calc.unit')}</dt><dd>${money(quote.unit)}</dd><dt>${t('calc.base')}</dt><dd>${money(quote.base)}</dd>${quote.install ? h`<dt>${t('calc.installCost')}</dt><dd>${money(quote.install)}</dd>` : ''}<dt>${t('calc.total')}</dt><dd><b>${money(quote.total)}</b></dd>`.toString() : '';
       $('[data-bind=desc]').textContent = quote ? t('calc.area', { a: FE.num(quote.area) }) : '';
       $$('[data-action=calc-add]').forEach(b => { b.disabled = !quote; });
