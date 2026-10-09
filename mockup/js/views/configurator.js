@@ -1,5 +1,5 @@
 /* Configurator view. Layers: rules (js/cfg/rules.js) decide what is allowed, draw.js pictures it, projects.js stores it,
-   FE.api '/quote' prices it. This file only turns state into screens: product -> form -> opening -> size -> finish -> price -> project. */
+   FE.api '/quote' prices it. This file only turns state into screens: product -> form -> series and colour -> opening -> glass -> size -> price -> project. */
 (() => {
   const { h, raw, t, money, icon } = FE;
   const cfg = FE.cfg, P = FE.projects, draw = cfg.draw;
@@ -96,10 +96,11 @@
       ${th.length > 1 ? h`<label class="cfg-thr">${t('cfg.threshold')}<select data-act-change="cfg-threshold" data-id="${id}" aria-label="${t('cfg.threshold')} — ${loc(ty.name)}">${th.map(x => h`<option value="${x}" ${raw((chosen ? s.threshold : th[0]) === x ? 'selected' : '')}>${loc(cfg.data.thresholds[x])}</option>`)}</select></label>` : ''}</div>`;
   };
 
-  let n = 0; const step = () => `${++n}. `;
+  /* step numbers: windows and exterior doors have a first step (form or door type), the others start at the finish */
+  const off = () => (product().forms || product().leaves ? 1 : 0);
   function paintTop() {
     keepFocus(() => {
-      n = 0; const s = V.S, p = product(), pr = P.active, ro = P.readOnly(pr);
+      const s = V.S, p = product(), pr = P.active, ro = P.readOnly(pr);
       const out = [h`<section class="cfg-bar acrylic e-2" aria-label="${t('cfg.project.label')}"><div class="cfg-bar-info"><small class="muted">${t('cfg.project.label')}</small>
           <b>${pr ? pr.name : t('cfg.project.none')}</b><span class="muted small">${pr ? [pr.isDraft ? t('cfg.project.draft') : fmtDate(pr.createdDate), pr.phone, ro ? t('cfg.project.readOnly') : ''].filter(Boolean).join(' · ') : t('cfg.project.create')}</span>${pr ? statusBadge(pr) : ''}</div>
         <div class="row cfg-bar-actions">${pr && !pr.isDraft && pr.items.length && P.nextStatus(pr) ? h`<button class="btn ghost small" data-action="cfg-status" data-s="${P.nextStatus(pr)}">${t('cfg.project.mark', { s: t(`cfg.status.${P.nextStatus(pr)}`) })}</button>` : ''}
@@ -107,22 +108,19 @@
           ${pr && !ro ? h`<button class="btn ghost small" data-action="cfg-rename">${t('cfg.project.rename')}</button>` : ''}
           <button class="btn ghost small" data-action="cfg-manager" aria-haspopup="dialog">${t('cfg.project.change')}</button><button class="btn primary small" data-action="cfg-newproject">${t('cfg.project.new')}</button></div></section>`.toString()];
       out.push(h`<section><h2>${t('cfg.pickProduct')}</h2><div class="cfg-products" role="group" aria-label="${t('cfg.pickProduct')}">${productCards()}</div></section>`.toString());
-      if (s.product === 'windows') out.push(h`<section><h2>${step()}${t('cfg.pickForm')}</h2><div class="cfg-forms">${Object.entries(cfg.data.forms).map(([id, f]) => {
+      if (s.product === 'windows') out.push(h`<section><h2>1. ${t('cfg.pickForm')}</h2><div class="cfg-forms">${Object.entries(cfg.data.forms).map(([id, f]) => {
         const sample = { product: 'windows', type: f.sample, side: 'dreapta', colour: s.colour, glass: 'f4-lowe', series: s.series, width: '', height: '' };
         return h`<button class="cfg-card cfg-product" type="button" data-action="cfg-form" data-id="${id}" data-key="f-${id}" aria-pressed="${s.form === id}"><span class="cfg-art">${draw.item(sample)}</span><span class="cfg-card-text"><b>${loc(f.name)}</b><small>${loc(f.hint)}</small></span></button>`;
       })}</div></section>`.toString());
       if (s.product === 'exterior') {
         const leafCard = c => h`<button class="cfg-card cfg-product" type="button" data-action="cfg-leaves" data-n="${c}" data-key="l-${c}" aria-pressed="${s.leaves === c}"><span class="cfg-art">${draw.item({ product: 'exterior', type: c === 1 ? 'exterior-glass-full' : 'exterior-pui-glass-full', side: 'dreapta', colour: 'alb', glass: 'f4-lowe', series: 'lumena-esential', threshold: 'frame', width: '', height: '' })}</span><span class="cfg-card-text"><b>${t(c === 1 ? 'cfg.oneLeaf' : 'cfg.twoLeaves')}</b><small>${t(c === 1 ? 'cfg.oneLeafHint' : 'cfg.twoLeavesHint')}</small></span></button>`;
-        out.push(h`<section><h2>${step()}${t('cfg.pickDoor')}</h2><div class="cfg-forms">${[1, 2].map(leafCard)}</div>
+        out.push(h`<section><h2>1. ${t('cfg.pickDoor')}</h2><div class="cfg-forms">${[1, 2].map(leafCard)}</div>
           <h3>${t(s.leaves === 2 ? 'cfg.pickVariantPui' : 'cfg.pickVariant')}</h3><div class="cfg-forms">${p.constructions.map(k => { const c = cfg.data.constructions[k]; return h`<button class="cfg-card cfg-text" type="button" data-action="cfg-construction" data-id="${k}" data-key="c-${k}" aria-pressed="${s.construction === k}"><b>${loc(c.name[s.leaves])}</b><small>${loc(c.hint[s.leaves])}</small></button>`; })}</div></section>`.toString());
       }
-      if (!isPanels()) {
-        const list = types();
-        out.push(h`<section><h2>${step()}${t(s.product === 'windows' ? 'cfg.pickOpening' : 'cfg.pickModel')}</h2><p class="muted small">${t(s.product === 'windows' ? 'cfg.openingHint' : 'cfg.doorHint')}</p>
-          <div class="cfg-types" style="--n:${list.length}">${list.map(typeCard)}</div></section>`.toString());
-      }
       $('#c-top').innerHTML = out.join('');
+      $('#c-look').hidden = $('#c-types').hidden = isPanels();
       $('#c-size').hidden = isPanels() || !s.type; $('#c-finish').hidden = isPanels() || !s.type; $('#c-review').hidden = isPanels();
+      paintLook(); paintTypes();
       $('#c-panel').hidden = !isPanels();
       paintFinish(); paintSize(); paintAside();
       if (isPanels()) paintPanel(); else paintReview();
@@ -149,18 +147,31 @@
     }
     $('[data-bind=limits]').textContent = lm ? t('cfg.limits', { w1: lm.wmin, w2: lm.wmax, h1: lm.hmin, h2: lm.hmax }) : '';
   }
-  const step2 = () => `${(product().forms || product().leaves ? 3 : 2)}. `;
+  const step2 = () => `${off() + 4}. `;
 
   function infoBtn(kind, id, label) { return h`<button class="cfg-info" type="button" data-action="cfg-info" data-kind="${kind}" data-id="${id}" aria-haspopup="dialog" aria-label="${label}">${kind === 'series' ? draw.profile(id) : h`<i style="${raw(kind === 'colour' ? draw.swatchStyle(cfg.colour(id)) : draw.glassStyle(id))}"></i>`}</button>`; }
+  /* series and colour come first, as at the source: the opening types shown below depend on them */
+  function paintLook() {
+    const s = V.S; if (isPanels()) return;
+    const colours = cfg.coloursFor({ product: s.product, series: s.series, type: s.type, construction: s.construction }), series = cfg.seriesFor(s.product);
+    keepFocus(() => {
+      $('#c-look').innerHTML = h`<h2>${off() + 1}. ${t('cfg.look')}</h2><div class="cfg-finish">
+        <div class="cfg-col"><small>${t('cfg.series')}</small>${series.map(x => h`<div class="cfg-row"><button type="button" class="cfg-choice" data-action="cfg-series" data-id="${x.id}" data-key="s-${x.id}" aria-pressed="${s.series === x.id}">${x.name} · ${x.mm} mm · ${t('profile.chambers', { n: x.chambers })}</button>${infoBtn('series', x.id, t('cfg.profileSection', { name: x.name }))}</div>`)}</div>
+        <div class="cfg-col"><small>${t('cfg.colour')}</small>${colours.map(c => h`<div class="cfg-row"><button type="button" class="cfg-choice" data-action="cfg-colour" data-id="${c}" data-key="c-${c}" aria-pressed="${s.colour === c}">${colourName(c)}</button>${infoBtn('colour', c, t('cfg.texture', { name: colourName(c) }))}</div>`)}</div></div>`.toString();
+    });
+  }
+  function paintTypes() {
+    const s = V.S; if (isPanels()) return;
+    const list = types();
+    $('#c-types').innerHTML = h`<section><h2>${off() + 2}. ${t(s.product === 'windows' ? 'cfg.pickOpening' : 'cfg.pickModel')}</h2><p class="muted small">${t(s.product === 'windows' ? 'cfg.openingHint' : 'cfg.doorHint')}</p>
+      <div class="cfg-types" style="--n:${list.length}">${list.map(typeCard)}</div></section>`.toString();
+  }
+  /* the material (glass or panel) depends on the chosen type, so it follows the opening */
   function paintFinish() {
     const s = V.S; if (!s.type) return;
-    const colours = cfg.coloursFor({ product: s.product, series: s.series, type: s.type }), glass = cfg.glassFor(s.type);
-    const series = cfg.seriesFor(s.product);
-    const door = cfg.isDoor(s.type);
+    const glass = cfg.glassFor(s.type), door = cfg.isDoor(s.type);
     keepFocus(() => {
-      $('#c-finish').innerHTML = h`<h2>${(product().forms || product().leaves ? 4 : 3)}. ${t(door ? 'cfg.finishDoor' : 'cfg.finish')}</h2><div class="cfg-finish">
-        <div class="cfg-col"><small>${t('cfg.series')}</small>${series.map(x => h`<div class="cfg-row"><button type="button" class="cfg-choice" data-action="cfg-series" data-id="${x.id}" data-key="s-${x.id}" aria-pressed="${s.series === x.id}">${x.name} · ${x.mm} mm · ${t('profile.chambers', { n: x.chambers })}</button>${infoBtn('series', x.id, t('cfg.profileSection', { name: x.name }))}</div>`)}</div>
-        <div class="cfg-col"><small>${t('cfg.colour')}</small>${colours.map(c => h`<div class="cfg-row"><button type="button" class="cfg-choice" data-action="cfg-colour" data-id="${c}" data-key="c-${c}" aria-pressed="${s.colour === c}">${colourName(c)}</button>${infoBtn('colour', c, t('cfg.texture', { name: colourName(c) }))}</div>`)}</div>
+      $('#c-finish').innerHTML = h`<h2>${off() + 3}. ${t(door ? 'cfg.finishDoor' : 'cfg.finish')}</h2><div class="cfg-finish">
         <div class="cfg-col"><small>${t(door ? 'cfg.material' : 'cfg.glass')}</small>${glass.map(g => h`<div class="cfg-row"><button type="button" class="cfg-choice" data-action="cfg-glass" data-id="${g}" data-key="g-${g}" aria-pressed="${s.glass === g}">${glassName(g)}</button>${infoBtn('glass', g, glassName(g))}</div>`)}</div></div>`.toString();
     });
   }
@@ -212,13 +223,14 @@
   const newPanel = () => ({ scheme: 'windows-side', arrangement: 'door-left', series: 'lumena-esential', colour: 'alb', components: [0, 1].map(() => ({ type: '', side: '', glass: '', threshold: '', width: '', height: '' })) });
   const PN = () => V.panel || (V.panel = newPanel());
   function panelModels(i) {
-    const p = PN(), D = cfg.data.panels, door = cfg.panelDoorIndex(p) === i;
-    return (door ? D.doorTypes : D.windowTypes).filter(id => cfg.available(id, { series: p.series, colour: p.colour }));
+    const p = PN();
+    return cfg.panelModels(cfg.panelDoorIndex(p) === i, p);
   }
   function panelFix(reset = false) {
-    const p = PN(), D = cfg.data.panels;
-    if (!D.series.includes(p.series)) p.series = D.series[0];
-    if (!D.colours.includes(p.colour)) p.colour = D.colours[0];
+    const p = PN(), series = cfg.panelSeries(p.scheme);
+    if (!series.includes(p.series)) p.series = series[0];
+    const colours = cfg.panelColours(p.series);
+    if (!colours.includes(p.colour)) p.colour = colours[0];
     p.components.forEach((c, i) => {
       if (reset) Object.assign(c, { type: '', side: '', glass: '', threshold: '', width: '', height: '' });
       if (c.type && !panelModels(i).includes(c.type)) Object.assign(c, { type: '', side: '', glass: '', threshold: '' });
@@ -251,8 +263,8 @@
         <h3>${t('cfg.pn.scheme')}</h3><div class="cfg-forms">${D.schemes.map(s => h`<button class="cfg-card cfg-product" type="button" data-action="cfg-pn-scheme" data-id="${s.id}" data-key="ps-${s.id}" aria-pressed="${p.scheme === s.id}"><span class="cfg-art">${draw.panel({ product: 'panels', panel: { ...p, scheme: s.id, components: sampleComps(s.id, p.arrangement) } })}</span><span class="cfg-card-text"><b>${loc(s.name)}</b></span></button>`)}</div>
         <div class="cfg-pn-controls">
           ${p.scheme === 'door-side' ? h`<label class="field"><span>${t('cfg.pn.arrangement')}</span><select data-pn="arrangement">${opt(D.arrangements.map(a => ({ v: a.id, n: loc(a.name) })), p.arrangement, a => a.n)}</select></label>` : ''}
-          <label class="field"><span>${t('cfg.series')}</span><select data-pn="series">${opt(D.series, p.series, s => cfg.series(s).name)}</select></label>
-          <label class="field"><span>${t('cfg.colour')}</span><select data-pn="colour">${opt(D.colours, p.colour, colourName)}</select></label></div>
+          <label class="field"><span>${t('cfg.series')}</span><select data-pn="series">${opt(cfg.panelSeries(p.scheme), p.series, s => cfg.series(s).name)}</select></label>
+          <label class="field"><span>${t('cfg.colour')}</span><select data-pn="colour">${opt(cfg.panelColours(p.series), p.colour, colourName)}</select></label></div>
         <p class="cfg-relation muted" aria-live="polite">${t('cfg.pn.coupling', { n: g.thickness })} ${rule}</p>
         <div class="cfg-comps">${p.components.map(comp)}</div>
         <div class="cfg-review acrylic thick e-3"><div class="cfg-review-art">${draw.panel({ product: 'panels', panel: p }, { dims: true, label: t('cfg.pn.preview') })}</div>
@@ -358,7 +370,7 @@
       const s = V.S, paint = () => {
         const it = { ...V.S, width: V.S.width || 1000, height: V.S.height || 2100 }, models = cfg.typesFor({ product: it.product, form: it.form, leaves: it.leaves, construction: it.construction });
         const sel = (k, opts, cur) => h`<label class="field"><span>${t(`cfg.decorSel.${k}`)}</span><select data-d="${k}">${opts.map(([v, l]) => h`<option value="${v}" ${raw(v === cur ? 'selected' : '')}>${l}</option>`)}</select></label>`;
-        body.innerHTML = h`<div class="cfg-decor-body"><div><div class="seg" role="tablist">${cfg.data.rooms.map((r, i) => h`<button class="seg-btn" role="tab" aria-selected="${i === room}" aria-checked="${i === room}" data-d="room" data-i="${i}">${loc(r.name)}</button>`)}</div><div class="cfg-decor-art">${draw.room(it, cfg.data.rooms[room], open)}</div><p class="muted small">${t('cfg.decorNote')}</p></div>
+        body.innerHTML = h`<div class="cfg-decor-body"><div><div class="seg" role="tablist">${cfg.data.rooms.map((r, i) => h`<button class="seg-btn" role="tab" aria-selected="${i === room}" data-d="room" data-i="${i}">${loc(r.name)}</button>`)}</div><div class="cfg-decor-art">${draw.room(it, cfg.data.rooms[room], open)}</div><p class="muted small">${t('cfg.decorNote')}</p></div>
           <div class="stack">${sel('model', models.map(m => [m, typeName(m)]), it.type)}${sel('colour', cfg.coloursFor(it).map(c => [c, colourName(c)]), it.colour)}${sel('glass', cfg.glassFor(it.type).map(g => [g, glassName(g)]), it.glass)}${cfg.handed(it.type) ? sel('side', [['stanga', sideLabel('stanga')], ['dreapta', sideLabel('dreapta')]], it.side || 'dreapta') : ''}
             <button class="btn ghost" data-d="open" aria-pressed="${open}">${t(open ? 'cfg.decorClose' : 'cfg.decorOpen')}</button></div></div>`.toString();
       };
@@ -411,7 +423,7 @@
   FE.views.calculator = async host_ => {
     host = host_; if (!V.S) V.S = cfg.blank('windows');
     host.innerHTML = h`<p class="muted small cfg-crumb">${t('cfg.crumb')}</p><header class="page-head"><h1>${t('cfg.title')}</h1><p class="muted">${t('cfg.lead')}</p></header>
-      <div class="cfg"><div class="cfg-main"><div id="c-top" class="stack"></div><section id="c-size" class="cfg-sec acrylic e-2" hidden></section><section id="c-finish" class="cfg-sec acrylic e-2" hidden></section>
+      <div class="cfg"><div class="cfg-main"><div id="c-top" class="stack"></div><section id="c-look" class="cfg-sec acrylic e-2" hidden></section><div id="c-types" hidden></div><section id="c-finish" class="cfg-sec acrylic e-2" hidden></section><section id="c-size" class="cfg-sec acrylic e-2" hidden></section>
         <section id="c-review" class="cfg-sec" hidden></section><div id="c-panel" hidden></div></div><aside id="c-aside" class="cfg-side" aria-label="${t('cfg.projectItems')}"></aside></div><div id="c-bar" class="cfg-fixbar acrylic thick e-4" hidden></div>`.toString();
     buildSize();
     if (!P.active) P.restore();
