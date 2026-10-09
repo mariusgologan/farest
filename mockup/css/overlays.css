@@ -42,7 +42,7 @@ html[data-eff="compact"] .layer[data-kind=drawer] .panel { margin: auto 0 0; wid
 html[data-eff="compact"] .layer[data-kind=drawer] .panel { height: 92%; }
 .layer[data-kind=sheet].in .panel, html[data-eff="compact"] .layer.in .panel { transform: none; }
 html[data-eff="compact"] .layer[data-covered=true] .panel { transform: translateY(calc(var(--above) * -14px)) scale(calc(1 - var(--above) * .04)); }
-html[data-eff="compact"] .layer[data-kind=sheet] .panel::after, html[data-eff="compact"] .layer[data-kind=modal] .panel::after { content: ""; position: absolute; top: 6px; left: 50%; width: 36px; height: 4px; margin-left: -18px; border-radius: 2px; background: var(--line); }
+html[data-eff="compact"] .layer[data-kind=sheet] .panel-head::before, html[data-eff="compact"] .layer[data-kind=modal] .panel-head::before { content: ""; position: absolute; top: 6px; left: 50%; width: 36px; height: 4px; margin-left: -18px; border-radius: 2px; background: var(--line); }
 
 /* popover: anchored, no scrim, lighter elevation */
 .layer[data-kind=popover] .panel { position: absolute; margin: 0; width: min(320px, calc(100% - 24px)); max-height: 70%; transform-origin: 50% 0; border-radius: var(--r-md); box-shadow: var(--e-4); }
