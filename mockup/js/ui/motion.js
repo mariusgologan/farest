@@ -21,6 +21,7 @@
       if (skip) return apply();
       from?.style.setProperty(NAME, MORPH);
       const t = document.startViewTransition(async () => { await apply(); if (from) hero()?.style.setProperty(NAME, MORPH); });
+      t.ready.catch(() => {});
       t.finished.catch(() => {}).finally(() => { from?.style.removeProperty(NAME); hero()?.style.removeProperty(NAME); });
       return t.updateCallbackDone;
     },
