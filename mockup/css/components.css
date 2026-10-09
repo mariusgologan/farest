@@ -18,7 +18,7 @@
 
 /* Cards */
 .card { border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column; }
-.card-art { display: grid; place-items: center; padding: var(--s-3); overflow: hidden; background: linear-gradient(160deg, var(--acr-tint), transparent); min-height: 200px; }
+.card-art { display: grid; place-items: center; padding: var(--s-3); overflow: hidden; min-height: 200px; }
 .card-art .photo { height: 200px; width: 100%; transition: transform var(--dur-3) var(--ease); }
 .card:hover .card-art .photo { transform: scale(1.04); }
 .card-body { display: grid; gap: var(--s-3); padding: var(--s-4); }
@@ -177,3 +177,8 @@ html[data-eff="wide"] .prose-band { grid-template-columns: 1fr 1fr; align-items:
 
 /* coarse pointers: every standalone target reaches 44px (links in running text excepted) */
 @media (pointer: coarse) { .foot a, .lines a, .row > a:not(.btn), .card-body > a:not(.btn), .card-body p > a:not(.btn), .card-title a, .crumbs a, .breadcrumb a, .logo, .seg-btn, .btn.small { min-height: var(--hit); } .crumbs a, .breadcrumb a { display: inline-flex; align-items: center; min-width: var(--hit); justify-content: center; } .logo { align-items: center; padding-inline: var(--s-2); } }
+
+/* card media blends with the pane: the white photo plate multiplies into the light pane and is dimmed on the dark one; heading links read as titles, not underlined links */
+.card-art .photo { mix-blend-mode: multiply; }
+:root[data-theme="dark"] .card-art .photo { mix-blend-mode: normal; filter: brightness(.68); }
+.card-title a { color: var(--text); text-decoration: none; } .card-title a:hover { color: var(--brand); text-decoration: underline; }
