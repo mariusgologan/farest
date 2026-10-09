@@ -93,7 +93,9 @@
   addEventListener('resize', () => { if (store.get('layout') === 'auto') applyEnv(); });
 
   /* boot: load content files, then render; installable web app via service worker (http/https only) */
-  FE.loadAll().then(() => { applyEnv(); drawShell(); FE.ambient.apply(); return FE.router.start(); })
+  /* the shell needs only static data, so it is drawn first: the bars, footer and layout attributes are in place before the content files arrive (nothing moves later) */
+  applyEnv(); drawShell(); FE.ambient.apply();
+  FE.loadAll().then(() => FE.router.start())
     .catch(err => { FE.$('#view').removeAttribute('aria-busy'); FE.$('#view').innerHTML = `<div class="empty center stack"><h1>${t('error.load')}</h1><p class="muted">${t('error.loadHint')}</p><code>${FE.esc(err.message)}</code></div>`; });
   applyEnv();
   if (FE.config.registerSw !== false && 'serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});

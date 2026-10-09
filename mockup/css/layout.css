@@ -7,7 +7,7 @@ html:not([data-layout="auto"]) #device { height: min(100dvh - 2 * var(--s-4), 96
 html[data-layout="compact"] #device { border-radius: 36px; }
 .ambient { position: absolute; z-index: 0; }
 #frame { position: relative; z-index: 1; height: 100%; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; display: flex; flex-direction: column; }
-#view { flex: 1; min-height: calc(100% - 61px); width: 100%; max-width: 1240px; margin: 0 auto; padding: var(--s-5) var(--s-5) var(--s-7); display: grid; gap: var(--s-7); align-content: start; outline: none; }
+#view { flex: 1 0 auto; min-height: calc(100% - 61px); width: 100%; max-width: 1240px; margin: 0 auto; padding: var(--s-5) var(--s-5) var(--s-7); display: grid; gap: var(--s-7); align-content: start; outline: none; }
 html[data-eff="compact"] #view { padding: var(--s-4) var(--s-4) var(--s-6); gap: var(--s-6); }
 #view[aria-busy="true"] { opacity: .5; }
 #view > * { animation: rise var(--dur-3) var(--ease) both; }
@@ -69,3 +69,5 @@ html[data-eff="wide"] .btn.only-compact { display: none; }
 /* reserve the header and tab bar height before their items are drawn, so a late font or icon does not shift the page */
 .top { min-height: calc(var(--hit) + var(--s-4) + 1px); }
 html[data-nav="tabs"] .tabs { height: calc(var(--hit) + var(--s-2) + 1px + env(safe-area-inset-bottom)); }
+/* the bars keep their natural height: with an explicit min-height above, a taller header (the corporate one) would otherwise be shrunk by the flex column and overlap the page */
+#top, #tabs { flex-shrink: 0; }
