@@ -176,7 +176,8 @@ html[data-eff="wide"] .prose-band { grid-template-columns: 1fr 1fr; align-items:
 .card-title a { display: block; min-height: 24px; }
 
 /* coarse pointers: every standalone target reaches 44px (links in running text excepted) */
-@media (pointer: coarse) { .foot a, .lines a, .row > a:not(.btn), .card-body > a:not(.btn), .card-body p > a:not(.btn), .card-title a, .crumbs a, .breadcrumb a, .logo, .seg-btn, .btn.small { min-height: var(--hit); } .crumbs a, .breadcrumb a { display: inline-flex; align-items: center; min-width: var(--hit); justify-content: center; } .logo { align-items: center; padding-inline: var(--s-2); } }
+@media (pointer: coarse) { .foot a, .lines a, .row > a:not(.btn), .card-body > a:not(.btn), .card-body p > a:not(.btn), .card-title a, .crumbs a, .breadcrumb a, .logo, .seg-btn, .btn.small { min-height: var(--hit); } .crumbs a, .breadcrumb a { display: inline-flex; align-items: center; min-width: var(--hit); justify-content: center; } .logo { align-items: center; padding-inline: var(--s-2); }
+  .seg-btn, .row > a:not(.btn) { min-width: var(--hit); } .row.spread > a:not(.btn) { justify-content: flex-end; } }
 
 /* card media blends with the pane: the white photo plate multiplies into the light pane and is dimmed on the dark one; heading links read as titles, not underlined links */
 .card-art .photo { mix-blend-mode: multiply; }
