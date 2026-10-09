@@ -22,7 +22,10 @@
   // bar heights for the progressive-blur layers (css/glass.css): --top-h, --tabs-h
   const bars = [['top', '--top-h'], ['tabs', '--tabs-h']].map(([id, v]) => [document.getElementById(id), v]).filter(([el]) => el);
   if (bars.length && window.ResizeObserver) {
-    const ro = new ResizeObserver(() => { for (const [el, v] of bars) document.documentElement.style.setProperty(v, el.offsetHeight + 'px'); });
+    const css = document.documentElement.style, frame = document.getElementById('frame');
+    // write only when the measured height differs from what the CSS already gives (no move of the fixed layers after first paint)
+    const known = v => parseFloat(getComputedStyle(frame, v === '--top-h' ? '::before' : '::after')[v === '--top-h' ? 'top' : 'bottom']);
+    const ro = new ResizeObserver(() => { for (const [el, v] of bars) { const h = el.offsetHeight; if (h && !(Math.abs(known(v) - h) < .5)) css.setProperty(v, h + 'px'); } });
     for (const [el] of bars) ro.observe(el);
   }
   addEventListener('pointermove', move, { passive: true });
