@@ -35,6 +35,7 @@
     FE.$('#foot').innerHTML = h`<div class="foot-in"><div><b>${config.brand.legal}</b><p class="muted small">${t('foot.tag', { year: config.brand.since })}</p><p class="small"><a href="#/page/about">${t('foot.about')}</a> · <a href="#/page/warranty">${t('foot.warranty')}</a></p></div>
       <div><p class="muted small">${t('phone.hours')}</p><p><a href="tel:${FE.db.callCenter[0].replace(/\s/g, '')}">${FE.db.callCenter[0]}</a></p></div>
       <p class="muted small">${t('foot.mock')}</p></div>`.toString();
+    FE.skin?.shell?.();
     markActive(); badge();
   }
   const badge = () => { const n = FE.cart.count(), el = FE.$('[data-bind=cart-count]'); if (el) { el.hidden = !n; el.textContent = n; } };
