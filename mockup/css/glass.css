@@ -9,11 +9,11 @@
 /* Frosted glass: a uniform translucent pane. Heavy blur diffuses whatever is behind, a flat neutral tint (no gradient) keeps text at AA over the
    brightest and darkest backdrops, fine grain gives the frosted texture, a 1px rim (a touch brighter on top) and an inner highlight line
    define the edge, and a tight contact shadow sits under the soft ambient one. */
-:root { --glass-blur: 26px; --glass-blur-thick: 30px; --glass-sat: 1.1;
-  --glass-fill: rgb(244 248 252 / .8); --glass-fill-strong: rgb(246 249 253 / .88);
+:root { --glass-blur: 30px; --glass-blur-thick: 34px; --glass-sat: 1.3;
+  --glass-fill: rgb(244 248 252 / .5); --glass-fill-strong: rgb(246 249 253 / .6);
   --glass-hi: rgb(255 255 255 / .55); --glass-rim: rgb(255 255 255 / .7); --glass-rim-t: rgb(255 255 255 / .95);
   --glass-contact: 0 1px 2px rgb(var(--shadow-rgb) / .2); }
-:root[data-theme="dark"] { --glass-fill: rgb(20 29 40 / .8); --glass-fill-strong: rgb(14 21 30 / .88);
+:root[data-theme="dark"] { --glass-fill: rgb(20 29 40 / .44); --glass-fill-strong: rgb(14 21 30 / .56);
   --glass-hi: rgb(255 255 255 / .08); --glass-rim: rgb(255 255 255 / .14); --glass-rim-t: rgb(255 255 255 / .26);
   --glass-contact: 0 1px 2px rgb(0 0 0 / .5); }
 
@@ -31,10 +31,14 @@
 .acrylic.lift:hover { --elev: var(--e-4); box-shadow: var(--glass-shadow); }
 
 /* menus: the same pane, denser under the labels, rim on the free edge only */
-.top.acrylic, .tabs.acrylic { --glass-fill-strong: rgb(246 249 253 / .92); }
-:root[data-theme="dark"] .top.acrylic, :root[data-theme="dark"] .tabs.acrylic { --glass-fill-strong: rgb(13 20 27 / .92); }
+.top.acrylic, .tabs.acrylic { --glass-fill-strong: rgb(246 249 253 / .62); }
+:root[data-theme="dark"] .top.acrylic, :root[data-theme="dark"] .tabs.acrylic { --glass-fill-strong: rgb(13 20 27 / .6); }
 .top.acrylic { border-color: transparent transparent var(--glass-rim); --glass-shadow: var(--e-2), inset 0 1px 0 var(--glass-hi); }
 .tabs.acrylic { border-color: var(--glass-rim-t) transparent transparent; --glass-shadow: 0 -4px 16px rgb(var(--shadow-rgb) / var(--shadow-a)), inset 0 1px 0 var(--glass-hi); }
+
+/* dialogs and popovers carry small body text: a denser pane, only here */
+.panel.acrylic { --glass-fill-strong: rgb(246 249 253 / .74); }
+:root[data-theme="dark"] .panel.acrylic { --glass-fill-strong: rgb(14 21 30 / .74); }
 
 /* no transparency wanted, or more contrast: solid fill, no blur, no sheen */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
