@@ -1,0 +1,12 @@
+/* Motion: route transitions and press feedback. Skipped under reduced motion; no layout properties are animated. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 200ms; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
+  ::view-transition-group(product-img) { animation-duration: 280ms; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
+  ::view-transition-old(product-img), ::view-transition-new(product-img) { height: 100%; object-fit: contain; }
+  .btn:active, .card:active, .tile:active, .offer:active, .cfg-card:active, .seg-btn:active, .icon-btn:active, .tab:active, .c-tile:active, .c-sys:active { transform: scale(.98); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  .btn:active { transform: none; }
+}
+#c-bar .price { display: inline-block; }

@@ -1,8 +1,8 @@
 /* Offline shell. Same-origin only: app files are cache-first, content files stale-while-revalidate.
    Bump VERSION when shipping, old caches are dropped. Paths are relative so any GitHub Pages sub-path works. */
-const VERSION = 'farest-v31';
+const VERSION = 'farest-v33';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon.svg',
-  'css/fonts.css', 'css/configurator.css', 'css/glass.css', 'js/ui/glass.js', 'css/chrome.css', 'js/ui/chrome.js', 'fonts/inter-latin.woff2', 'fonts/inter-latin-ext.woff2', 'fonts/plus-jakarta-sans-latin.woff2', 'fonts/plus-jakarta-sans-latin-ext.woff2', 'css/tokens.css', 'css/base.css', 'css/surfaces.css', 'css/layout.css', 'css/components.css', 'css/overlays.css',
+  'css/fonts.css', 'css/configurator.css', 'css/glass.css', 'js/ui/glass.js', 'css/chrome.css', 'js/ui/chrome.js', 'css/motion.css', 'js/ui/motion.js', 'fonts/inter-latin.woff2', 'fonts/inter-latin-ext.woff2', 'fonts/plus-jakarta-sans-latin.woff2', 'fonts/plus-jakarta-sans-latin-ext.woff2', 'css/tokens.css', 'css/base.css', 'css/surfaces.css', 'css/layout.css', 'css/components.css', 'css/overlays.css',
   'data/config.js', 'data/catalog.js', 'data/content.js',
   'js/core/util.js', 'js/core/parse.js', 'js/core/store.js', 'js/core/loader.js', 'js/core/i18n.js', 'js/core/api.js', 'js/core/router.js', 'js/core/actions.js',
   'js/ui/icons.js', 'js/ui/ambient.js', 'js/ui/toast.js', 'js/ui/overlay.js', 'js/ui/components.js',

@@ -71,7 +71,7 @@
     cfg.reconcile(s);
     /* a different leaf count or construction changes the width range: do not carry the old width over */
     const lm = cfg.limits(id, s); for (const [k, lo, hi] of [['width', lm.wmin, lm.wmax], ['height', lm.hmin, lm.hmax]]) { const v = num(s[k]); if (v && (v < lo || v > hi)) s[k] = ''; }
-    syncInputs(); V.notice = null; schedule(); paintTop();
+    syncInputs(); V.notice = null; V.swingAt = performance.now(); schedule(); paintTop();
   };
 
   /* ---------- painting ---------- */
@@ -194,6 +194,10 @@
           ${V.editId ? h`<button class="btn ghost" data-action="cfg-cancel-edit">${t('action.close')}</button>` : ''}</div>
         ${ro ? h`<p class="muted small">${t('cfg.project.locked', { s: t(`cfg.status.${P.state(pr)}`) })}</p>` : ''}</div></div>
       <div class="cfg-notice" data-bind="notice" tabindex="-1" aria-live="polite" ${raw(V.notice ? '' : 'hidden')}>${V.notice ? h`<h3>${V.notice.title}</h3><p>${t('cfg.another?')}</p><div class="row"><button class="btn primary" data-action="cfg-another">${t('cfg.another')}</button><a class="btn ghost" href="#/calculator/summary">${t('cfg.viewSummary')}</a></div>` : ''}</div>`.toString();
+    const total = q?.available && !V.busy ? q.total : null;
+    if (V.swingAt) { const e = performance.now() - V.swingAt; if (e < 760) FE.motion?.swing(box, e); else V.swingAt = 0; }
+    if (total !== null && V.lastTotal != null && total !== V.lastTotal) FE.motion?.pulse(box.querySelector('.price'));
+    if (!V.busy) V.lastTotal = total;
     /* compact screens: the price and the add button stay in reach above the tab bar while the form is edited */
     const bar = $('#c-bar'); bar.hidden = isPanels() || !s.type;
     if (!bar.hidden) bar.innerHTML = h`<div aria-hidden="true"><small class="muted">${t('cfg.total')}</small><b class="price">${q?.available ? money(q.total) : '–'}</b></div><button class="btn primary" data-action="cfg-add" ${raw(canAdd ? '' : 'disabled')}>${icon('cart', 18)} ${t(V.editId ? 'cfg.saveChanges' : 'cfg.addToProject')}</button>`.toString();
@@ -367,12 +371,15 @@
   function decorDialog() {
     let room = 0, open = false;
     FE.overlay.open({ size: 'lg', title: t('cfg.decor'), render(body) {
+      let shown = null;
       const s = V.S, paint = () => {
         const it = { ...V.S, width: V.S.width || 1000, height: V.S.height || 2100 }, models = cfg.typesFor({ product: it.product, form: it.form, leaves: it.leaves, construction: it.construction });
         const sel = (k, opts, cur) => h`<label class="field"><span>${t(`cfg.decorSel.${k}`)}</span><select data-d="${k}">${opts.map(([v, l]) => h`<option value="${v}" ${raw(v === cur ? 'selected' : '')}>${l}</option>`)}</select></label>`;
         body.innerHTML = h`<div class="cfg-decor-body"><div><div class="seg" role="tablist">${cfg.data.rooms.map((r, i) => h`<button class="seg-btn" role="tab" aria-selected="${i === room}" data-d="room" data-i="${i}">${loc(r.name)}</button>`)}</div><div class="cfg-decor-art">${draw.room(it, cfg.data.rooms[room], open)}</div><p class="muted small">${t('cfg.decorNote')}</p></div>
           <div class="stack">${sel('model', models.map(m => [m, typeName(m)]), it.type)}${sel('colour', cfg.coloursFor(it).map(c => [c, colourName(c)]), it.colour)}${sel('glass', cfg.glassFor(it.type).map(g => [g, glassName(g)]), it.glass)}${cfg.handed(it.type) ? sel('side', [['stanga', sideLabel('stanga')], ['dreapta', sideLabel('dreapta')]], it.side || 'dreapta') : ''}
             <button class="btn ghost" data-d="open" aria-pressed="${open}">${t(open ? 'cfg.decorClose' : 'cfg.decorOpen')}</button></div></div>`.toString();
+        if (shown !== null && shown !== open) FE.motion?.flip(body.querySelector('.room-leaf'), shown ? 'scaleX(.22)' : 'none', open ? 'scaleX(.22)' : 'none');
+        shown = open;
       };
       paint();
       body.addEventListener('change', e => { const k = e.target.dataset.d; if (!k) return; if (k === 'model') pickType(e.target.value, V.S.side || 'dreapta'); else if (k === 'colour') choose({ colour: e.target.value }); else if (k === 'glass') choose({ glass: e.target.value }); else if (k === 'side') choose({ side: e.target.value }); paint(); });
