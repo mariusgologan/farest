@@ -1,12 +1,16 @@
 /* Hash router. Views register patterns; the router sets route + ambient context in the store. */
 (() => {
   const table = [];
+  /* each run gets a generation; a view that is still loading when a newer route starts is told to stop (see FE.api.request) */
+  let gen = 0, rendering = false;
   FE.router = {
     add(pattern, view, context) {
       table.push({ re: new RegExp('^' + pattern.replace(/:(\w+)/g, '(?<$1>[^/]+)') + '$'), view, context });
     },
     go: path => { location.hash = '#' + path; },
     current: () => location.hash.slice(1) || '/',
+    pending: () => rendering ? gen : 0,
+    alive: g => !g || g === gen,
     start() {
       if (!FE.router.started) { FE.router.started = true; addEventListener('hashchange', () => FE.router.run()); }
       return FE.router.run();
@@ -14,6 +18,7 @@
     async run() {
       const path = FE.router.current();
       const render = async () => {
+        const mine = ++gen; rendering = true;
         const hit = table.map(r => [r, path.match(r.re)]).find(([, m]) => m);
         const [route, m] = hit || [table[0], [path]];
         const params = m.groups || {};
@@ -23,7 +28,8 @@
         const host = FE.$('#view');
         host.setAttribute('aria-busy', 'true');
         host.innerHTML = '';
-        await route.view(host, params);
+        try { await route.view(host, params); } catch (e) { if (e.superseded) return; throw e; } finally { if (mine === gen) rendering = false; }
+        if (mine !== gen) return;
         host.removeAttribute('aria-busy');
         FE.$('#frame').scrollTo({ top: 0 });
         document.title = FE.t('meta.title');

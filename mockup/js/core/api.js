@@ -81,7 +81,10 @@
       const [path, qs] = url.split('?');
       const query = Object.fromEntries(new URLSearchParams(qs || ''));
       const [min, max] = cfg.api.latency;
+      const gen = FE.router?.pending?.();
       await FE.sleep(min + Math.random() * (max - min));
+      /* a route that started loading this data is no longer the current one: stop its view before it writes into the new page */
+      if (!FE.router.alive(gen)) throw Object.assign(new Error('superseded'), { superseded: true });
       for (const r of compiled) {
         const m = r.method === method && path.match(r.re);
         if (m) {
