@@ -76,7 +76,7 @@
       grid.innerHTML = ui.skeleton(FE.config.catalog.pageSize).toString();
       const qs = new URLSearchParams(Object.fromEntries(Object.entries(q).filter(([k, v]) => v && !(k === 'max' && +v >= 3000)))).toString();
       const r = await FE.api.get(`/products?${qs}`);
-      if (!host.isConnected) return;
+      if (!grid.isConnected) return;
       FE.$('[data-bind=count]', host).textContent = t('catalog.count', { n: r.meta.total });
       grid.innerHTML = r.data.length ? r.data.map(ui.card).join('') : h`<p class="empty muted">${t('catalog.none')}</p>`.toString();
       FE.$('[data-bind=pager]', host).innerHTML = r.meta.pages > 1 ? Array.from({ length: r.meta.pages }, (_, i) =>
