@@ -43,8 +43,8 @@
 
 /* mica: large, quiet surfaces (configurator panels, bands, footer) are a static tinted pane: no backdrop blur (cheap, steady), the same grain and 1px rim,
    a soft shadow, no edge light. Acrylic stays on the bars, popovers, sheets and cards. Screen only (print keeps its own rules); the corporate skin stays flat. */
-:root { --mica-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); --mica-fill: rgb(238 244 250 / .9); --mica-shadow: 0 1px 2px rgb(var(--shadow-rgb) / .1), 0 8px 24px rgb(var(--shadow-rgb) / .08); }
-:root[data-theme="dark"] { --mica-fill: rgb(18 27 38 / .88); --mica-shadow: 0 1px 2px rgb(0 0 0 / .4), 0 8px 24px rgb(0 0 0 / .25); }
+:root { --mica-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); --mica-fill: rgb(238 244 250 / .62); --mica-shadow: 0 1px 2px rgb(var(--shadow-rgb) / .1), 0 8px 24px rgb(var(--shadow-rgb) / .08); }
+:root[data-theme="dark"] { --mica-fill: rgb(18 27 38 / .58); --mica-shadow: 0 1px 2px rgb(0 0 0 / .4), 0 8px 24px rgb(0 0 0 / .25); }
 @media screen {
   html:not([data-skin="corporate"]) :is(.cfg-sec, .cfg-panel, .cfg-review, .cfg-project, .cfg-sum, .prose-band, .split-band, .prose-page, .aside).acrylic,
   html:not([data-skin="corporate"]) .foot { background: var(--mica-fill); -webkit-backdrop-filter: none; backdrop-filter: none; transition: none;
