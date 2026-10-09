@@ -217,5 +217,6 @@ html[data-eff="compact"] .c-refs th, html[data-eff="compact"] .c-refs td { paddi
 @media (pointer: coarse) {
   .u-bar a, .u-link, .u-lang button, .c-more, .m-link, .c-shops .btn.small, .c-docs a, .c-docs button { min-height: var(--hit); }
   .u-lang button { min-width: var(--hit); }
+  .f-grid a { display: inline-flex; align-items: center; min-width: var(--hit); min-height: var(--hit); }
   .c-card li a, .c-card p a, .c-shops td a { display: inline-flex; align-items: center; min-height: var(--hit); }
 }
