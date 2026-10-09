@@ -44,12 +44,13 @@
   FE.contextFor = route => {
     const m = route.match(/^\/c\/(\w+)/); if (m) return byId(FE.db.categories, m[1])?.ambient || 'home';
     const p = route.match(/^\/p\/([\w-]+)/); if (p) return byId(FE.db.categories, byId(FE.db.products, p[1])?.cat)?.ambient || 'home';
-    return { '/calculator': 'calc', '/shops': 'shops' }[route] || 'home';
+    return { '/calculator': 'calc', '/calculator/summary': 'calc', '/shops': 'shops' }[route] || 'home';
   };
   FE.router.add('/', FE.views.home, 'home');
   FE.router.add('/c/:cat', FE.views.catalog, ({ cat }) => FE.contextFor('/c/' + cat));
   FE.router.add('/p/:id', FE.views.product, ({ id }) => FE.contextFor('/p/' + id));
   FE.router.add('/calculator', FE.views.calculator, 'calc');
+  FE.router.add('/calculator/summary', FE.views.cfgSummary, 'calc');
   FE.router.add('/shops', FE.views.shops, 'shops');
   FE.router.add('/page/:slug', FE.views.page, 'home');
 
@@ -58,12 +59,7 @@
   A('add', (el, ev, d) => { const p = byId(FE.db.products, d.id); FE.cart.add({ pid: p.id, opening: p.opening, color: 'white', extras: [], qty: 1 }); FE.toast(t('toast.added')); });
   A('quickview', (el, ev, d) => FE.flows.quickview(d.id));
   A('configure', (el, ev, d) => FE.flows.configure(d.id));
-  A('edit-line', (el, ev, d) => {
-    const l = FE.store.get('cart')[+d.i];
-    if (!l.custom) return FE.flows.configure(l.pid, +d.i);
-    FE.calcEdit = { i: +d.i, custom: l.custom, qty: l.qty };
-    FE.overlay.closeAll(); FE.router.current() === '/calculator' ? FE.router.run() : FE.router.go('/calculator');
-  });
+  A('edit-line', (el, ev, d) => FE.flows.configure(FE.store.get('cart')[+d.i].pid, +d.i));
   A('open-profile', (el, ev, d) => FE.flows.profile(d.id));
   A('open-measure', () => FE.flows.measure());
   A('map', (el, ev, d) => FE.flows.map(d.id));

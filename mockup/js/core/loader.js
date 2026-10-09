@@ -28,7 +28,8 @@
   /* boot data: every file listed in config.content */
   FE.loadAll = async () => {
     const c = FE.config.content;
-    const [products, shops, offers, faq, site] = await Promise.all([c.products, c.shops, c.offers, c.faq, c.site].map(load));
+    const [products, shops, offers, faq, site, configurator] = await Promise.all([c.products, c.shops, c.offers, c.faq, c.site, c.configurator].map(load));
+    FE.cfg.data = configurator;
     FE.db.products = products.map(r => ({
       id: r.id, cat: r.cat, group: r.group, kind: r.kind, name: r.name, w: r.w || 0, h: r.h || 0, price: r.price,
       producer: r.producer || null, profile: FE.db.producers[r.producer] || null, chambers: r.chambers || null, mm: r.mm || null,

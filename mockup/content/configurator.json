@@ -1,0 +1,1754 @@
+{
+ "version": 1,
+ "note": {
+  "ro": "Catalog și reguli ale configuratorului. Prețurile sunt ilustrative.",
+  "en": "Configurator catalogue and rules. Prices are illustrative."
+ },
+ "products": [
+  {
+   "id": "windows",
+   "name": {
+    "ro": "Ferestre",
+    "en": "Windows"
+   },
+   "hint": {
+    "ro": "1, 2 sau 3 canate",
+    "en": "1, 2 or 3 sashes"
+   },
+   "sample": "fixdd",
+   "forms": [
+    "one",
+    "two",
+    "three"
+   ],
+   "series": [
+    "lumena-esential",
+    "lumena-plus",
+    "lumena-color-plus"
+   ],
+   "openings": "fixed-side",
+   "thresholds": []
+  },
+  {
+   "id": "balcony",
+   "name": {
+    "ro": "Uși de balcon",
+    "en": "Balcony doors"
+   },
+   "hint": {
+    "ro": "Un canat · Două canate cu stulp",
+    "en": "One leaf · Two leaves with mullion"
+   },
+   "sample": "balcony-dd",
+   "equipment": [
+    {
+     "ro": "Cercevea de fereastră",
+     "en": "Window sash"
+    },
+    {
+     "ro": "Balamale de fereastră",
+     "en": "Window hinges"
+    },
+    {
+     "ro": "Închidere multipunct",
+     "en": "Multi-point lock"
+    },
+    {
+     "ro": "Mâner de fereastră doar pe interior",
+     "en": "Window handle, inside only"
+    }
+   ],
+   "series": [
+    "lumena-esential",
+    "lumena-plus",
+    "lumena-color-plus"
+   ],
+   "thresholds": [
+    "frame"
+   ]
+  },
+  {
+   "id": "doors",
+   "name": {
+    "ro": "Uși secundare",
+    "en": "Secondary doors"
+   },
+   "hint": {
+    "ro": "4 modele · Alb, Nuc, Gri antracit",
+    "en": "4 models · White, Walnut, Anthracite"
+   },
+   "sample": "door-glass-third",
+   "equipment": [
+    {
+     "ro": "Cercevea de fereastră",
+     "en": "Window sash"
+    },
+    {
+     "ro": "Balamale de fereastră",
+     "en": "Window hinges"
+    },
+    {
+     "ro": "Închidere multipunct",
+     "en": "Multi-point lock"
+    }
+   ],
+   "series": [
+    "lumena-esential"
+   ],
+   "thresholds": [
+    "frame",
+    "aluminium"
+   ]
+  },
+  {
+   "id": "exterior",
+   "name": {
+    "ro": "Uși exterior",
+    "en": "Exterior doors"
+   },
+   "hint": {
+    "ro": "Un canat · Două canate cu pui",
+    "en": "One leaf · Two leaves with side leaf"
+   },
+   "sample": "exterior-glass-third",
+   "equipment": [
+    {
+     "ro": "Cercevea de ușă",
+     "en": "Door sash"
+    },
+    {
+     "ro": "Balamale de ușă",
+     "en": "Door hinges"
+    },
+    {
+     "ro": "Închidere multipunct",
+     "en": "Multi-point lock"
+    }
+   ],
+   "series": [
+    "lumena-esential"
+   ],
+   "thresholds": [
+    "frame",
+    "aluminium"
+   ],
+   "leaves": [
+    1,
+    2
+   ],
+   "constructions": [
+    "mullions",
+    "ornamental",
+    "t-bars"
+   ]
+  },
+  {
+   "id": "panels",
+   "name": {
+    "ro": "Panouri",
+    "en": "Panels"
+   },
+   "hint": {
+    "ro": "Două tâmplării cuplate",
+    "en": "Two coupled units"
+   },
+   "sample": "panel"
+  }
+ ],
+ "forms": {
+  "one": {
+   "name": {
+    "ro": "Un canat",
+    "en": "One sash"
+   },
+   "hint": {
+    "ro": "1 canat",
+    "en": "1 sash"
+   },
+   "types": [
+    "fix",
+    "sd",
+    "dd",
+    "kipp"
+   ],
+   "sample": "fix"
+  },
+  "two": {
+   "name": {
+    "ro": "Două canate",
+    "en": "Two sashes"
+   },
+   "hint": {
+    "ro": "2 canate",
+    "en": "2 sashes"
+   },
+   "types": [
+    "fixsd",
+    "fixdd",
+    "ddsd"
+   ],
+   "sample": "fixdd"
+  },
+  "three": {
+   "name": {
+    "ro": "Trei canate",
+    "en": "Three sashes"
+   },
+   "hint": {
+    "ro": "3 canate",
+    "en": "3 sashes"
+   },
+   "types": [
+    "t3fixddsd",
+    "t3ddfixdd",
+    "t3fixddfix"
+   ],
+   "sample": "t3ddfixdd"
+  }
+ },
+ "constructions": {
+  "mullions": {
+   "name": {
+    "1": {
+     "ro": "Modele standard",
+     "en": "Standard models"
+    },
+    "2": {
+     "ro": "Umplutură integrală",
+     "en": "Full infill"
+    }
+   },
+   "hint": {
+    "1": {
+     "ro": "Geam sau panel PVC",
+     "en": "Glass or PVC panel"
+    },
+    "2": {
+     "ro": "Sticlă sau panel PVC, după materialul ales",
+     "en": "Glass or PVC panel, as chosen"
+    }
+   },
+   "pui": {
+    "2": 440
+   }
+  },
+  "ornamental": {
+   "name": {
+    "1": {
+     "ro": "Cu paneluri ornamentale",
+     "en": "With ornamental panels"
+    },
+    "2": {
+     "ro": "Cu paneluri ornamentale",
+     "en": "With ornamental panels"
+    }
+   },
+   "hint": {
+    "1": {
+     "ro": "Paneluri cu model ornamental · doar Alb",
+     "en": "Ornamental panels · White only"
+    },
+    "2": {
+     "ro": "Paneluri cu model ornamental · doar Alb",
+     "en": "Ornamental panels · White only"
+    }
+   },
+   "pui": {
+    "2": 535
+   }
+  },
+  "t-bars": {
+   "name": {
+    "1": {
+     "ro": "Uși cu T-uri",
+     "en": "T-bar doors"
+    },
+    "2": {
+     "ro": "Uși cu T-uri",
+     "en": "T-bar doors"
+    }
+   },
+   "hint": {
+    "1": {
+     "ro": "Model Sithonia",
+     "en": "Sithonia model"
+    },
+    "2": {
+     "ro": "Model Thasos",
+     "en": "Thasos model"
+    }
+   },
+   "pui": {
+    "2": 440
+   }
+  }
+ },
+ "series": [
+  {
+   "id": "lumena-esential",
+   "name": "LUMENA Esential",
+   "mm": 60,
+   "chambers": 4,
+   "tier": 1,
+   "colours": [
+    "alb",
+    "nuc",
+    "gri-antracit"
+   ],
+   "blurb": {
+    "ro": "Profil de bază, 4 camere, două garnituri.",
+    "en": "Entry profile, 4 chambers, two seals."
+   }
+  },
+  {
+   "id": "lumena-plus",
+   "name": "LUMENA Plus",
+   "mm": 70,
+   "chambers": 5,
+   "tier": 2,
+   "colours": [
+    "alb"
+   ],
+   "blurb": {
+    "ro": "Profil de 70 mm cu 5 camere, izolare mai bună.",
+    "en": "70 mm profile with 5 chambers, better insulation."
+   }
+  },
+  {
+   "id": "lumena-color-plus",
+   "name": "LUMENA Color Plus",
+   "mm": 70,
+   "chambers": 6,
+   "tier": 3,
+   "colours": [
+    "golden-oak",
+    "nuc",
+    "wenge-mooreiche",
+    "gri-antracit"
+   ],
+   "blurb": {
+    "ro": "70 mm, 6 camere, folie colorată în masă.",
+    "en": "70 mm, 6 chambers, through-colour foil."
+   }
+  }
+ ],
+ "colours": [
+  {
+   "id": "alb",
+   "name": {
+    "ro": "Alb",
+    "en": "White"
+   },
+   "hex": "#f4f6f8",
+   "delta": 0
+  },
+  {
+   "id": "nuc",
+   "name": {
+    "ro": "Nuc",
+    "en": "Walnut"
+   },
+   "hex": "#6b4426",
+   "grain": "#4f301a",
+   "delta": 0.12
+  },
+  {
+   "id": "gri-antracit",
+   "name": {
+    "ro": "Gri antracit",
+    "en": "Anthracite grey"
+   },
+   "hex": "#3a4048",
+   "delta": 0.15
+  },
+  {
+   "id": "golden-oak",
+   "name": {
+    "ro": "Golden Oak",
+    "en": "Golden Oak"
+   },
+   "hex": "#b9803c",
+   "grain": "#8c5a22",
+   "delta": 0.12
+  },
+  {
+   "id": "wenge-mooreiche",
+   "name": {
+    "ro": "Wenge Eiche Dunkel",
+    "en": "Wenge Eiche Dunkel"
+   },
+   "hex": "#3d2b22",
+   "grain": "#241811",
+   "delta": 0.15
+  }
+ ],
+ "glass": [
+  {
+   "id": "f4-lowe",
+   "name": {
+    "ro": "24mm F4+LowE (sticlă clară)",
+    "en": "24mm F4+LowE (clear glass)"
+   },
+   "delta": 0
+  },
+  {
+   "id": "delta4-lowe",
+   "name": {
+    "ro": "24mm Delta4+LowE",
+    "en": "24mm Delta4+LowE"
+   },
+   "delta": 0.1
+  },
+  {
+   "id": "hasir4-lowe",
+   "name": {
+    "ro": "24mm Hasir4+LowE",
+    "en": "24mm Hasir4+LowE"
+   },
+   "delta": 0.12
+  },
+  {
+   "id": "mat4-lowe",
+   "name": {
+    "ro": "24mm LowE4+Mat4 (sticlă mată)",
+    "en": "24mm LowE4+Mat4 (matt glass)"
+   },
+   "delta": 0.1
+  },
+  {
+   "id": "panel",
+   "name": {
+    "ro": "Panel PVC (fără sticlă)",
+    "en": "PVC panel (no glass)"
+   },
+   "delta": -0.05
+  }
+ ],
+ "thresholds": {
+  "frame": {
+   "ro": "Prag din toc",
+   "en": "Frame threshold"
+  },
+  "aluminium": {
+   "ro": "Prag de aluminiu",
+   "en": "Aluminium threshold"
+  }
+ },
+ "types": {
+  "fix": {
+   "product": "windows",
+   "name": {
+    "ro": "Fix",
+    "en": "Fixed"
+   },
+   "hint": {
+    "ro": "Fără deschidere",
+    "en": "No opening"
+   },
+   "limits": {
+    "wmin": 400,
+    "wmax": 1500,
+    "hmin": 400,
+    "hmax": 1500
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.0,
+   "hardware": 0,
+   "form": "one",
+   "handed": false,
+   "parts": [
+    {
+     "k": "fix"
+    }
+   ]
+  },
+  "sd": {
+   "product": "windows",
+   "name": {
+    "ro": "Simplă deschidere",
+    "en": "Single opening"
+   },
+   "hint": {
+    "ro": "Deschidere laterală · doar Alb, seria Esential",
+    "en": "Side opening · White only, Esential series"
+   },
+   "limits": {
+    "wmin": 560,
+    "wmax": 900,
+    "hmin": 560,
+    "hmax": 1200
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.1,
+   "hardware": 70,
+   "form": "one",
+   "handed": true,
+   "parts": [
+    {
+     "k": "sd",
+     "h": "R"
+    }
+   ],
+   "only": {
+    "series": [
+     "lumena-esential"
+    ],
+    "colour": [
+     "alb"
+    ]
+   }
+  },
+  "dd": {
+   "product": "windows",
+   "name": {
+    "ro": "Dublă deschidere",
+    "en": "Tilt and turn"
+   },
+   "hint": {
+    "ro": "Deschidere laterală și rabatare",
+    "en": "Side opening and tilt"
+   },
+   "limits": {
+    "wmin": 560,
+    "wmax": 900,
+    "hmin": 560,
+    "hmax": 1600
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.2,
+   "hardware": 110,
+   "form": "one",
+   "handed": true,
+   "parts": [
+    {
+     "k": "dd",
+     "h": "R"
+    }
+   ]
+  },
+  "kipp": {
+   "product": "windows",
+   "name": {
+    "ro": "Kipp",
+    "en": "Tilt only"
+   },
+   "hint": {
+    "ro": "Deschidere prin rabatare",
+    "en": "Tilt opening"
+   },
+   "limits": {
+    "wmin": 560,
+    "wmax": 1000,
+    "hmin": 560,
+    "hmax": 800
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.05,
+   "hardware": 60,
+   "form": "one",
+   "handed": false,
+   "parts": [
+    {
+     "k": "kipp"
+    }
+   ]
+  },
+  "fixsd": {
+   "product": "windows",
+   "name": {
+    "ro": "Fix + simplă deschidere",
+    "en": "Fixed + single opening"
+   },
+   "hint": {
+    "ro": "Un element fix și unul mobil",
+    "en": "One fixed and one opening"
+   },
+   "limits": {
+    "wmin": 1000,
+    "wmax": 1800,
+    "hmin": 600,
+    "hmax": 1200
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.1,
+   "hardware": 70,
+   "form": "two",
+   "handed": true,
+   "parts": [
+    {
+     "k": "fix"
+    },
+    {
+     "k": "sd",
+     "h": "R"
+    }
+   ],
+   "only": {
+    "series": [
+     "lumena-esential"
+    ],
+    "colourNot": [
+     "nuc",
+     "gri-antracit"
+    ]
+   }
+  },
+  "fixdd": {
+   "product": "windows",
+   "name": {
+    "ro": "Fix + dublă deschidere",
+    "en": "Fixed + tilt and turn"
+   },
+   "hint": {
+    "ro": "Un element fix și unul oscilobatant",
+    "en": "One fixed and one tilt-and-turn"
+   },
+   "limits": {
+    "wmin": 1000,
+    "wmax": 1800,
+    "hmin": 600,
+    "hmax": 1600
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.15,
+   "hardware": 110,
+   "form": "two",
+   "handed": true,
+   "parts": [
+    {
+     "k": "fix"
+    },
+    {
+     "k": "dd",
+     "h": "R"
+    }
+   ]
+  },
+  "ddsd": {
+   "product": "windows",
+   "name": {
+    "ro": "Dublă + simplă deschidere",
+    "en": "Tilt-turn + single opening"
+   },
+   "hint": {
+    "ro": "Ambele canate se deschid",
+    "en": "Both sashes open"
+   },
+   "limits": {
+    "wmin": 1000,
+    "wmax": 1800,
+    "hmin": 600,
+    "hmax": 1600
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.2,
+   "hardware": 180,
+   "form": "two",
+   "handed": true,
+   "parts": [
+    {
+     "k": "sd",
+     "h": "L"
+    },
+    {
+     "k": "dd",
+     "h": "R"
+    }
+   ],
+   "sideLabel": "ddsd"
+  },
+  "t3fixddsd": {
+   "product": "windows",
+   "name": {
+    "ro": "Fix + dublă + simplă deschidere",
+    "en": "Fixed + tilt-turn + single"
+   },
+   "hint": {
+    "ro": "Un element fix și două canate mobile",
+    "en": "One fixed and two opening sashes"
+   },
+   "limits": {
+    "wmin": 1500,
+    "wmax": 2400,
+    "hmin": 600,
+    "hmax": 1600
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.2,
+   "hardware": 180,
+   "form": "three",
+   "handed": true,
+   "parts": [
+    {
+     "k": "fix"
+    },
+    {
+     "k": "dd",
+     "h": "L"
+    },
+    {
+     "k": "sd",
+     "h": "R"
+    }
+   ]
+  },
+  "t3ddfixdd": {
+   "product": "windows",
+   "name": {
+    "ro": "Dublă + fix + dublă deschidere",
+    "en": "Tilt-turn + fixed + tilt-turn"
+   },
+   "hint": {
+    "ro": "Două canate oscilobatante și fix central",
+    "en": "Two tilt-and-turn sashes, fixed centre"
+   },
+   "limits": {
+    "wmin": 1500,
+    "wmax": 2400,
+    "hmin": 600,
+    "hmax": 1600
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.25,
+   "hardware": 220,
+   "form": "three",
+   "handed": false,
+   "parts": [
+    {
+     "k": "dd",
+     "h": "L"
+    },
+    {
+     "k": "fix"
+    },
+    {
+     "k": "dd",
+     "h": "R"
+    }
+   ]
+  },
+  "t3fixddfix": {
+   "product": "windows",
+   "name": {
+    "ro": "Fix + dublă deschidere + fix",
+    "en": "Fixed + tilt-turn + fixed"
+   },
+   "hint": {
+    "ro": "Canat central oscilobatant și două fixe",
+    "en": "Tilt-and-turn centre, two fixed"
+   },
+   "limits": {
+    "wmin": 1500,
+    "wmax": 2400,
+    "hmin": 600,
+    "hmax": 1600
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.2,
+   "hardware": 110,
+   "form": "three",
+   "handed": true,
+   "parts": [
+    {
+     "k": "fix"
+    },
+    {
+     "k": "dd",
+     "h": "R"
+    },
+    {
+     "k": "fix"
+    }
+   ]
+  },
+  "balcony-dd": {
+   "product": "balcony",
+   "name": {
+    "ro": "Ușă de balcon · Un canat",
+    "en": "Balcony door · One leaf"
+   },
+   "hint": {
+    "ro": "Dublă deschidere · Prag din toc",
+    "en": "Tilt and turn · Frame threshold"
+   },
+   "limits": {
+    "wmin": 560,
+    "wmax": 900,
+    "hmin": 1750,
+    "hmax": 2175
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "hasir4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.3,
+   "hardware": 150,
+   "handed": true,
+   "parts": [
+    {
+     "k": "dd",
+     "h": "R"
+    }
+   ],
+   "door": true
+  },
+  "balcony-stulp": {
+   "product": "balcony",
+   "name": {
+    "ro": "Ușă de balcon · Două canate",
+    "en": "Balcony door · Two leaves"
+   },
+   "hint": {
+    "ro": "Stulp · Prag din toc",
+    "en": "Mullion-free double leaf · Frame threshold"
+   },
+   "limits": {
+    "wmin": 1000,
+    "wmax": 1800,
+    "hmin": 1750,
+    "hmax": 2175
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "hasir4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.4,
+   "hardware": 260,
+   "handed": true,
+   "parts": [
+    {
+     "k": "sd",
+     "h": "L"
+    },
+    {
+     "k": "dd",
+     "h": "R"
+    }
+   ],
+   "door": true,
+   "sideLabel": "ddsd"
+  },
+  "door-glass-third": {
+   "product": "doors",
+   "name": {
+    "ro": "Ușă secundară · Geam termopan 1/3",
+    "en": "Secondary door · 1/3 glazing"
+   },
+   "hint": {
+    "ro": "Delta sau Mat sus · panel PVC jos",
+    "en": "Delta or Matt above · PVC panel below"
+   },
+   "limits": {
+    "wmin": 700,
+    "wmax": 1000,
+    "hmin": 1750,
+    "hmax": 2175
+   },
+   "glass": [
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.5,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "third",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ]
+  },
+  "door-glass-two-thirds": {
+   "product": "doors",
+   "name": {
+    "ro": "Ușă secundară · Geam termopan 2/3",
+    "en": "Secondary door · 2/3 glazing"
+   },
+   "hint": {
+    "ro": "Delta sau Mat sus · panel PVC jos",
+    "en": "Delta or Matt above · PVC panel below"
+   },
+   "limits": {
+    "wmin": 700,
+    "wmax": 1000,
+    "hmin": 1750,
+    "hmax": 2175
+   },
+   "glass": [
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.55,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "two-thirds",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ]
+  },
+  "door-panel": {
+   "product": "doors",
+   "name": {
+    "ro": "Ușă secundară · Panel integral",
+    "en": "Secondary door · Full panel"
+   },
+   "hint": {
+    "ro": "Panel PVC de sus până jos",
+    "en": "PVC panel top to bottom"
+   },
+   "limits": {
+    "wmin": 700,
+    "wmax": 1000,
+    "hmin": 1750,
+    "hmax": 2175
+   },
+   "glass": [
+    "panel"
+   ],
+   "factor": 1.4,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "panel",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ]
+  },
+  "door-glass-full": {
+   "product": "doors",
+   "name": {
+    "ro": "Ușă secundară · Sticlă integrală",
+    "en": "Secondary door · Full glass"
+   },
+   "hint": {
+    "ro": "Sticlă clară, Delta sau Mat de sus până jos",
+    "en": "Clear, Delta or Matt glass top to bottom"
+   },
+   "limits": {
+    "wmin": 700,
+    "wmax": 1000,
+    "hmin": 1750,
+    "hmax": 2175
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.6,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "full",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ]
+  },
+  "exterior-glass-third": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Geam termopan 1/3",
+    "en": "Exterior door · 1/3 glazing"
+   },
+   "hint": {
+    "ro": "Delta, Hasir sau Mat sus · panel PVC jos",
+    "en": "Delta, Hasir or Matt above · PVC panel below"
+   },
+   "limits": {
+    "wmin": 900,
+    "wmax": 1100,
+    "hmin": 1900,
+    "hmax": 2200
+   },
+   "glass": [
+    "delta4-lowe",
+    "hasir4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.9,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "third",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 1,
+   "construction": "mullions"
+  },
+  "exterior-glass-two-thirds": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Geam termopan 2/3",
+    "en": "Exterior door · 2/3 glazing"
+   },
+   "hint": {
+    "ro": "Delta, Hasir sau Mat sus · panel PVC jos",
+    "en": "Delta, Hasir or Matt above · PVC panel below"
+   },
+   "limits": {
+    "wmin": 900,
+    "wmax": 1100,
+    "hmin": 1900,
+    "hmax": 2200
+   },
+   "glass": [
+    "delta4-lowe",
+    "hasir4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 1.95,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "two-thirds",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 1,
+   "construction": "mullions"
+  },
+  "exterior-panel": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Panel integral",
+    "en": "Exterior door · Full panel"
+   },
+   "hint": {
+    "ro": "Panel PVC de sus până jos",
+    "en": "PVC panel top to bottom"
+   },
+   "limits": {
+    "wmin": 900,
+    "wmax": 1100,
+    "hmin": 1900,
+    "hmax": 2200
+   },
+   "glass": [
+    "panel"
+   ],
+   "factor": 1.8,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "panel",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 1,
+   "construction": "mullions"
+  },
+  "exterior-glass-full": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Sticlă integrală",
+    "en": "Exterior door · Full glass"
+   },
+   "hint": {
+    "ro": "Sticlă clară sau Mat de sus până jos",
+    "en": "Clear or Matt glass top to bottom"
+   },
+   "limits": {
+    "wmin": 900,
+    "wmax": 1100,
+    "hmin": 1900,
+    "hmax": 2200
+   },
+   "glass": [
+    "f4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 2.0,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "full",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 1,
+   "construction": "mullions"
+  },
+  "exterior-pui-glass-full": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Două canate · Umplutură integrală",
+    "en": "Exterior door · Two leaves · Full infill"
+   },
+   "hint": {
+    "ro": "Sticlă sau panel PVC pe ambele canate · Pui 440 mm",
+    "en": "Glass or PVC panel on both leaves · Side leaf 440 mm"
+   },
+   "limits": {
+    "wmin": 1230,
+    "wmax": 1400,
+    "hmin": 1900,
+    "hmax": 2200
+   },
+   "glass": [
+    "f4-lowe",
+    "delta4-lowe",
+    "hasir4-lowe",
+    "panel",
+    "mat4-lowe"
+   ],
+   "factor": 2.5,
+   "hardware": 330,
+   "handed": true,
+   "door": true,
+   "fill": "full",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 2,
+   "construction": "mullions",
+   "pui": 440
+  },
+  "exterior-ornamental-verona-panel": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Un canat · VERONA",
+    "en": "Exterior door · One leaf · VERONA"
+   },
+   "hint": {
+    "ro": "Panel ornamental · doar Alb",
+    "en": "Ornamental panel · White only"
+   },
+   "limits": {
+    "wmin": 900,
+    "wmax": 1100,
+    "hmin": 1900,
+    "hmax": 2250
+   },
+   "glass": [
+    "panel"
+   ],
+   "factor": 2.2,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "ornament",
+   "ornament": "verona",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 1,
+   "construction": "ornamental"
+  },
+  "exterior-ornamental-bari-panel": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Un canat · BARI",
+    "en": "Exterior door · One leaf · BARI"
+   },
+   "hint": {
+    "ro": "Panel ornamental · doar Alb",
+    "en": "Ornamental panel · White only"
+   },
+   "limits": {
+    "wmin": 900,
+    "wmax": 1100,
+    "hmin": 1900,
+    "hmax": 2250
+   },
+   "glass": [
+    "panel"
+   ],
+   "factor": 2.2,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "ornament",
+   "ornament": "bari",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 1,
+   "construction": "ornamental"
+  },
+  "exterior-ornamental-venetia-panel": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Un canat · VENETIA",
+    "en": "Exterior door · One leaf · VENETIA"
+   },
+   "hint": {
+    "ro": "Panel ornamental · doar Alb",
+    "en": "Ornamental panel · White only"
+   },
+   "limits": {
+    "wmin": 900,
+    "wmax": 1100,
+    "hmin": 1900,
+    "hmax": 2250
+   },
+   "glass": [
+    "panel"
+   ],
+   "factor": 2.2,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "ornament",
+   "ornament": "venetia",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 1,
+   "construction": "ornamental"
+  },
+  "exterior-pui-ornamental-venetia-panel": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Două canate · VENETIA + PUI",
+    "en": "Exterior door · Two leaves · VENETIA + side leaf"
+   },
+   "hint": {
+    "ro": "Panel ornamental · Alb · Pui 535 mm",
+    "en": "Ornamental panel · White · Side leaf 535 mm"
+   },
+   "limits": {
+    "wmin": 1400,
+    "wmax": 1600,
+    "hmin": 1900,
+    "hmax": 2250
+   },
+   "glass": [
+    "panel"
+   ],
+   "factor": 3.0,
+   "hardware": 330,
+   "handed": true,
+   "door": true,
+   "fill": "ornament",
+   "ornament": "venetia",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 2,
+   "construction": "ornamental",
+   "pui": 535
+  },
+  "exterior-ornamental-milano-panel": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Un canat · MILANO",
+    "en": "Exterior door · One leaf · MILANO"
+   },
+   "hint": {
+    "ro": "Panel ornamental · doar Alb",
+    "en": "Ornamental panel · White only"
+   },
+   "limits": {
+    "wmin": 900,
+    "wmax": 1100,
+    "hmin": 1900,
+    "hmax": 2250
+   },
+   "glass": [
+    "panel"
+   ],
+   "factor": 2.2,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "ornament",
+   "ornament": "milano",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 1,
+   "construction": "ornamental"
+  },
+  "exterior-ornamental-rebecca-panel": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Un canat · REBECCA",
+    "en": "Exterior door · One leaf · REBECCA"
+   },
+   "hint": {
+    "ro": "Panel ornamental · doar Alb",
+    "en": "Ornamental panel · White only"
+   },
+   "limits": {
+    "wmin": 900,
+    "wmax": 1100,
+    "hmin": 1900,
+    "hmax": 2250
+   },
+   "glass": [
+    "panel"
+   ],
+   "factor": 2.2,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "ornament",
+   "ornament": "rebecca",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 1,
+   "construction": "ornamental"
+  },
+  "exterior-pui-ornamental-rebecca-panel": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Două canate · REBECCA + PUI",
+    "en": "Exterior door · Two leaves · REBECCA + side leaf"
+   },
+   "hint": {
+    "ro": "Panel ornamental · Alb · Pui 535 mm",
+    "en": "Ornamental panel · White · Side leaf 535 mm"
+   },
+   "limits": {
+    "wmin": 1400,
+    "wmax": 1600,
+    "hmin": 1900,
+    "hmax": 2250
+   },
+   "glass": [
+    "panel"
+   ],
+   "factor": 3.0,
+   "hardware": 330,
+   "handed": true,
+   "door": true,
+   "fill": "ornament",
+   "ornament": "rebecca",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 2,
+   "construction": "ornamental",
+   "pui": 535
+  },
+  "exterior-ornamental-bologna-panel": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Un canat · BOLOGNA",
+    "en": "Exterior door · One leaf · BOLOGNA"
+   },
+   "hint": {
+    "ro": "Panel ornamental · doar Alb",
+    "en": "Ornamental panel · White only"
+   },
+   "limits": {
+    "wmin": 900,
+    "wmax": 1100,
+    "hmin": 1900,
+    "hmax": 2250
+   },
+   "glass": [
+    "panel"
+   ],
+   "factor": 2.2,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "ornament",
+   "ornament": "bologna",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 1,
+   "construction": "ornamental"
+  },
+  "exterior-pui-ornamental-bologna-panel": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Două canate · BOLOGNA + PUI",
+    "en": "Exterior door · Two leaves · BOLOGNA + side leaf"
+   },
+   "hint": {
+    "ro": "Panel ornamental · Alb · Pui 535 mm",
+    "en": "Ornamental panel · White · Side leaf 535 mm"
+   },
+   "limits": {
+    "wmin": 1400,
+    "wmax": 1600,
+    "hmin": 1900,
+    "hmax": 2250
+   },
+   "glass": [
+    "panel"
+   ],
+   "factor": 3.0,
+   "hardware": 330,
+   "handed": true,
+   "door": true,
+   "fill": "ornament",
+   "ornament": "bologna",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 2,
+   "construction": "ornamental",
+   "pui": 535
+  },
+  "exterior-ornamental-napoli-panel": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Un canat · NAPOLI",
+    "en": "Exterior door · One leaf · NAPOLI"
+   },
+   "hint": {
+    "ro": "Panel ornamental · doar Alb",
+    "en": "Ornamental panel · White only"
+   },
+   "limits": {
+    "wmin": 900,
+    "wmax": 1100,
+    "hmin": 1900,
+    "hmax": 2250
+   },
+   "glass": [
+    "panel"
+   ],
+   "factor": 2.2,
+   "hardware": 200,
+   "handed": true,
+   "door": true,
+   "fill": "ornament",
+   "ornament": "napoli",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 1,
+   "construction": "ornamental"
+  },
+  "exterior-t-sithonia": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Un canat · Sithonia",
+    "en": "Exterior door · One leaf · Sithonia"
+   },
+   "hint": {
+    "ro": "Cu T vertical · geam lateral și panel PVC",
+    "en": "Vertical T-bar · side glass and PVC panel"
+   },
+   "limits": {
+    "wmin": 850,
+    "wmax": 1050,
+    "hmin": 1900,
+    "hmax": 2200
+   },
+   "glass": [
+    "delta4-lowe",
+    "hasir4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 2.3,
+   "hardware": 220,
+   "handed": true,
+   "door": true,
+   "fill": "t-bars",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 1,
+   "construction": "t-bars"
+  },
+  "exterior-pui-t-thasos": {
+   "product": "exterior",
+   "name": {
+    "ro": "Ușă exterior · Două canate · Thasos",
+    "en": "Exterior door · Two leaves · Thasos"
+   },
+   "hint": {
+    "ro": "Cu T-uri · șase ochiuri de sticlă și panel PVC",
+    "en": "T-bars · six glass panes and PVC panel"
+   },
+   "limits": {
+    "wmin": 1230,
+    "wmax": 1400,
+    "hmin": 1900,
+    "hmax": 2200
+   },
+   "glass": [
+    "delta4-lowe",
+    "hasir4-lowe",
+    "mat4-lowe"
+   ],
+   "factor": 3.1,
+   "hardware": 330,
+   "handed": true,
+   "door": true,
+   "fill": "t-bars",
+   "parts": [
+    {
+     "k": "door"
+    }
+   ],
+   "leaves": 2,
+   "construction": "t-bars",
+   "pui": 440
+  }
+ },
+ "limitOverrides": [
+  {
+   "when": {
+    "series": "lumena-color-plus"
+   },
+   "types": {
+    "fixdd": {
+     "wmin": 1050
+    },
+    "t3fixddsd": {
+     "wmin": 1550
+    },
+    "t3ddfixdd": {
+     "wmin": 1550
+    },
+    "t3fixddfix": {
+     "wmin": 1550
+    },
+    "balcony-stulp": {
+     "wmin": 1014
+    }
+   }
+  }
+ ],
+ "ornaments": [
+  "verona",
+  "bari",
+  "venetia",
+  "milano",
+  "rebecca",
+  "bologna",
+  "napoli"
+ ],
+ "panels": {
+  "schemes": [
+   {
+    "id": "windows-side",
+    "name": {
+     "ro": "Ferestre alăturate",
+     "en": "Windows side by side"
+    },
+    "axis": "vertical",
+    "windows": 2
+   },
+   {
+    "id": "windows-stack",
+    "name": {
+     "ro": "Ferestre suprapuse",
+     "en": "Windows stacked"
+    },
+    "axis": "horizontal",
+    "windows": 2
+   },
+   {
+    "id": "door-side",
+    "name": {
+     "ro": "Ușă + fereastră laterală",
+     "en": "Door + side window"
+    },
+    "axis": "vertical",
+    "windows": 1
+   },
+   {
+    "id": "door-top",
+    "name": {
+     "ro": "Ușă + supralumină",
+     "en": "Door + transom"
+    },
+    "axis": "horizontal",
+    "windows": 1
+   }
+  ],
+  "arrangements": [
+   {
+    "id": "door-left",
+    "name": {
+     "ro": "Ușă în stânga + fereastră în dreapta",
+     "en": "Door left + window right"
+    }
+   },
+   {
+    "id": "door-right",
+    "name": {
+     "ro": "Fereastră în stânga + ușă în dreapta",
+     "en": "Window left + door right"
+    }
+   }
+  ],
+  "series": [
+   "lumena-esential",
+   "lumena-color-plus"
+  ],
+  "colours": [
+   "alb",
+   "nuc"
+  ],
+  "coupling": {
+   "lumena-esential": 4,
+   "default": 2
+  },
+  "couplingFee": 45,
+  "windowTypes": [
+   "fix",
+   "sd",
+   "dd",
+   "kipp"
+  ],
+  "doorTypes": [
+   "balcony-dd",
+   "door-glass-third",
+   "door-glass-two-thirds",
+   "door-panel",
+   "door-glass-full"
+  ]
+ },
+ "pricing": {
+  "perM2": 310,
+  "perTier": 120,
+  "minArea": 0.6,
+  "vat": 0.21,
+  "installPct": 0.12,
+  "maxQty": 9999,
+  "version": "2026-10-mock",
+  "unavailable": [
+   {
+    "type": "t3fixddfix",
+    "series": "lumena-color-plus",
+    "colour": "wenge-mooreiche",
+    "message": {
+     "ro": "Prețul pentru această combinație se confirmă în magazin.",
+     "en": "The price for this combination is confirmed in store."
+    }
+   }
+  ]
+ },
+ "statuses": [
+  "OFERTA",
+  "PLATITA",
+  "FINALIZATA"
+ ],
+ "rooms": [
+  {
+   "id": "cream",
+   "name": {
+    "ro": "Hol alb-crem",
+    "en": "Cream hall"
+   },
+   "wall": "#ece4d6",
+   "floor": "#c9b79c",
+   "accent": "#d9cdb8"
+  },
+  {
+   "id": "sage",
+   "name": {
+    "ro": "Hol verde salvie",
+    "en": "Sage hall"
+   },
+   "wall": "#9d9b87",
+   "floor": "#b9ab93",
+   "accent": "#85826c"
+  },
+  {
+   "id": "rose",
+   "name": {
+    "ro": "Hol roz pudrat",
+    "en": "Powder pink hall"
+   },
+   "wall": "#d0a895",
+   "floor": "#c7b39d",
+   "accent": "#b88f7a"
+  },
+  {
+   "id": "blue",
+   "name": {
+    "ro": "Hol bleu pastel",
+    "en": "Pastel blue hall"
+   },
+   "wall": "#a2b6c5",
+   "floor": "#c0b49e",
+   "accent": "#8a9daa"
+  }
+ ]
+}
