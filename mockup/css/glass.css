@@ -1,5 +1,5 @@
 /* Frosted glass: opaque enough to read as a slab, with a hairline edge. An edge light follows the pointer or finger: it brightens the
-   rim of the card nearest to it, with a soft glow, and fades when the pointer moves away (--mx, --my, --glint set by js/ui/glass.js). */
+   rim of the card nearest to it, with a soft glow, and fades in over 200ms and out over 800ms (data-lit marks the lit cards; no snap when the pointer leaves, exits the window or a touch ends) (--mx, --my, --glint set by js/ui/glass.js). */
 @property --glint { syntax: "<number>"; inherits: true; initial-value: 0; }
 :root { --rim-w: 1.2px; --edge-lit: 60 140 230; --edge-reach: 170px;
   --acr-bg: rgb(255 255 255 / .50); --acr-bg-strong: rgb(255 255 255 / .70); --frost-a: rgb(255 255 255 / .58); --frost-b: rgb(255 255 255 / .14); }
@@ -19,7 +19,7 @@
 
 .acrylic { --fill: var(--glass-fill); --blur: var(--glass-blur);
   --glass-shadow: var(--glass-contact), var(--elev, var(--e-2)), inset 0 1px 0 var(--glass-hi);
-  transition: --glint var(--dur-3) var(--ease), box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+  transition: --glint 800ms ease-out, box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
   border-color: var(--glass-rim-t) var(--glass-rim) var(--glass-rim) var(--glass-rim);
   background: var(--fill);
   -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat)); backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat));
@@ -27,6 +27,7 @@
 .acrylic.thick { --fill: var(--glass-fill-strong); --blur: var(--glass-blur-thick); background: var(--fill);
   -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat)); backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat)); }
 .acrylic::before { opacity: calc(var(--noise-opacity) * .3); }
+.acrylic[data-lit] { transition: --glint 200ms ease-out, box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease); }
 .acrylic.e-1 { --elev: var(--e-1); } .acrylic.e-2 { --elev: var(--e-2); } .acrylic.e-3 { --elev: var(--e-3); } .acrylic.e-4 { --elev: var(--e-4); } .acrylic.e-5 { --elev: var(--e-5); }
 .acrylic.lift:hover { --elev: var(--e-4); box-shadow: var(--glass-shadow); }
 
