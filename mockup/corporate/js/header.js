@@ -38,6 +38,7 @@
           ${trigger('windows', 'windows', t('corp.menu.windows'))}${trigger('doors', 'doors', t('corp.menu.doors'))}${plain('acc', '/c/accessories', t('corp.menu.acc'))}${plain('calc', '/calculator', t('corp.menu.calc'))}${trigger('company', 'shops', t('corp.menu.company'))}
         </ul></nav>
         <div class="top-actions">
+          <a class="icon-btn m-tel" href="tel:${tel(phone)}" aria-label="${t('phone.title')} ${phone}">${icon('phone')}</a>
           <button class="icon-btn m-phone" data-action="phone" aria-label="${t('phone.title')}" aria-haspopup="dialog">${icon('phone')}</button>
           <button class="icon-btn" data-action="settings" aria-label="${t('settings.title')}" aria-haspopup="dialog">${icon('settings')}</button>
           <button class="icon-btn cart-btn" data-action="open-cart" aria-label="${t('cart.title')}">${icon('cart')}<span class="badge-dot" data-bind="cart-count" hidden></span></button>

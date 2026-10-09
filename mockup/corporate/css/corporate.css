@@ -82,6 +82,9 @@ html[data-eff="compact"] .wrap { padding-inline: var(--s-4); }
 .m-feature { background: var(--alt); padding: var(--s-4); border-left: 3px solid var(--cta); display: grid; gap: var(--s-3); align-content: start; }
 .m-feature h3 { border: 0; padding: 0; margin: 0; }
 html[data-nav="tabs"] .u-bar, html[data-nav="tabs"] .m-nav, html[data-nav="tabs"] .m-panel, html[data-nav="tabs"] .m-phone { display: none; }
+.m-tel { display: none; }
+html[data-nav="tabs"] .m-tel { display: inline-grid; }
+html[data-nav="tabs"] .m-cta { display: none; }
 html[data-nav="tabs"] .m-bar > .wrap { min-height: 56px; }
 html[data-nav="tabs"] .m-nav { flex: 0; }
 html[data-nav="tabs"] .top-actions { margin-left: auto; }
@@ -209,3 +212,10 @@ html[data-eff="compact"] .c-shops tr { display: grid; gap: 2px; padding: var(--s
 html[data-eff="compact"] .c-shops th, html[data-eff="compact"] .c-shops td { display: block; padding: 0; border: 0; }
 html[data-eff="compact"] .c-shops td:last-child { margin-top: var(--s-2); }
 html[data-eff="compact"] .c-refs th, html[data-eff="compact"] .c-refs td { padding: var(--s-2) var(--s-3); }
+
+/* touch targets: 44px on coarse pointers, density unchanged elsewhere */
+@media (pointer: coarse) {
+  .u-bar a, .u-link, .u-lang button, .c-more, .m-link, .c-shops .btn.small, .c-docs a, .c-docs button { min-height: var(--hit); }
+  .u-lang button { min-width: var(--hit); }
+  .c-card li a, .c-card p a, .c-shops td a { display: inline-flex; align-items: center; min-height: var(--hit); }
+}
