@@ -42,6 +42,18 @@ FE.config = {
   catalog: { pageSize: 8, featured: ["fereastra-pvc-4-camere-alb-56x56-cm", "fereastra-pvc-4-camere-alb-116x116-cm", "usa-exterior-din-pvc-cu-geam-termopan-pentru-terasa-osciloculisanta-5-camere-stanga-alb-180-x-210-cm"], groups: { windows: ['ferestre', 'ferestre-duble'], doors: ['usi-interior-exterior-pvc', 'usi-osciloculisante'], accessories: ['oferte'] }, sorts: ['featured', 'price-asc', 'price-desc', 'size'], freeDeliveryFrom: 1500, installPct: 0.12, vat: 0.21 },
   /* ambient from pictures: sample size, thresholds on saturation/lightness, hue buckets */
   ambientImage: { size: 36, minSat: 0.22, minLight: 0.12, maxLight: 0.92, buckets: 12, minShare: 0.035, boostSat: 0.55, light: 0.55 },
+  /* configurator: size limits in mm per type, price factor, sash count; pricing is illustrative (lei per m2 by profile tier) */
+  calc: {
+    types: {
+      fix:      { sashes: 0, handed: false, w: [400, 1500], h: [400, 1500], factor: 1 },
+      tiltturn: { sashes: 1, handed: true,  w: [450, 900],  h: [500, 1600], factor: 1.15 },
+      double:   { sashes: 2, handed: true,  w: [800, 1800], h: [500, 1600], factor: 1.2 },
+      tilt:     { sashes: 1, handed: false, w: [450, 1000], h: [400, 800],  factor: 1.05 },
+      balcony:  { sashes: 1, handed: true,  w: [700, 1000], h: [1900, 2300], factor: 1.25 }
+    },
+    start: { type: 'tiltturn', side: 'left', w: 800, h: 1200, qty: 1, profile: 'trocal70', color: 'white', glass: 'clear', install: true },
+    perM2: 310, perTier: 120, hardwarePerSash: 90, minArea: 0.6, maxQty: 99, debounceMs: 220
+  },
   overlay: { maxDepth: 4, exitMs: 220, coveredScale: .965, coveredShift: -14 },
   toastMs: 3200
 };

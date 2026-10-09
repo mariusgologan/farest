@@ -18,6 +18,13 @@ FE.db = {
     { id: 'walnut', hex: '#6b4426', delta: 0.12 },
     { id: 'anthra', hex: '#3a4048', delta: 0.15 }
   ],
+  /* glass options: calculator only; delta is the price uplift over standard double glazing */
+  glass: [
+    { id: 'clear',  delta: 0 },
+    { id: 'lowe',   delta: 0.08 },
+    { id: 'matt',   delta: 0.10 },
+    { id: 'triple', delta: 0.22 }
+  ],
   categories: [
     { id: 'windows', ambient: 'windows' },
     { id: 'doors', ambient: 'doors' },

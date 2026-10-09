@@ -58,7 +58,12 @@
   A('add', (el, ev, d) => { const p = byId(FE.db.products, d.id); FE.cart.add({ pid: p.id, opening: p.opening, color: 'white', extras: [], qty: 1 }); FE.toast(t('toast.added')); });
   A('quickview', (el, ev, d) => FE.flows.quickview(d.id));
   A('configure', (el, ev, d) => FE.flows.configure(d.id));
-  A('edit-line', (el, ev, d) => FE.flows.configure(FE.store.get('cart')[+d.i].pid, +d.i));
+  A('edit-line', (el, ev, d) => {
+    const l = FE.store.get('cart')[+d.i];
+    if (!l.custom) return FE.flows.configure(l.pid, +d.i);
+    FE.calcEdit = { i: +d.i, custom: l.custom, qty: l.qty };
+    FE.overlay.closeAll(); FE.router.current() === '/calculator' ? FE.router.run() : FE.router.go('/calculator');
+  });
   A('open-profile', (el, ev, d) => FE.flows.profile(d.id));
   A('open-measure', () => FE.flows.measure());
   A('map', (el, ev, d) => FE.flows.map(d.id));

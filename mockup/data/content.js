@@ -59,8 +59,18 @@ FE.content = {
     sort: { featured: 'Recomandate', 'price-asc': 'Preț crescător', 'price-desc': 'Preț descrescător', size: 'Dimensiune' },
     catalog: { count: '{n} produse', none: 'Niciun produs pentru filtrele alese.' },
     calc: {
-      title: 'Calculator prețuri termopane', lead: 'Estimare în trei pași, TVA inclus.', w: 'Lățime', h: 'Înălțime', count: 'Număr de ferestre', install: 'Include montajul',
-      step: { size: 'Dimensiuni', system: 'Sistem', result: 'Estimare' }, area: 'Suprafață totală: {a} m²', base: 'Produse', installCost: 'Montaj', disclaimer: 'Estimare orientativă; oferta finală după măsurătoare.', quote: 'Cere ofertă', restart: 'Reia'
+      title: 'Configurator ferestre și uși', lead: 'Alege tipul, dimensiunile și finisajele. Prețul se actualizează pe loc, TVA inclus.',
+      s1: 'Tip și deschidere', s2: 'Dimensiuni', s3: 'Profil, culoare și sticlă', s4: 'Cantitate și montaj',
+      type: { label: 'Tip', fix: 'Fix', tiltturn: 'Oscilo-batantă', double: 'Două canate', tilt: 'Basculantă', balcony: 'Ușă de balcon' },
+      typeHint: { fix: 'Fără deschidere', tiltturn: 'Un canat, lateral și oblic', double: 'Două canate, lateral și oblic', tilt: 'Deschidere doar oblică', balcony: 'Un canat, cu prag' },
+      side: { label: 'Sensul de deschidere', left: 'Stânga', right: 'Dreapta', hint: 'Privit din interior. La două canate alegi canatul principal, cu mâner.' },
+      width: 'Lățime', height: 'Înălțime', range: 'Între {min} și {max} mm', errNum: '{f}: introdu o valoare.', errMin: '{f} este prea mică. Minimum {min} mm.', errMax: '{f} este prea mare. Maximum {max} mm.',
+      glass: { label: 'Sticlă', clear: 'Termopan clar', lowe: 'Low-E, izolare termică', matt: 'Mată, intimitate', triple: 'Triplu vitraj' },
+      qty: 'Cantitate', install: 'Include montajul',
+      summary: 'Configurația ta', area: '{a} m² / bucată (minim facturat 0,6 m²)', unit: 'Preț / bucată', base: 'Produse', installCost: 'Montaj', total: 'Total',
+      invalid: 'Completează dimensiunile pentru a vedea prețul.', pending: 'Se calculează…', failed: 'Prețul nu a putut fi calculat. Încearcă din nou.',
+      add: 'Adaugă în coș', update: 'Actualizează în coș', quote: 'Cere ofertă', reset: 'Resetează', editing: 'Modifici o poziție din coș.',
+      disclaimer: 'Estimare orientativă; oferta finală după măsurătoare.', line: '{w}×{h} mm · {profile}', previewLabel: 'Schița configurației: {type}, {w} × {h} mm'
     },
     shops: {
       title: 'Magazine FAR EST', lead: 'Vino să vezi profilele și culorile.', hours: 'Luni–Vineri 09:00–18:00', serviceTitle: 'Service și reparații', serviceLead: 'Reglaje, înlocuiri de feronerie și garnituri.', map: 'Hartă', route: 'Indicații Google Maps'
@@ -127,8 +137,18 @@ FE.content = {
     sort: { featured: 'Recommended', 'price-asc': 'Price, low to high', 'price-desc': 'Price, high to low', size: 'Size' },
     catalog: { count: '{n} products', none: 'No product matches these filters.' },
     calc: {
-      title: 'Window price calculator', lead: 'A three-step estimate, VAT included.', w: 'Width', h: 'Height', count: 'Number of windows', install: 'Include installation',
-      step: { size: 'Size', system: 'System', result: 'Estimate' }, area: 'Total area: {a} m²', base: 'Products', installCost: 'Installation', disclaimer: 'Indicative estimate; final offer after measuring.', quote: 'Request a quote', restart: 'Start over'
+      title: 'Window and door configurator', lead: 'Pick the type, size and finish. The price updates as you go, VAT included.',
+      s1: 'Type and opening', s2: 'Size', s3: 'Profile, colour and glass', s4: 'Quantity and installation',
+      type: { label: 'Type', fix: 'Fixed', tiltturn: 'Tilt and turn', double: 'Two sashes', tilt: 'Tilt only', balcony: 'Balcony door' },
+      typeHint: { fix: 'No opening', tiltturn: 'One sash, side and tilt', double: 'Two sashes, side and tilt', tilt: 'Tilt opening only', balcony: 'One leaf, with threshold' },
+      side: { label: 'Opening side', left: 'Left', right: 'Right', hint: 'Seen from inside. With two sashes you pick the main sash, the one with the handle.' },
+      width: 'Width', height: 'Height', range: 'Between {min} and {max} mm', errNum: '{f}: enter a value.', errMin: '{f} is too small. Minimum {min} mm.', errMax: '{f} is too large. Maximum {max} mm.',
+      glass: { label: 'Glass', clear: 'Clear double glazing', lowe: 'Low-E, thermal insulation', matt: 'Matt, privacy', triple: 'Triple glazing' },
+      qty: 'Quantity', install: 'Include installation',
+      summary: 'Your configuration', area: '{a} m² each (0.6 m² minimum billed)', unit: 'Price each', base: 'Products', installCost: 'Installation', total: 'Total',
+      invalid: 'Complete the size to see the price.', pending: 'Calculating…', failed: 'The price could not be calculated. Try again.',
+      add: 'Add to cart', update: 'Update in cart', quote: 'Request a quote', reset: 'Reset', editing: 'You are editing a cart item.',
+      disclaimer: 'Indicative estimate; final offer after measuring.', line: '{w}×{h} mm · {profile}', previewLabel: 'Sketch of the configuration: {type}, {w} × {h} mm'
     },
     shops: {
       title: 'FAR EST shops', lead: 'Come and see the profiles and colours.', hours: 'Mon–Fri 09:00–18:00', serviceTitle: 'Service and repairs', serviceLead: 'Adjustments, hardware and gasket replacement.', map: 'Map', route: 'Directions in Google Maps'

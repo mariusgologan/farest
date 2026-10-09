@@ -5,7 +5,7 @@
   const byId = (list, id) => list.find(x => x.id === id);
   const product = async id => (await FE.api.get(`/products/${id}`)).data;
   const cartCount = () => FE.store.get('cart').reduce((n, l) => n + l.qty, 0);
-  const lineTotal = l => byId(FE.db.products, l.pid).price * l.qty;
+  const lineTotal = l => (l.custom ? l.unit : byId(FE.db.products, l.pid).price) * l.qty;
 
   /* variants come from the shop photos: hinge side and insect screen */
   FE.variantsOf = p => ({
@@ -21,7 +21,7 @@
     total: () => FE.store.get('cart').reduce((s, l) => s + lineTotal(l), 0),
     add(line) {
       const list = [...FE.store.get('cart')];
-      const same = list.find(l => l.pid === line.pid && l.side === line.side && l.mesh === line.mesh);
+      const same = list.find(l => line.custom ? JSON.stringify(l.custom) === JSON.stringify(line.custom) && l.unit === line.unit : l.pid === line.pid && l.side === line.side && l.mesh === line.mesh);
       same ? same.qty += line.qty : list.push(line);
       FE.store.set({ cart: list });
     },
@@ -165,13 +165,17 @@
           const list = FE.store.get('cart');
           if (!list.length) { body.innerHTML = h`<div class="empty center stack">${icon('cart', 48)}<p>${t('cart.empty')}</p><a class="btn primary" href="#/c/windows" data-action="overlay-all-close">${t('cart.browse')}</a></div>`.toString(); return; }
           const total = cart.total(), left = Math.max(0, FE.config.catalog.freeDeliveryFrom - total);
-          body.innerHTML = h`<ul class="lines">${list.map((l, i) => { const p = byId(FE.db.products, l.pid), im = FE.imageFor(p, l); return h`<li class="line">
-              <div class="thumb">${im ? h`<img class="photo" src="${im.src}" alt="">` : ui.windowSvg(p)}</div>
-              <div class="grow"><b class="clamp">${p.name}</b>
-                <div class="muted small">${[l.side && t(`side.${l.side}`), l.mesh && t('configure.mesh')].filter(Boolean).join(' · ')}</div>
+          body.innerHTML = h`<ul class="lines">${list.map((l, i) => { const p = l.custom ? null : byId(FE.db.products, l.pid), im = p && FE.imageFor(p, l);
+              const thumb = l.custom ? ui.scheme(l.custom) : im ? h`<img class="photo" src="${im.src}" alt="">` : ui.windowSvg(p);
+              const name = l.custom ? FE.cartLine.name(l.custom) : p.name;
+              const sub = l.custom ? FE.cartLine.detail(l.custom) : [l.side && t(`side.${l.side}`), l.mesh && t('configure.mesh')].filter(Boolean).join(' · ');
+              return h`<li class="line">
+              <div class="thumb">${thumb}</div>
+              <div class="grow"><b class="clamp">${name}</b>
+                <div class="muted small">${sub}</div>
                 <div class="row spread"><div class="qty" role="group" aria-label="${t('cart.qty')}"><button class="icon-btn sm" data-action="qty" data-i="${i}" data-d="-1" aria-label="−">−</button><output>${l.qty}</output><button class="icon-btn sm" data-action="qty" data-i="${i}" data-d="1" aria-label="+">+</button></div>
                 <b>${money(lineTotal(l))}</b></div>
-                ${FE.variantsOf(p).sides.length ? h`<button class="btn link small" data-action="edit-line" data-i="${i}">${t('action.edit')}</button>` : ''}</div></li>`; })}</ul>
+                ${l.custom || FE.variantsOf(p).sides.length ? h`<button class="btn link small" data-action="edit-line" data-i="${i}">${t('action.edit')}</button>` : ''}</div></li>`; })}</ul>
             <div class="free ${left ? '' : 'done'}"><span class="meter" style="--v:${Math.min(1, total / FE.config.catalog.freeDeliveryFrom)}"><i></i></span>
               <small>${left ? t('cart.freeLeft', { amount: money(left) }) : t('cart.freeDone')}</small></div>
             <div class="row spread footer-bar"><div><div class="muted">${t('cart.total')}</div><div class="price big">${money(total)}</div></div>

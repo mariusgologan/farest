@@ -133,42 +133,6 @@
     bind(host, 'click', '[data-action=gallery]', el => show(+el.dataset.i));
   };
 
-  /* ---------- calculator (stepper) ---------- */
-  FE.views.calculator = async host => {
-    const s = { step: 1, w: 100, h: 120, count: 3, profile: 'trocal70', color: 'white', install: true };
-    const steps = ['size', 'system', 'result'];
-    const draw = async () => {
-      let body;
-      if (s.step === 1) body = h`<div class="stack"><label class="field"><span>${t('calc.w')}: <output>${s.w} cm</output></span><input type="range" name="w" min="40" max="250" value="${s.w}"></label>
-        <label class="field"><span>${t('calc.h')}: <output>${s.h} cm</output></span><input type="range" name="h" min="40" max="250" value="${s.h}"></label>
-        <label class="field"><span>${t('calc.count')}: <output>${s.count}</output></span><input type="range" name="count" min="1" max="20" value="${s.count}"></label>
-        <div class="preview small-prev">${ui.windowSvg({ kind: 'window', w: s.w, h: s.h, opening: 'tilt' })}</div></div>`;
-      else if (s.step === 2) body = h`<div class="stack"><fieldset><legend>${t('profile.title')}</legend><div class="grid tiles">${FE.db.profiles.filter(p => p.tier >= 2).map(p => h`<label class="opt block"><input type="radio" name="profile" value="${p.id}" ${p.id === s.profile ? 'checked' : ''}><span><b>${p.name}</b><small class="muted"> ${p.mm} mm · ${t('profile.chambers', { n: p.chambers })}</small></span></label>`)}</div></fieldset>
-        <fieldset><legend>${t('configure.color')}</legend><div class="row">${FE.db.colors.map(c => h`<label class="swatch"><input type="radio" name="color" value="${c.id}" ${c.id === s.color ? 'checked' : ''}><i style="background:${c.hex}"></i><span class="sr-only">${t(`color.${c.id}`)}</span></label>`)}</div></fieldset>
-        <label class="check"><input type="checkbox" name="install" ${s.install ? 'checked' : ''}><span>${t('calc.install')}</span></label></div>`;
-      else { const r = (await FE.api.post('/estimate', s)).data; body = h`<div class="result"><p class="muted">${t('calc.area', { a: r.area })}</p>
-        <dl class="specs"><dt>${t('calc.base')}</dt><dd>${money(r.base)}</dd><dt>${t('calc.installCost')}</dt><dd>${money(r.install)}</dd></dl>
-        <div class="price big total">${money(r.total)}</div><p class="muted small">${t('calc.disclaimer')}</p>
-        <div class="row"><button class="btn primary lg" data-action="callback">${icon('phone', 20)} ${t('calc.quote')}</button><button class="btn ghost" data-action="calc-restart">${t('calc.restart')}</button></div></div>`; }
-      set(FE.$('[data-bind=step]', host), body);
-      FE.$$('.step', host).forEach((el, i) => { el.dataset.state = i + 1 < s.step ? 'done' : i + 1 === s.step ? 'current' : 'todo'; });
-      FE.$('[data-action=calc-back]', host).hidden = s.step === 1;
-      FE.$('[data-action=calc-next]', host).hidden = s.step === steps.length;
-    };
-    set(host, h`<header class="page-head"><h1>${t('calc.title')}</h1><p class="muted">${t('calc.lead')}</p></header>
-      <section class="calc acrylic thick e-3"><ol class="stepper">${steps.map((k, i) => h`<li class="step" data-state="todo"><span>${i + 1}</span>${t(`calc.step.${k}`)}</li>`)}</ol>
-        <div data-bind="step" aria-live="polite"></div>
-        <div class="row spread footer-bar"><button class="btn ghost" data-action="calc-back">${icon('back', 18)} ${t('action.back')}</button><button class="btn primary" data-action="calc-next">${t('action.next')}</button></div></section>`);
-    host.addEventListener('input', e => { const el = e.target; if (!el.name || !(el.name in s)) return; s[el.name] = el.type === 'range' ? +el.value : el.type === 'checkbox' ? el.checked : el.value;
-      const o = el.closest('label')?.querySelector('output'); if (o) o.textContent = el.name === 'count' ? el.value : el.value + ' cm';
-      if (el.name === 'w' || el.name === 'h') FE.$('.small-prev', host).innerHTML = ui.windowSvg({ kind: 'window', w: s.w, h: s.h, opening: 'tilt' }).toString();
-      if (el.name === 'color') FE.store.set({ swatch: byId(FE.db.colors, el.value).delta ? byId(FE.db.colors, el.value).hex : null }); });
-    FE.actions.register('calc-next', () => { s.step = Math.min(steps.length, s.step + 1); draw(); });
-    FE.actions.register('calc-back', () => { s.step = Math.max(1, s.step - 1); draw(); });
-    FE.actions.register('calc-restart', () => { s.step = 1; FE.store.set({ swatch: null }); draw(); });
-    draw();
-  };
-
   /* ---------- shops ---------- */
   FE.views.shops = async host => {
     const { data } = await FE.api.get('/shops');

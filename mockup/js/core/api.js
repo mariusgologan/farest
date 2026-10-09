@@ -37,13 +37,16 @@
     'GET /welcome': () => FE.loader.localized(cfg.content.welcome).then(data => ({ data })),
     'GET /pages/:slug': (q, { slug }) => FE.loader.localized(`${cfg.content.pages}/${slug}`).then(data => ({ data }), () => ({ status: 404, error: 'not_found' })),
     'POST /price': b => { const p = byId(db().products, b.id); return p ? { data: { unit: priceOf(p) } } : { status: 404, error: 'not_found' }; },
-    /* illustrative formula, not the shop price list */
+    /* illustrative formula, not the shop price list: area x tier rate x finish uplifts x type factor, plus hardware per sash */
     'POST /estimate': b => {
-      const area = (b.w / 100) * (b.h / 100) * b.count;
-      const tier = byId(db().profiles, b.profile).tier;
-      const base = area * (310 + tier * 120) * (1 + byId(db().colors, b.color).delta);
-      const install = b.install ? base * cfg.catalog.installPct : 0;
-      return { data: { area: +area.toFixed(2), base: Math.round(base), install: Math.round(install), total: Math.round(base + install) } };
+      const type = cfg.calc.types[b.type], profile = byId(db().profiles, b.profile), color = byId(db().colors, b.color), glass = byId(db().glass, b.glass);
+      if (!type || !profile || !color || !glass) return { status: 422, error: 'invalid_config' };
+      if (!(b.w >= type.w[0] && b.w <= type.w[1] && b.h >= type.h[0] && b.h <= type.h[1] && b.qty >= 1 && b.qty <= cfg.calc.maxQty)) return { status: 422, error: 'out_of_range' };
+      const area = Math.max(cfg.calc.minArea, (b.w / 1000) * (b.h / 1000));
+      const body = area * (cfg.calc.perM2 + profile.tier * cfg.calc.perTier) * (1 + color.delta + glass.delta) * type.factor;
+      const unit = Math.round(body + type.sashes * cfg.calc.hardwarePerSash);
+      const base = unit * b.qty, install = b.install ? Math.round(base * cfg.catalog.installPct) : 0;
+      return { data: { area: +area.toFixed(2), unit, base, install, total: base + install, perUnit: Math.round((base + install) / b.qty) } };
     },
     'POST /requests': b => (!b.phone || b.phone.replace(/\D/g, '').length < 9)
       ? { status: 422, error: 'invalid_phone' } : { status: 201, data: { ref: 'CB-' + Math.random().toString(36).slice(2, 7).toUpperCase() } },

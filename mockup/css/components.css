@@ -108,13 +108,35 @@ input[type=radio], input[type=checkbox] { accent-color: var(--brand); width: 18p
 .empty { padding: var(--s-7) 0; }
 .big-check { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
 
-/* Stepper */
-.calc { border-radius: var(--r-lg); padding: var(--s-5); display: grid; gap: var(--s-5); max-width: 760px; }
-.stepper { list-style: none; display: flex; gap: var(--s-3); margin: 0; padding: 0; flex-wrap: wrap; }
-.step { display: flex; align-items: center; gap: var(--s-2); color: var(--text-2); }
-.step span { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); font-weight: 700; }
-.step[data-state=current] { color: var(--text); font-weight: 700; } .step[data-state=current] span { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
-.step[data-state=done] span { background: var(--brand-soft); color: var(--brand); }
+/* Configurator */
+.cfg { display: grid; gap: var(--s-4); align-items: start; grid-template-areas: "prev" "main" "sum"; }
+.cfg-side { display: contents; } .cfg-prev { grid-area: prev; } .cfg-main { grid-area: main; } .cfg-sum { grid-area: sum; }
+html[data-eff="regular"] .cfg, html[data-eff="wide"] .cfg { grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr); grid-template-areas: "main side"; }
+html[data-eff="regular"] .cfg-side, html[data-eff="wide"] .cfg-side { display: grid; gap: var(--s-4); grid-area: side; position: sticky; top: var(--s-4); }
+html[data-eff="regular"] .cfg-prev, html[data-eff="wide"] .cfg-prev, html[data-eff="regular"] .cfg-sum, html[data-eff="wide"] .cfg-sum { grid-area: auto; }
+.cfg-prev, .cfg-sum { border-radius: var(--r-lg); padding: var(--s-5); display: grid; gap: var(--s-4); }
+.cfg-art { display: grid; place-items: center; min-height: 160px; }
+.scheme { display: block; width: auto; height: 240px; max-width: 100%; }
+html[data-eff="compact"] .scheme { height: 190px; }
+.cfg-price { display: grid; gap: 2px; justify-items: start; } .cfg-price .big { margin: 0; }
+.cfg-sec { border-radius: var(--r-lg); padding: var(--s-4) var(--s-5) var(--s-5); display: grid; gap: var(--s-4); border: 1px solid var(--acr-border); min-width: 0; }
+.cfg-sec h2 { font-size: var(--fs-lg); margin: 0; }
+.cfg .sub { display: grid; gap: var(--s-2); }
+.type-grid { display: grid; gap: var(--s-2); grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.opt.tile { display: grid; justify-items: center; text-align: center; padding: var(--s-3); gap: var(--s-2); min-height: 0; }
+.opt.tile small { display: block; } .tile-art { display: grid; place-items: center; height: 84px; } html .tile-art .scheme { height: 76px; }
+.thumb .scheme { height: 64px; }
+.grid.opts { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: var(--s-2); }
+.opt input[type=radio] { flex: none; }
+.opt.tile input { position: absolute; opacity: 0; } .opt.tile { position: relative; }
+.seg-btn:has(input:checked) { background: var(--surface); color: var(--brand); font-weight: 700; box-shadow: var(--e-1); }
+.seg-btn:has(input:focus-visible) { outline: 3px solid var(--brand); } .seg-btn { display: inline-flex; align-items: center; cursor: pointer; }
+.seg-btn input { position: absolute; opacity: 0; }
+.dims { display: grid; gap: var(--s-4); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.dim-field { display: grid; gap: var(--s-1); }
+.dim-in { display: flex; align-items: center; gap: var(--s-2); } .dim-in input { max-width: 9rem; } .dim-in b { font-weight: 600; color: var(--text-2); }
+input[type=number] { min-height: var(--hit); padding: 0 var(--s-3); border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--acr-bg-strong); font-weight: 400; }
+.error { color: var(--err); }
 .total { margin: var(--s-3) 0; }
 
 /* Toasts */
