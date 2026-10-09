@@ -147,6 +147,25 @@
     return wrap(defs(id, col) + body + (dims ? dimsMarkup(pad, pad, W, H, round(g.overallW), round(g.overallH)) : ''), W + 2 * pad, H + 2 * pad, label);
   };
 
+  /* what lies behind the door: dark, or (rooms with `through`) a lit adjacent room seen through the opening */
+  const opening = (room, x, y, W, H, floorY) => {
+    if (!room.through) return `<rect x="${round(x)}" y="${round(y)}" width="${round(W)}" height="${round(H)}" fill="#1d252c" opacity=".78"/>`;
+    const fl = round(y + H * .8), th = room.through;
+    return `<rect x="${round(x)}" y="${round(y)}" width="${round(W)}" height="${round(H)}" fill="${th.wall}"/><rect x="${round(x)}" y="${fl}" width="${round(W)}" height="${round(y + H - fl)}" fill="${th.floor}"/>`
+      + `<rect x="${round(x + W * .22)}" y="${round(y + H * .18)}" width="${round(W * .56)}" height="${round(H * .34)}" fill="#cfe3f1" stroke="rgb(0 0 0 / .18)"/><path d="M${round(x + W / 2)} ${round(y + H * .18)}v${round(H * .34)}M${round(x + W * .22)} ${round(y + H * .35)}h${round(W * .56)}" stroke="rgb(0 0 0 / .18)"/>`;
+  };
+  /* furniture beside the door; each room kind has its own */
+  const deco = (room, VW, floorY) => {
+    const a = room.accent;
+    if (room.deco === 'child') return `<rect x="${round(VW * .05)}" y="${round(floorY - 38)}" width="74" height="38" rx="4" fill="#8fb4cf"/><rect x="${round(VW * .05)}" y="${round(floorY - 50)}" width="74" height="14" rx="6" fill="#f3efe6"/>`
+      + `<rect x="${round(VW * .72)}" y="${round(floorY - 20)}" width="22" height="20" rx="2" fill="#e8b94a"/><rect x="${round(VW * .72 + 26)}" y="${round(floorY - 20)}" width="22" height="20" rx="2" fill="#d96b5b"/><rect x="${round(VW * .72 + 13)}" y="${round(floorY - 40)}" width="22" height="20" rx="2" fill="#6aa876"/>`
+      + `<path d="M${round(VW * .12)} 70l6 12 13 2-10 9 3 13-12-7-12 7 3-13-10-9 13-2z" fill="#e8b94a" opacity=".85"/>`;
+    if (room.deco === 'white') return `<rect x="${round(VW * .04)}" y="${round(floorY - 120)}" width="46" height="120" rx="2" fill="${a}"/><path d="M${round(VW * .04 + 23)} ${round(floorY - 120)}v120" stroke="rgb(0 0 0 / .18)"/>`
+      + `<rect x="${round(VW * .76)}" y="60" width="40" height="52" fill="#fff" stroke="${a}" stroke-width="3"/><rect x="${round(VW * .76 + 8)}" y="70" width="24" height="32" fill="${a}" opacity=".6"/>`;
+    return `<rect x="${round(VW * .08)}" y="${round(floorY - 70)}" width="26" height="70" rx="3" fill="${a}" opacity=".7"/><circle cx="${round(VW * .08 + 13)}" cy="${round(floorY - 82)}" r="14" fill="#5f8a5a" opacity=".8"/>`
+      + `<rect x="${round(VW * .78)}" y="${round(floorY - 54)}" width="56" height="54" rx="3" fill="${a}" opacity=".6"/>`;
+  };
+
   /* an interior with the door in it, to scale (door ~2.1 m in a 2.6 m wall); `open` swings the leaf */
   draw.room = (item, room, open) => {
     const id = 'd' + ++seq, col = cfg.colour(item.colour) || cfg.colour('alb'), VW = 400, VH = 300, floorY = 252, wallMm = 2600;
@@ -155,9 +174,8 @@
     const door = `<g class="room-leaf" style="transform-box:fill-box;transform-origin:${hinge === 'L' ? 'left' : 'right'} center;transform:${open ? 'scaleX(.22)' : 'none'}">${doorGroup(item, { x, y, w: W, h: H }, id, col)}</g>`;
     return wrap(defs(id, col)
       + `<rect width="${VW}" height="${VH}" fill="${room.wall}"/><rect y="${floorY}" width="${VW}" height="${VH - floorY}" fill="${room.floor}"/><rect y="${floorY - 6}" width="${VW}" height="6" fill="rgb(255 255 255 / .55)"/>`
-      + `<rect x="${round(x - 3)}" y="${round(y - 3)}" width="${round(W + 6)}" height="${round(H + 3)}" fill="${room.accent}"/><rect x="${round(x)}" y="${round(y)}" width="${round(W)}" height="${round(H)}" fill="#1d252c" opacity=".78"/>`
-      + door + `<rect x="${round(VW * .08)}" y="${round(floorY - 70)}" width="26" height="70" rx="3" fill="${room.accent}" opacity=".7"/><circle cx="${round(VW * .08 + 13)}" cy="${round(floorY - 82)}" r="14" fill="#5f8a5a" opacity=".8"/>`
-      + `<rect x="${round(VW * .78)}" y="${round(floorY - 54)}" width="56" height="54" rx="3" fill="${room.accent}" opacity=".6"/>`,
+      + `<rect x="${round(x - 3)}" y="${round(y - 3)}" width="${round(W + 6)}" height="${round(H + 3)}" fill="${room.accent}"/>${opening(room, x, y, W, H, floorY)}`
+      + door + deco(room, VW, floorY),
       VW, VH, '', 'cfg-svg cfg-room');
   };
 
