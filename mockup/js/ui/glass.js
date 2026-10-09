@@ -19,6 +19,12 @@
     lit = now;
   }
   const move = e => { x = e.clientX; y = e.clientY; if (!queued) { queued = true; requestAnimationFrame(paint); } };
+  // bar heights for the progressive-blur layers (css/glass.css): --top-h, --tabs-h
+  const bars = [['top', '--top-h'], ['tabs', '--tabs-h']].map(([id, v]) => [document.getElementById(id), v]).filter(([el]) => el);
+  if (bars.length && window.ResizeObserver) {
+    const ro = new ResizeObserver(() => { for (const [el, v] of bars) document.documentElement.style.setProperty(v, el.offsetHeight + 'px'); });
+    for (const [el] of bars) ro.observe(el);
+  }
   addEventListener('pointermove', move, { passive: true });
   addEventListener('pointerdown', move, { passive: true });
   const off = () => { for (const g of lit) { g.style.setProperty('--glint', '0'); g.removeAttribute('data-lit'); } lit.clear(); };

@@ -54,10 +54,30 @@
   html[data-eff="compact"]:not([data-skin="corporate"]) .foot { width: calc(100% - 2 * var(--s-4)); margin-bottom: var(--s-4); padding: var(--s-4); }
 }
 
+/* progressive blur: content scrolling under the sticky header (and above the tab bar on compact layouts) fades out softly instead of ending on a hard line.
+   One thin fixed layer per bar, below it in z-order, pointer-events none: a backdrop blur whose strength is ramped by a mask, plus a tint fade to the page colour. It must be a
+   sibling of the bar, not a child (a backdrop-filter inside another backdrop-filter sees nothing). --top-h and --tabs-h are measured by glass.js. */
+:root { --fade-tint: 246 248 250; --fade-h: 30px; } :root[data-theme="dark"] { --fade-tint: 13 20 27; }
+@media screen {
+  #frame::before, #frame::after { content: ""; display: none; position: fixed; left: 0; right: 0; height: var(--fade-h); pointer-events: none; z-index: calc(var(--z-nav) - 1);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: opacity var(--dur-bars) var(--ease-ambient); }
+  #frame::before { display: block; top: var(--top-h, 61px); background: linear-gradient(to bottom, rgb(var(--fade-tint) / .6), transparent);
+    -webkit-mask-image: linear-gradient(to bottom, #000 10%, transparent); mask-image: linear-gradient(to bottom, #000 10%, transparent); }
+  html[data-nav="tabs"] #frame::after { display: block; bottom: var(--tabs-h, 57px); background: linear-gradient(to top, rgb(var(--fade-tint) / .6), transparent);
+    -webkit-mask-image: linear-gradient(to top, #000 10%, transparent); mask-image: linear-gradient(to top, #000 10%, transparent); }
+  html[data-bars="hidden"] #frame::before, html[data-bars="hidden"] #frame::after { opacity: 0; }
+  /* corporate: flat, a subtle shade only, no blur */
+  html[data-skin="corporate"] #frame::before, html[data-skin="corporate"] #frame::after { -webkit-backdrop-filter: none; backdrop-filter: none; --fade-h: 16px; }
+  html[data-skin="corporate"] #frame::before { background: linear-gradient(to bottom, rgb(15 30 50 / .1), transparent); -webkit-mask-image: none; mask-image: none; }
+  html[data-skin="corporate"][data-nav="tabs"] #frame::after { background: linear-gradient(to top, rgb(15 30 50 / .1), transparent); -webkit-mask-image: none; mask-image: none; }
+}
+@media (prefers-reduced-motion: reduce) { #frame::before, #frame::after { transition: none !important; } }
+
 /* no transparency wanted, or more contrast: solid fill, no blur, no sheen */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
   .acrylic, .acrylic.thick, .top.acrylic, .tabs.acrylic { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; border-color: var(--line); }
   .acrylic::before { display: none; }
+  #frame::before, #frame::after { display: none !important; }
   .acrylic, .foot { --mica-fill: var(--surface); }
 }
 
