@@ -7,7 +7,7 @@ html:not([data-layout="auto"]) #device { height: min(100dvh - 2 * var(--s-4), 96
 html[data-layout="compact"] #device { border-radius: 36px; }
 .ambient { position: absolute; z-index: 0; }
 #frame { position: relative; z-index: 1; height: 100%; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; display: flex; flex-direction: column; }
-#view { flex: 1; width: 100%; max-width: 1240px; margin: 0 auto; padding: var(--s-5) var(--s-5) var(--s-7); display: grid; gap: var(--s-7); align-content: start; outline: none; }
+#view { flex: 1; min-height: calc(100% - 61px); width: 100%; max-width: 1240px; margin: 0 auto; padding: var(--s-5) var(--s-5) var(--s-7); display: grid; gap: var(--s-7); align-content: start; outline: none; }
 html[data-eff="compact"] #view { padding: var(--s-4) var(--s-4) var(--s-6); gap: var(--s-6); }
 #view[aria-busy="true"] { opacity: .5; }
 #view > * { animation: rise var(--dur-3) var(--ease) both; }

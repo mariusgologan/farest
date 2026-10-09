@@ -108,7 +108,12 @@ html[data-eff="compact"] .f-grid { grid-template-columns: 1fr 1fr; padding-block
 html[data-eff="compact"] .f-brand { grid-column: 1 / -1; }
 
 /* ---------- home ---------- */
-html[data-skin="corporate"] #view:has(> .c-home) { max-width: none; padding: 0; gap: 0; grid-template-columns: minmax(0, 1fr); }
+/* #view keeps the same full-width box on every route (a box that changed width when the home loaded counted as a layout shift);
+   pages other than the home centre their content in a 1240px column instead */
+html[data-skin="corporate"] #view { max-width: none; padding-inline: 0; grid-template-columns: minmax(0, 1fr); }
+html[data-skin="corporate"] #view > :not(.c-home) { width: min(100% - 2 * var(--s-5), 1240px); margin-inline: auto; }
+html[data-eff="compact"][data-skin="corporate"] #view > :not(.c-home) { width: min(100% - 2 * var(--s-4), 1240px); }
+html[data-skin="corporate"] #view:has(> .c-home) { padding: 0; gap: 0; }
 .c-home { display: block; }
 .c-hero { color: #fff; padding-block: clamp(3rem, 8vw, 6rem); background: linear-gradient(120deg, #081a2b 0, var(--navy) 55%, #1b4263 100%); }
 .c-hero > .wrap { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--s-7); align-items: center; }
