@@ -1659,29 +1659,39 @@
   ],
   "series": [
    "lumena-esential",
+   "lumena-plus",
    "lumena-color-plus"
   ],
-  "colours": [
-   "alb",
-   "nuc"
-  ],
+  "colours": {
+   "lumena-esential": [
+    "alb",
+    "nuc"
+   ],
+   "lumena-plus": [
+    "alb"
+   ],
+   "lumena-color-plus": [
+    "nuc",
+    "gri-antracit",
+    "golden-oak",
+    "wenge-mooreiche"
+   ]
+  },
   "coupling": {
    "lumena-esential": 4,
    "default": 2
   },
   "couplingFee": 45,
-  "windowTypes": [
-   "fix",
-   "sd",
-   "dd",
-   "kipp"
+  "windowsOnlySeries": [
+   "lumena-plus"
   ],
-  "doorTypes": [
-   "balcony-dd",
-   "door-glass-third",
-   "door-glass-two-thirds",
-   "door-panel",
-   "door-glass-full"
+  "windowProducts": [
+   "windows"
+  ],
+  "doorProducts": [
+   "balcony",
+   "doors",
+   "exterior"
   ]
  },
  "pricing": {
@@ -1749,6 +1759,36 @@
    "wall": "#a2b6c5",
    "floor": "#c0b49e",
    "accent": "#8a9daa"
+  },
+  {
+   "id": "child",
+   "name": {
+    "ro": "Cameră de copil",
+    "en": "Child's room"
+   },
+   "wall": "#e8dfcf",
+   "floor": "#c8a97f",
+   "accent": "#d3b98e",
+   "deco": "child",
+   "through": {
+    "wall": "#f0eadf",
+    "floor": "#cdb99a"
+   }
+  },
+  {
+   "id": "white",
+   "name": {
+    "ro": "Interior alb",
+    "en": "White interior"
+   },
+   "wall": "#f2f2ee",
+   "floor": "#bcb2a2",
+   "accent": "#dadad3",
+   "deco": "white",
+   "through": {
+    "wall": "#f2efe8",
+    "floor": "#c9bba3"
+   }
   }
  ]
 }

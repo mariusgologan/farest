@@ -30,9 +30,9 @@
     return (!only.series || only.series.includes(series)) && (!only.colour || only.colour.includes(colour)) && !(only.colourNot || []).includes(colour);
   };
 
-  cfg.coloursFor = ({ product, series, type }) => {
+  cfg.coloursFor = ({ product, series, type, construction }) => {
     const t = type && cfg.type(type);
-    if (t?.construction === 'ornamental') return ['alb'];
+    if ((t ? t.construction : product === 'exterior' && construction) === 'ornamental') return ['alb'];
     if (product === 'doors' || product === 'exterior') return cfg.DOOR_COLOURS;
     return cfg.series(series)?.colours || ['alb'];
   };
@@ -96,6 +96,15 @@
   cfg.panelDoorIndex = p => p.scheme === 'door-side' ? (p.arrangement === 'door-right' ? 1 : 0) : p.scheme === 'door-top' ? 0 : -1;
   cfg.panelAxis = p => cfg.panelScheme(p.scheme)?.axis;
   cfg.panelScheme = id => byId(D().panels.schemes, id);
+  /* panel series: Plus only joins windows; colours follow the series */
+  cfg.panelSeries = scheme => D().panels.series.filter(s => scheme.startsWith('windows') || !D().panels.windowsOnlySeries.includes(s));
+  cfg.panelColours = series => D().panels.colours[series] || [];
+  /* typologies a panel unit can take: every window, or every door, that exists for the series and colour (doors other than balcony: Esential only) */
+  cfg.panelModels = (isDoor, { series, colour }) => Object.entries(D().types)
+    .filter(([id, t]) => (isDoor ? D().panels.doorProducts : D().panels.windowProducts).includes(t.product)
+      && cfg.available(id, { series, colour }) && cfg.series(series).colours.includes(colour) && cfg.coloursFor({ product: t.product, series, type: id }).includes(colour)
+      && (t.product === 'windows' || t.product === 'balcony' || series === 'lumena-esential'))
+    .map(([id]) => id);
   /* execution size of each component after the coupling deduction (windows share it; a window next to a door takes all of it) */
   cfg.panelGeometry = p => {
     const th = cfg.coupling(p.series), axis = cfg.panelAxis(p) === 'vertical' ? 'width' : 'height', bothWindows = p.scheme.startsWith('windows'), di = cfg.panelDoorIndex(p);
