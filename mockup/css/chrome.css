@@ -3,3 +3,14 @@
 html[data-bars="hidden"] #top { transform: translateY(-110%); opacity: 0; pointer-events: none; }
 html[data-bars="hidden"][data-nav="tabs"] #tabs { transform: translateY(110%); opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { #top, #tabs { transition: none !important; } }
+
+/* Pull to refresh (js/ui/pull.js): #frame scrolls, so the browser's own gesture and bounce are replaced by this indicator */
+#frame { overscroll-behavior-y: none; }
+.pull { position: fixed; top: calc(var(--top-h) - 48px); left: 50%; z-index: calc(var(--z-nav) + 1); width: 44px; height: 44px; margin-left: -22px;
+  display: grid; place-items: center; border-radius: 50%; color: var(--text-2); opacity: 0; pointer-events: none;
+  transform: translateY(var(--pull, 0px)) rotate(calc(var(--p, 0) * 270deg)); transition: transform var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease); }
+.pull[data-active] { opacity: var(--p); transition: none; }
+.pull[data-ready], .pull[data-state="loading"] { color: var(--brand); opacity: 1; }
+.pull[data-state="loading"] svg { animation: pull-spin .8s linear infinite; }
+@keyframes pull-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .pull, .pull svg { transition: none !important; animation: none !important; } }
