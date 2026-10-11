@@ -13,9 +13,25 @@
     const b = config.layoutBreakpoints, at = px => matchMedia(`(min-width: ${px}px)`).matches;
     return at(b.wide) ? 'wide' : at(b.regular) ? 'regular' : 'compact';
   }
+  /* glass or flat (config.surfaceModes): auto is flat where glass is unsupported, unwanted or too slow to draw */
+  const glassOk = CSS.supports('backdrop-filter', 'blur(1px)') || CSS.supports('-webkit-backdrop-filter', 'blur(1px)');
+  const lessGlass = matchMedia('(prefers-reduced-transparency: reduce)');
+  const isFlat = () => { const m = store.get('surface'); return m === 'auto' ? !glassOk || lessGlass.matches || !!store.get('slow') : m === 'flat'; };
+  function probe() {
+    if (store.get('surface') !== 'auto' || isFlat() || navigator.webdriver) return; /* automated browsers render in software: never judge them */
+    const f = config.flat, ds = []; let last = 0;
+    const tick = now => { if (last) ds.push(now - last); last = now; if (ds.length && ds.reduce((a, b) => a + b, 0) >= f.probeMs) return judge(); requestAnimationFrame(tick); };
+    const judge = () => { if (document.visibilityState !== 'visible') return; ds.sort((a, b) => a - b); if (ds[ds.length >> 1] > f.slowFrameMs) store.set({ slow: true }); };
+    requestAnimationFrame(tick);
+  }
+  FE.surface = { isFlat, probe };
   function applyEnv() {
     const theme = store.get('theme'), sel = store.get('layout'), eff = effectiveLayout();
-    root.dataset.theme = theme === 'auto' ? (mq.matches ? 'dark' : 'light') : theme;
+    const scheme = theme === 'auto' ? (mq.matches ? 'dark' : 'light') : theme;
+    /* a theme switch is quick for everything (css/base.css); the slow ambient glides are for colour changes, not for this */
+    if (root.dataset.theme && root.dataset.theme !== scheme) { clearTimeout(applyEnv.t); root.dataset.switching = ''; applyEnv.t = setTimeout(() => delete root.dataset.switching, 400); }
+    root.dataset.theme = scheme;
+    root.toggleAttribute('data-flat', isFlat());
     root.dataset.layout = sel; root.dataset.eff = eff; root.dataset.nav = config.layouts[eff].nav;
     root.style.setProperty('--cols', config.layouts[eff].cols);
     root.style.setProperty('--frame-w', sel === 'auto' ? '100%' : config.layouts[sel].width + 'px');
@@ -75,6 +91,7 @@
   A('set-theme', (el, ev, d) => store.set({ theme: d.value }));
   A('set-layout', (el, ev, d) => store.set({ layout: d.value }));
   A('set-ambient', (el, ev, d) => store.set({ ambient: d.value }));
+  A('set-surface', (el, ev, d) => store.set({ surface: d.value }));
   A('set-bars', (el, ev, d) => store.set({ bars: d.value }));
   A('set-lang', (el, ev, d) => store.set({ lang: d.value }));
 
@@ -85,18 +102,19 @@
 
   /* ---------- wiring ---------- */
   store.on((s, prev, patch) => {
-    if ('theme' in patch || 'layout' in patch || 'lang' in patch) applyEnv();
+    if ('theme' in patch || 'layout' in patch || 'lang' in patch || 'surface' in patch || 'slow' in patch) applyEnv();
     if ('lang' in patch) { drawShell(); FE.router.start(); }
     if ('cart' in patch) badge();
     if ('context' in patch) markActive();
   });
-  mq.addEventListener('change', applyEnv);
+  mq.addEventListener('change', applyEnv); lessGlass.addEventListener('change', applyEnv);
   addEventListener('resize', () => { if (store.get('layout') === 'auto') applyEnv(); });
 
   /* boot: load content files, then render; installable web app via service worker (http/https only) */
   /* the shell needs only static data, so it is drawn first: the bars, footer and layout attributes are in place before the content files arrive (nothing moves later) */
   applyEnv(); drawShell(); FE.ambient.apply();
   FE.loadAll().then(() => { FE.prices.start(); return FE.router.start(); })
+    .then(() => setTimeout(probe, 1000))
     .catch(err => { FE.$('#view').removeAttribute('aria-busy'); FE.$('#view').innerHTML = `<div class="empty center stack"><h1>${t('error.load')}</h1><p class="muted">${t('error.loadHint')}</p><code>${FE.esc(err.message)}</code></div>`; });
   applyEnv();
   if (FE.config.registerSw !== false && 'serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});

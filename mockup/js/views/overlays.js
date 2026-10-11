@@ -239,6 +239,7 @@
           <div><div class="muted small">${t('settings.theme.label')}</div>${seg('settings.theme', FE.config.themes, s.get('theme'), 'set-theme')}</div>
           <div><div class="muted small">${t('settings.layout.label')}</div>${seg('settings.layout', ['auto', ...Object.keys(FE.config.layouts)], s.get('layout'), 'set-layout')}</div>
           <div><div class="muted small">${t('settings.ambient.label')}</div>${seg('settings.ambient', FE.config.ambientModes, s.get('ambient'), 'set-ambient')}</div>
+          <div><div class="muted small">${t('settings.surface.label')}</div>${seg('settings.surface', FE.config.surfaceModes, s.get('surface'), 'set-surface')}</div>
           <div><div class="muted small">${t('settings.bars.label')}</div>${seg('settings.bars', FE.config.barModes, s.get('bars'), 'set-bars')}</div>
           <div><div class="muted small">${t('settings.lang.label')}</div>${seg('settings.lang', FE.config.langs, s.get('lang'), 'set-lang')}</div></div>`.toString();
       };

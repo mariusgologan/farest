@@ -17,4 +17,6 @@ button { cursor: pointer; }
 .row { display: flex; gap: var(--s-3); align-items: center; flex-wrap: wrap; }
 .stack { display: grid; gap: var(--s-4); }
 .spread { justify-content: space-between; }
+/* theme switch (js/app.js applyEnv): every transition runs short, so panes with long ambient glides follow the scheme at once */
+:root[data-switching] *, :root[data-switching] *::before, :root[data-switching] *::after { transition-duration: var(--dur-2) !important; transition-delay: 0s !important; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 1ms !important; animation-duration: 1ms !important; } }
