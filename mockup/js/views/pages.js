@@ -11,6 +11,7 @@
       <button class="btn ghost small" data-action="map" data-id="${sh.id}">${icon('pin', 16)} ${t('shops.map')}</button>
       <a class="btn link small" href="${FE.config.maps.route + encodeURIComponent(sh.maps_query)}" target="_blank" rel="noopener">${t('shops.route')}</a></div>`;
   FE.views.home = async host => {
+    if (FE.store.get('segment') === 'b2b') return FE.views.trade(host);
     const [{ data: top }, { data: w }, { data: offers }, { data: faq }, { data: shops }] = await Promise.all(
       ['/products?sort=featured&page=1', '/welcome', '/offers', '/faq', '/shops'].map(u => FE.api.get(u)));
     const picks = top.slice(0, 3), m = w.meta, site = FE.data.site;

@@ -1,4 +1,4 @@
-"""Playwright checks of the mockup: API contract, live prices, cart and checkout, service worker, both skins, axe.
+"""Playwright checks of the mockup: API contract, live prices, cart and checkout, service worker, B2C and B2B, axe.
 Run with `make test` (the Playwright image serves a writable copy of mockup/ and runs this). Args: SITE PORT; env AXE = axe.min.js path."""
 import csv, io, json, os, re, sys, time
 from playwright.sync_api import sync_playwright
@@ -251,8 +251,8 @@ with sync_playwright() as pw:
     ctx.close()
     write_csv(ORIG)
 
-    # ---------------- regression sweep, both skins ----------------
-    for skin, base in (('default', BASE), ('corporate', BASE + 'corporate/')):
+    # ---------------- regression sweep, both segments ----------------
+    for skin, base in (('b2c', BASE), ('b2b', BASE + '?b2b')):
         ctx = browser.new_context(service_workers='block')
         page = ctx.new_page(); errs = []; watch(page, errs)
         for path in ['/', '/c/windows', '/c/doors', '/c/accessories', f'/p/{PID}', '/calculator', '/shops', '/page/about', '/page/warranty', '/p/nope']:
@@ -424,6 +424,70 @@ with sync_playwright() as pw:
     ctx.add_init_script("Object.defineProperty(Navigator.prototype, 'hardwareConcurrency', { get: () => 2 })")
     page = ctx.new_page(); boot(page, '/')
     ok('flat: auto is flat on a low-end device (2 cores)', page.evaluate("document.documentElement.hasAttribute('data-flat')"))
+    ctx.close()
+
+    # ---------------- B2B segment: switch, link, prices without VAT, home, volume quote ----------------
+    ctx = browser.new_context(service_workers='block')
+    page = ctx.new_page(); errs = []; watch(page, errs)
+    price = f'#view .buybox [data-price-of="{PID}"]'
+    boot(page, f'/p/{PID}'); gross = page.locator(price).inner_text()
+    ok('b2b: households (b2c) are the default', page.evaluate('document.documentElement.dataset.segment') == 'b2c' and gross == page.evaluate(f'FE.money({PRICE0})'))
+    page.click('#top [data-action=set-segment][data-value=b2b]')
+    page.wait_for_function(f"document.querySelector({json.dumps(price)})?.textContent !== {json.dumps(gross)}")
+    ok('b2b: the header switch shows prices without VAT', page.locator(price).inner_text() == page.evaluate(f'FE.moneyGross({PRICE0} / 1.21)')
+       and page.locator('#view .buybox .vat').inner_text() == 'fără TVA', page.locator(price).inner_text())
+    ok('b2b: the switch is checked and the address carries ?b2b', page.locator('#top [data-value=b2b]').get_attribute('aria-checked') == 'true' and page.evaluate('location.search') == '?b2b')
+    page.goto(BASE + '#/'); boot(page, '/')
+    ok('b2b: the choice is remembered', page.evaluate('document.documentElement.dataset.segment') == 'b2b' and page.locator('#view .t-hero').count() == 1)
+    ok('b2b: the home lists every profile system', page.locator('#view .t-band').first.locator('tbody tr').count() == page.evaluate('FE.db.profiles.length'))
+    ok('b2b: a quieter ambient light that still follows the page', page.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--amb-opacity').trim()") == '.3'
+       and page.evaluate("FE.store.get('ambient')") == 'auto')
+    boot(page, '/c/windows'); page.wait_for_selector('#view .card[data-id]')
+    ok('b2b: catalogue cards carry a spec table', page.locator('#view .card .spec-mini').count() > 0 and page.locator('#view .card .chip').count() == 0)
+    page.evaluate(f"FE.store.set({{ cart: [{{ pid: '{PID}', qty: 3 }}] }})")
+    page.click('[data-action=open-cart]'); page.wait_for_selector('.layer .lines')
+    ok('b2b: the cart total is without VAT, with the VAT-inclusive amount below', 'Total fără TVA' in page.locator('.layer .footer-bar').inner_text()
+       and page.evaluate(f'FE.moneyGross({PRICE0} * 3)') in page.locator('.layer .footer-bar').inner_text())
+    page.click('.layer [data-action=trade-quote]'); page.wait_for_selector('#tq-company')
+    for sel, v in (('#tq-company', 'Construct Test SRL'), ('#tq-cui', 'abc'), ('#tq-name', 'Ana Pop'), ('#tq-phone', '0722 000 111'), ('#tq-email', 'ana@example.ro'), ('#tq-quantity', '40')):
+        page.fill(sel, v)
+    page.click('.t-form button[type=submit]'); page.wait_for_selector('.t-form [data-bind=err]:not([hidden])')
+    ok('b2b: a bad CUI is refused and marked', page.locator('#tq-cui').get_attribute('aria-invalid') == 'true')
+    page.fill('#tq-cui', 'ro 123456'); page.click('.t-form button[type=submit]')
+    page.wait_for_function("document.querySelector('#toasts').textContent.includes('B2B-')")
+    page.wait_for_selector('#tq-company', state='detached', timeout=5000)
+    ok('b2b: the volume quote is sent and the form closes', page.locator('#tq-company').count() == 0)
+    r = api(page, 'POST', '/trade-requests', {'company': 'X', 'cui': 'RO123', 'name': 'Y', 'phone': '0722000111', 'email': 'a@b.ro', 'type': 'reseller', 'quantity': 5, 'items': [{'pid': 'nope', 'qty': 1}]})
+    ok('b2b: the API refuses unknown products in a quote', r['status'] == 422 and r['error'] == 'invalid_trade', str(r))
+    page.evaluate('FE.overlay.closeAll()'); page.wait_for_timeout(300)
+    page.click('[data-action=settings]'); page.click('.layer [data-action=set-segment][data-value=b2c]')
+    ok('b2b: Settings switches back to B2C and the address drops ?b2b', page.evaluate('document.documentElement.dataset.segment') == 'b2c' and page.evaluate('location.search') == '')
+    ctx.close()
+    ctx = browser.new_context(service_workers='block')
+    page = ctx.new_page(); errs2 = []; watch(page, errs2)
+    boot(page, '/', BASE + '?b2b')
+    ok('b2b: a shared ?b2b link opens the B2B home', page.evaluate('document.documentElement.dataset.segment') == 'b2b' and page.locator('#view .t-hero').count() == 1)
+    page.add_script_tag(path=os.environ.get('AXE', '/capture/tools/axe.min.js'))
+    for theme in ('light', 'dark'):
+        page.evaluate(f"FE.store.set({{ theme: '{theme}' }})"); page.wait_for_timeout(400)
+        v = page.evaluate("axe.run(document, { runOnly: ['wcag2a', 'wcag2aa'] }).then(r => r.violations.map(v => v.id + ':' + v.nodes.length))")
+        ok(f'axe: B2B home, {theme}', not v, str(v))
+        page.evaluate('void FE.flows.tradeQuote()'); page.wait_for_selector('#tq-company'); page.wait_for_timeout(400)
+        v = page.evaluate("axe.run(document.querySelector('#overlays'), { runOnly: ['wcag2a', 'wcag2aa'] }).then(r => r.violations.map(v => v.id + ':' + v.nodes.length))")
+        ok(f'axe: volume quote form, {theme}', not v, str(v))
+        page.evaluate('FE.overlay.closeAll()'); page.wait_for_timeout(300)
+    boot(page, '/', BASE + '?b2c')
+    ok('b2b: a ?b2c link switches back', page.evaluate('document.documentElement.dataset.segment') == 'b2c')
+    ok('b2b: no console errors', not errs + errs2, '; '.join((errs + errs2)[:5]))
+    ctx.close()
+
+    # ---------------- call-back form (B2C) ----------------
+    ctx = browser.new_context(service_workers='block')
+    page = ctx.new_page(); errs = []; watch(page, errs)
+    boot(page, '/'); page.evaluate('void FE.flows.callback()'); page.wait_for_selector('#cb-phone')
+    page.fill('#cb-phone', '0722 000 111'); page.click('.layer button[type=submit]')
+    page.wait_for_function("document.querySelector('#toasts').textContent.includes('CB-')")
+    ok('callback: the request is sent', not errs, '; '.join(errs[:3]))
     ctx.close()
 
     # ---------------- accessibility of the new states ----------------

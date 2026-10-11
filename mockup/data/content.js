@@ -88,7 +88,32 @@ FE.content = {
       title: 'Magazine FAR EST', lead: 'Vino să vezi profilele și culorile.', hours: 'Luni–Vineri 09:00–18:00', serviceTitle: 'Service și reparații', serviceLead: 'Reglaje, înlocuiri de feronerie și garnituri.', map: 'Hartă', route: 'Indicații Google Maps'
     },
     error: { 404: 'Pagina nu a fost găsită.', home: 'Acasă', load: 'Nu s-a putut încărca conținutul', loadHint: 'Rulează site-ul printr-un server static (de ex. GitHub Pages sau python3 -m http.server), nu din file://.' },
-    foot: { about: 'Despre noi', warranty: 'Garanție și service', tag: 'Producător de tâmplărie PVC din {year}.', mock: 'Mockup de design. Catalogul și prețurile provin din captura site-ului din 2026-10-08; ofertele și calculatorul sunt ilustrative.' }
+    foot: { about: 'Despre noi', warranty: 'Garanție și service', tag: 'Producător de tâmplărie PVC din {year}.', mock: 'Mockup de design. Catalogul și prețurile provin din captura site-ului din 2026-10-08; ofertele și calculatorul sunt ilustrative.' },
+    segment: { label: 'Tip de client', b2c: 'B2C', b2b: 'B2B' },
+    /* B2B home and volume quote (data-segment="b2b") */
+    trade: {
+      eyebrow: 'FAR EST pentru firme', title: 'Tâmplărie PVC pentru șantiere, dezvoltări și revânzare',
+      lead: 'Ferestre și uși din fabrica proprie, cu prețuri fără TVA, ofertă de volum, livrare eșalonată pe etape și un singur contact pentru tot proiectul.',
+      quote: 'Cere ofertă de volum', configure: 'Configurează pozițiile', perks: ['Prețuri fără TVA', 'Factură pe firmă', 'Livrare eșalonată'],
+      fig: { since: 'Pe piață din', factory: 'Fabrică proprie din', glass: 'Unități de sticlă pe zi', warranty: 'Ani garanție', note: 'Cifre declarate de companie pe farest.ro.' },
+      who: { title: 'Pentru cine lucrăm', items: [
+        ['tool', 'Constructori și antreprenori', 'Cantități pe etaje și faze, livrare la termenele șantierului, montaj de echipele noastre sau ale tale.'],
+        ['factory', 'Dezvoltatori imobiliari', 'Aceeași serie și culoare pe tot ansamblul, mostre pentru apartamentul-model, capacitate rezervată în fabrică.'],
+        ['cart', 'Revânzători și montatori', 'Prețuri de revânzare, comenzi repetate din proiecte salvate, fișe tehnice pentru clienții tăi.']] },
+      systems: { title: 'Sisteme de profile', lead: 'Date tehnice pentru caiete de sarcini și oferte.', name: 'Sistem', depth: 'Adâncime', chambers: 'Camere', seals: 'Garnituri', thermal: 'Izolare termică', sheet: 'Fișa', note: 'Ug = sticlă, K = produs finit, în W/m²K, după datele publicate pe farest.ro.' },
+      steps: { title: 'Cum lucrăm cu firmele', items: [
+        ['Cerere', 'Trimiți cantitățile, seria și termenele, sau pozițiile configurate.'], ['Ofertă de volum', 'Primești oferta pe firmă, cu prețuri fără TVA și termene de producție.'],
+        ['Măsurători și mostre', 'Verificăm golurile pe șantier și aducem mostre de profil și culoare.'], ['Producție', 'Profile, sticlă și feronerie asamblate în fabrica proprie.'],
+        ['Livrare și montaj', 'Livrare pe etape, montaj și service cu garanție de 5 ani.']] },
+      projects: { title: 'Proiectele tale', lead: 'Pozițiile configurate, grupate pe șantiere, etaje sau clienți.', none: 'Niciun proiect încă. Creează unul în configurator ca să grupezi pozițiile pe șantiere sau etaje.', open: 'Rezumat', create: 'Creează un proiect', pieces: '{n} buc.', name: 'Proiect', status: 'Stare', total: 'Total fără TVA' },
+      manager: { title: 'Un manager de cont pentru tot proiectul', lead: 'După prima cerere primești un manager de cont: oferte, termene, livrări și service, dintr-un singur contact.', call: 'Sună la vânzări' },
+      form: { title: 'Cerere de ofertă de volum', lead: 'Datele firmei și cantitățile estimate. Un manager de cont revine cu oferta.', company: 'Firmă', cui: 'CUI', cuiHint: 'ex. RO12345678', name: 'Persoană de contact', email: 'E-mail',
+        type: 'Tip de proiect', types: { builder: 'Construcție, antrepriză', developer: 'Dezvoltare imobiliară', reseller: 'Revânzare, montaj', other: 'Altul' },
+        quantity: 'Număr estimat de ferestre și uși', message: 'Detalii: termene, serie, culoare, adresa șantierului', attach: 'Atașează coșul ({n} produs)|Atașează coșul ({n} produse)', send: 'Trimite cererea', ok: 'Cerere trimisă ({ref}). Te contactăm în curând.' },
+      withVat: 'Cu TVA ({pct}%): {amount}', volume: 'Preț de volum la cerere'
+    },
+    /* b2b wording that replaces the household one (FE.t) */
+    b2b: { meta: { title: 'FAR EST pentru firme · Tâmplărie PVC' }, product: { vat: 'fără TVA' }, cart: { total: 'Total fără TVA' }, cfg: { total: 'Total fără TVA', projectTotal: 'Total proiect fără TVA', sum: { grand: 'Total general fără TVA' } } }
   },
   en: {
     meta: { title: 'FAR EST · PVC windows and doors' },
@@ -178,6 +203,29 @@ FE.content = {
       title: 'FAR EST shops', lead: 'Come and see the profiles and colours.', hours: 'Mon–Fri 09:00–18:00', serviceTitle: 'Service and repairs', serviceLead: 'Adjustments, hardware and gasket replacement.', map: 'Map', route: 'Directions in Google Maps'
     },
     error: { 404: 'Page not found.', home: 'Home', load: 'Could not load the content', loadHint: 'Serve the site from a static server (e.g. GitHub Pages or python3 -m http.server), not from file://.' },
-    foot: { about: 'About us', warranty: 'Warranty and service', tag: 'PVC joinery manufacturer since {year}.', mock: 'Design mockup. Catalogue and prices come from the 2026-10-08 site capture; offers and the calculator are illustrative.' }
+    foot: { about: 'About us', warranty: 'Warranty and service', tag: 'PVC joinery manufacturer since {year}.', mock: 'Design mockup. Catalogue and prices come from the 2026-10-08 site capture; offers and the calculator are illustrative.' },
+    segment: { label: 'Customer type', b2c: 'B2C', b2b: 'B2B' },
+    trade: {
+      eyebrow: 'FAR EST for business', title: 'PVC windows and doors for sites, developments and resale',
+      lead: 'Windows and doors from our own factory, with prices excluding VAT, volume quotes, phased delivery and one contact for the whole project.',
+      quote: 'Request a volume quote', configure: 'Configure the items', perks: ['Prices excl. VAT', 'Company invoice', 'Phased delivery'],
+      fig: { since: 'In business since', factory: 'Own factory since', glass: 'Glass units per day', warranty: 'Years of warranty', note: 'Figures as stated by the company on farest.ro.' },
+      who: { title: 'Who we work with', items: [
+        ['tool', 'Builders and contractors', 'Quantities per floor and phase, delivery on the site schedule, installed by our crews or yours.'],
+        ['factory', 'Property developers', 'One series and colour across the scheme, samples for the show flat, reserved factory capacity.'],
+        ['cart', 'Resellers and installers', 'Resale prices, repeat orders from saved projects, technical sheets for your customers.']] },
+      systems: { title: 'Profile systems', lead: 'Technical data for specifications and tenders.', name: 'System', depth: 'Depth', chambers: 'Chambers', seals: 'Seals', thermal: 'Thermal insulation', sheet: 'Sheet', note: 'Ug = glass, K = finished product, in W/m²K, as published on farest.ro.' },
+      steps: { title: 'How we work with companies', items: [
+        ['Request', 'Send the quantities, series and dates, or your configured items.'], ['Volume quote', 'Get a company quote, priced excluding VAT, with production dates.'],
+        ['Survey and samples', 'We check the openings on site and bring profile and colour samples.'], ['Production', 'Profiles, glass and hardware assembled in our own factory.'],
+        ['Delivery and installation', 'Phased delivery, installation and service with a 5-year warranty.']] },
+      projects: { title: 'Your projects', lead: 'Configured items, grouped by site, floor or customer.', none: 'No projects yet. Create one in the configurator to group items by site or floor.', open: 'Summary', create: 'Create a project', pieces: '{n} pcs', name: 'Project', status: 'Status', total: 'Total excl. VAT' },
+      manager: { title: 'One account manager for the whole project', lead: 'After your first request you get an account manager: quotes, dates, deliveries and service from a single contact.', call: 'Call sales' },
+      form: { title: 'Volume quote request', lead: 'Company details and estimated quantities. An account manager will come back with a quote.', company: 'Company', cui: 'VAT / CUI number', cuiHint: 'e.g. RO12345678', name: 'Contact person', email: 'E-mail',
+        type: 'Project type', types: { builder: 'Construction, contracting', developer: 'Property development', reseller: 'Resale, installation', other: 'Other' },
+        quantity: 'Estimated number of windows and doors', message: 'Details: dates, series, colour, site address', attach: 'Attach the cart ({n} product)|Attach the cart ({n} products)', send: 'Send request', ok: 'Request sent ({ref}). We will be in touch shortly.' },
+      withVat: 'Incl. VAT ({pct}%): {amount}', volume: 'Volume price on request'
+    },
+    b2b: { meta: { title: 'FAR EST for business · PVC windows and doors' }, product: { vat: 'excl. VAT' }, cart: { total: 'Total excl. VAT' }, cfg: { total: 'Total excl. VAT', projectTotal: 'Project total excl. VAT', sum: { grand: 'Grand total excl. VAT' } } }
   }
 };

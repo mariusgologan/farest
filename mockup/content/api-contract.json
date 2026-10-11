@@ -4,7 +4,7 @@
   "envelope": {
     "success": "{ status: 2xx, ok: true, data, meta: {} }",
     "error": "{ status: 4xx|5xx, ok: false, data: null, meta: {}, error: <code>, detail?: <first failing path> }",
-    "errors": ["no_route", "invalid_request", "not_found", "invalid_config", "out_of_range", "invalid_phone", "invalid_order", "server_error", "contract_violation"]
+    "errors": ["no_route", "invalid_request", "not_found", "invalid_config", "out_of_range", "invalid_phone", "invalid_order", "invalid_trade", "server_error", "contract_violation"]
   },
   "$defs": {
     "id": { "type": "string", "pattern": "^[a-z0-9-]+$", "maxLength": 200 },
@@ -137,6 +137,23 @@
         "properties": { "ref": { "type": "string", "pattern": "^FE-[A-Z0-9]{6}$" }, "total": { "$ref": "#/$defs/money" }, "install": { "$ref": "#/$defs/money" },
           "lines": { "type": "array", "items": { "type": "object", "required": ["pid", "qty", "unit"], "properties": { "pid": { "$ref": "#/$defs/id" }, "qty": { "type": "integer" }, "unit": { "$ref": "#/$defs/money" } } } } } },
       "errors": ["invalid_order"]
+    },
+    "POST /trade-requests": {
+      "invalid": "invalid_trade",
+      "status": 201,
+      "body": { "type": "object", "required": ["company", "cui", "name", "phone", "email", "type", "quantity"], "additionalProperties": false,
+        "properties": {
+          "company": { "type": "string", "pattern": "\\S", "maxLength": 120 },
+          "cui": { "type": "string", "pattern": "^(RO|ro)?[0-9]{2,10}$" },
+          "name": { "type": "string", "pattern": "\\S", "maxLength": 120 },
+          "phone": { "$ref": "#/$defs/phone" },
+          "email": { "type": "string", "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$", "maxLength": 160 },
+          "type": { "enum": ["builder", "developer", "reseller", "other"] },
+          "quantity": { "type": "integer", "minimum": 1, "maximum": 100000 },
+          "message": { "type": "string", "maxLength": 1000 },
+          "items": { "type": "array", "maxItems": 100, "items": { "type": "object", "required": ["pid", "qty"], "properties": { "pid": { "$ref": "#/$defs/id" }, "qty": { "type": "integer", "minimum": 1, "maximum": 99 } } } } } },
+      "data": { "type": "object", "required": ["ref"], "properties": { "ref": { "type": "string", "pattern": "^B2B-[A-Z0-9]{5}$" } } },
+      "errors": ["invalid_trade"]
     }
   }
 }

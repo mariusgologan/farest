@@ -71,5 +71,5 @@ html[data-eff="wide"] .btn.only-compact { display: none; }
 html[data-nav="tabs"] .tabs { height: calc(var(--hit) + var(--s-2) + 1px + env(safe-area-inset-bottom)); }
 /* the bar is fixed (a sticky bar re-anchors as the content grows and was counted as a layout shift); its height is reserved at the end of the scroller */
 html[data-nav="tabs"] #frame { padding-bottom: var(--tabs-h); }
-/* the bars keep their natural height: with an explicit min-height above, a taller header (the corporate one) would otherwise be shrunk by the flex column and overlap the page */
+/* the bars keep their natural height: with an explicit min-height above, a taller header would otherwise be shrunk by the flex column and overlap the page */
 #top, #tabs { flex-shrink: 0; }

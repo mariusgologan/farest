@@ -1,0 +1,66 @@
+/* B2B segment (html[data-segment="b2b"], js/views/trade.js): the same app for companies, sober and denser. Cool neutrals and a steel-navy
+   brand, tighter radii and spacing, one type family, fuller panes with less blur, a quieter ambient light, spec tables instead of chips. */
+:root[data-segment="b2b"] {
+  --r-sm: 4px; --r-md: 6px; --r-lg: 10px; --r-pill: 6px; /* square-ish buttons, switches and badges */
+  --s-5: 1.25rem; --s-6: 1.5rem; --s-7: 2.25rem; --s-8: 3rem;
+  --font-display: var(--font); --fs-4xl: 2.5rem; --fs-3xl: 2rem; --fs-2xl: 1.5rem;
+  --glass-blur: 18px; --glass-blur-thick: 22px; --glass-sat: 1.1;
+}
+:root[data-segment="b2b"]:not([data-theme="dark"]) {
+  --brand: #1f4e79; --brand-strong: #173d60; --brand-soft: #e8eef4; --bg: #f2f4f6;
+  --glass-fill: rgb(247 249 251 / .8); --glass-fill-strong: rgb(248 250 252 / .88); --acr-tint: rgb(31 78 121 / .05);
+  --amb-opacity: .3;
+}
+:root[data-segment="b2b"][data-theme="dark"] {
+  --brand: #a9c8e6; --brand-strong: #bad4ee; --brand-soft: #16263a;
+  --glass-fill: rgb(17 25 34 / .76); --glass-fill-strong: rgb(13 20 28 / .84);
+  --amb-opacity: .26;
+}
+:root[data-segment="b2b"] .hero { background-image: none; }
+.t-hero .hero-copy { min-width: 0; }
+:root[data-segment="b2b"] h1, :root[data-segment="b2b"] h2 { letter-spacing: -.01em; }
+
+/* segment switch in the header: compact, never wraps */
+.top-actions { align-items: center; }
+.top-actions .seg { flex-wrap: nowrap; }
+.top-actions .seg-btn { min-height: 32px; padding: 0 var(--s-2); font-weight: 600; }
+@media (pointer: coarse) { .top-actions .seg-btn { min-height: 40px; min-width: 40px; } }
+/* narrow phones: the call button gives its place to the switch (the numbers stay in the footer and the call-back forms) */
+@media (max-width: 399px) { .top-actions [data-action="phone"] { display: none; } }
+@media (max-width: 359px) { .top { gap: var(--s-2); } .top-actions { gap: 0; } }
+
+/* catalogue cards: a small spec table instead of chips */
+.spec-mini { display: grid; grid-template-columns: repeat(auto-fit, minmax(64px, 1fr)); gap: 1px; margin: 0; width: 100%; border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden; background: var(--line); }
+.spec-mini div { display: grid; padding: var(--s-1) var(--s-2); background: var(--surface); }
+.spec-mini dt { font-size: .75rem; color: var(--text-2); }
+.spec-mini dd { margin: 0; font-weight: 600; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; }
+:root[data-segment="b2b"] .card-art { min-height: 160px; }
+:root[data-segment="b2b"] .card-art .photo { height: 160px; }
+:root[data-segment="b2b"] .card-body { gap: var(--s-2); padding: var(--s-3); }
+
+/* B2B home */
+.t-perks { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); color: var(--text-2); font-size: var(--fs-sm); }
+.t-perks li { display: inline-flex; align-items: center; gap: var(--s-1); }
+.t-perks svg { color: var(--brand); }
+.t-figs { display: grid; gap: var(--s-2); padding: var(--s-4) var(--s-5); border-radius: var(--r-lg); }
+.t-figs dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--s-4); margin: 0; }
+.t-figs dt { font-size: var(--fs-sm); color: var(--text-2); }
+.t-figs dd { margin: 0; font-size: var(--fs-2xl); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--brand); }
+.grid.t-who { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); }
+.t-band { display: grid; gap: var(--s-3); padding: var(--s-5); border-radius: var(--r-lg); }
+html[data-eff="compact"] .t-band { padding: var(--s-4); }
+html[data-eff="wide"] .t-steps { grid-template-columns: repeat(5, 1fr); }
+.t-scroll { overflow-x: auto; }
+.t-table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; }
+.t-table th, .t-table td { text-align: left; padding: var(--s-2) var(--s-3); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.t-table thead th { color: var(--text-2); font-weight: 600; }
+.t-table tbody th { font-weight: 600; }
+.t-table .num { text-align: right; }
+.t-table td:last-child { text-align: right; }
+
+/* volume quote form: two columns where there is room */
+.t-fields { display: grid; gap: var(--s-3); }
+html:not([data-eff="compact"]) .t-fields { grid-template-columns: 1fr 1fr; }
+.t-form :is(input[type=email], input[type=number], textarea) { min-height: var(--hit); padding: 0 var(--s-3); border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--acr-bg-strong); width: 100%; font: inherit; font-weight: 400; color: inherit; }
+.t-form textarea { padding: var(--s-2) var(--s-3); resize: vertical; }
+.t-form :is(input, select, textarea)[aria-invalid=true] { border-color: var(--err); }

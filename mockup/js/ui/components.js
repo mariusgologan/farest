@@ -36,6 +36,9 @@
   ui.chip = (label, extra = '') => h`<span class="chip ${extra}">${label}</span>`;
   ui.specs = p => {
     if (p.kind === 'part') return '';
+    /* companies compare numbers: a small spec table instead of chips */
+    if (FE.store.get('segment') === 'b2b') return h`<dl class="spec-mini">${[[t('trade.systems.depth'), p.mm && `${p.mm} mm`], [t('trade.systems.chambers'), p.chambers], ['K', p.uf && FE.num(p.uf)], ['cm', `${p.w} × ${p.h}`]]
+      .filter(([, v]) => v).map(([k, v]) => h`<div><dt>${k}</dt><dd>${v}</dd></div>`)}</dl>`;
     return h`${p.mm ? ui.chip(`${p.mm} mm`) : ''}${p.chambers ? ui.chip(t('profile.chambers', { n: p.chambers })) : ''}${p.uf ? ui.chip(`K ${FE.num(p.uf)}`) : ''}`;
   };
 

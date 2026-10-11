@@ -60,7 +60,7 @@
     tEl.removeEventListener('pointermove', move); tEl = null;
   };
   document.addEventListener('pointerover', e => {
-    if (!fine.matches || still() || document.documentElement.dataset.skin === 'corporate') return;
+    if (!fine.matches || still()) return;
     const el = e.target.closest?.(TILT);
     if (!el || el === tEl) return;
     rest(); tEl = el; el.addEventListener('pointermove', move, { passive: true });
