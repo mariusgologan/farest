@@ -10,6 +10,8 @@ FE.config = {
   api: { base: '/api', latency: [120, 380], strict: true },
   /* live shop prices: products.csv is re-read on focus, on reconnect and every pollMs (± jitter) while the page is visible */
   prices: { pollMs: 300000, jitter: 0.2 },
+  /* pull to refresh (touch): px of indicator travel needed to reload; finger travel = px / resistance */
+  pull: { threshold: 70, max: 100, resistance: 0.5 },
   defaults: { theme: 'auto', layout: 'auto', ambient: 'on', bars: 'auto', lang: 'ro' },
   langs: ['ro', 'en'],
   themes: ['auto', 'light', 'dark'],

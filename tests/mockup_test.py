@@ -269,6 +269,45 @@ with sync_playwright() as pw:
         ok(f'{skin}: no console errors or failed requests across all routes', not errs, '; '.join(errs[:5]))
         ctx.close()
 
+    # ---------------- pull to refresh (touch) ----------------
+    ctx = browser.new_context(service_workers='block', viewport={'width': 412, 'height': 823}, is_mobile=True, has_touch=True)
+    page = ctx.new_page(); errs = []; watch(page, errs)
+    cdp = ctx.new_cdp_session(page)
+    def pull(dy, x=200, y=250, steps=8, end=True):
+        cdp.send('Input.dispatchTouchEvent', {'type': 'touchStart', 'touchPoints': [{'x': x, 'y': y}]})
+        for i in range(1, steps + 1):
+            cdp.send('Input.dispatchTouchEvent', {'type': 'touchMove', 'touchPoints': [{'x': x, 'y': y + dy * i / steps}]})
+        ready = page.evaluate("document.querySelector('.pull').hasAttribute('data-ready')")
+        if end:
+            cdp.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
+        return ready
+    boot(page, '/c/windows')
+    page.evaluate('window.__same = 1')
+    ok('touch: the pull indicator exists and is hidden from assistive tech', page.locator('.pull[aria-hidden=true]').count() == 1)
+    ok('touch: a short pull is not ready', not pull(60))
+    page.wait_for_timeout(400)
+    ok('touch: a short pull does not reload and the indicator resets', page.evaluate("window.__same === 1 && !document.querySelector('.pull').hasAttribute('data-active')"))
+    pull(-250, y=600); page.wait_for_timeout(300)
+    ok('touch: an upward swipe does not reload', page.evaluate('window.__same') == 1)
+    page.evaluate("document.querySelector('#frame').scrollTo({ top: 400, behavior: 'instant' })"); page.wait_for_timeout(200)
+    pull(220); page.wait_for_timeout(400)
+    ok('touch: pulling while scrolled down does not reload', page.evaluate('window.__same') == 1)
+    page.evaluate("document.querySelector('#frame').scrollTo({ top: 0, behavior: 'instant' })"); page.wait_for_timeout(200)
+    page.click('#view .card [data-action=quickview]'); page.wait_for_selector('.layer')
+    pull(220, y=120); page.wait_for_timeout(400)
+    ok('touch: pulling with an overlay open does not reload', page.evaluate('window.__same') == 1)
+    page.evaluate('FE.overlay.closeAll()'); page.wait_for_timeout(500)
+    with page.expect_navigation():
+        ready = pull(220)
+    ok('touch: a long pull at the top is ready and reloads the page', ready)
+    boot(page, '/c/windows')
+    ok('touch: after the reload the same route is shown', page.evaluate('window.__same === undefined && location.hash') == '#/c/windows')
+    ok('touch: no console errors', not errs, '; '.join(errs[:5]))
+    ctx.close()
+    ctx = browser.new_context(service_workers='block'); page = ctx.new_page(); boot(page)
+    ok('desktop (no touch): no pull indicator', page.locator('.pull').count() == 0)
+    ctx.close()
+
     # ---------------- accessibility of the new states ----------------
     ctx = browser.new_context(service_workers='block')
     page = ctx.new_page(); errs = []; watch(page, errs)
