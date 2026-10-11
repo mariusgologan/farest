@@ -361,6 +361,16 @@ with sync_playwright() as pw:
     ok('ambient: no section glow outside auto mode', page.locator('[data-glow]').count() == 0)
     page.evaluate("FE.store.set({ ambient: 'auto' })"); page.wait_for_function(f'FE.store.get("picture").a === "{band}"', timeout=5000)
     ok('ambient: switching back to auto picks up the section in view', pic() == band)
+    # two cards in the middle band: a scroll that ends nearer the other one moves the glow, though no card entered or left the band
+    boot(page, '/c/windows'); page.wait_for_timeout(1000)  # the route's smooth scroll to the top ends first
+    near = """(f => { const f0 = document.querySelector('#frame'), a = document.querySelector('#view .card[data-pic]'), ra = a.getBoundingClientRect();
+      const b = [...document.querySelectorAll('#view .card[data-pic]')].find(e => e.getBoundingClientRect().top >= ra.bottom), rb = b.getBoundingClientRect();
+      const ca = (ra.top + ra.bottom) / 2, cb = (rb.top + rb.bottom) / 2, mid = f0.getBoundingClientRect().top + f0.clientHeight / 2;
+      f0.scrollTo({ top: f0.scrollTop + ca + (cb - ca) * f - mid, behavior: 'instant' }); return [a.dataset.id, b.dataset.id]; })"""
+    a, b = page.evaluate(near + '(0.65)')
+    page.wait_for_function(f"document.querySelector('[data-glow]')?.dataset.id === '{b}'", timeout=5000)
+    page.evaluate(near + '(0.35)'); page.wait_for_timeout(600)
+    ok('ambient: when scrolling stops the glow is on the card nearest mid-screen', page.evaluate("document.querySelector('[data-glow]')?.dataset.id") == a, page.evaluate("document.querySelector('[data-glow]')?.dataset.id"))
     page.evaluate("FE.store.set({ ambient: 'off' })"); page.evaluate("document.querySelector('#frame').scrollTo({ top: 0, behavior: 'instant' })"); page.wait_for_timeout(500)
     ok('ambient: no console errors', not errs, '; '.join(errs[:5]))
     ctx.close()
