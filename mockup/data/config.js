@@ -12,8 +12,11 @@ FE.config = {
   prices: { pollMs: 300000, jitter: 0.2 },
   /* pull to refresh (touch): px of indicator travel needed to reload; finger travel = px / resistance */
   pull: { threshold: 70, max: 100, resistance: 0.5 },
-  defaults: { theme: 'auto', layout: 'auto', ambient: 'auto', surface: 'auto', bars: 'auto', lang: 'ro' },
+  defaults: { theme: 'auto', layout: 'auto', ambient: 'auto', surface: 'auto', bars: 'auto', lang: 'ro', segment: 'b2c' },
   langs: ['ro', 'en'],
+  /* who the shop speaks to: b2c (households, prices with VAT) or b2b (companies: prices without VAT, volume quotes, a denser look).
+     A link with ?b2b or ?b2c picks it; the header and Settings switch it */
+  segments: ['b2c', 'b2b'],
   themes: ['auto', 'light', 'dark'],
   ambientModes: ['auto', 'on', 'off'],
   barModes: ['auto', 'always'],

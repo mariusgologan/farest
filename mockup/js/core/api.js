@@ -67,6 +67,9 @@
     },
     'POST /requests': b => b.phone.replace(/\D/g, '').length < 9
       ? { status: 422, error: 'invalid_phone' } : { status: 201, data: { ref: 'CB-' + ref(5) } },
+    /* a company's volume quote request (B2B); a real backend would also check the CUI against the trade register */
+    'POST /trade-requests': b => b.phone.replace(/\D/g, '').length < 9 || (b.items || []).some(l => !byId(db().products, l.pid))
+      ? { status: 422, error: 'invalid_trade' } : { status: 201, data: { ref: 'B2B-' + ref(5) } },
     /* the order is repriced here from the current price list; the client's totals are only a display */
     'POST /orders': b => {
       const lines = b.items.map(l => ({ l, p: byId(db().products, l.pid) }));

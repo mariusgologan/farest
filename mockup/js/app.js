@@ -51,6 +51,7 @@
     root.style.setProperty('--cols', config.layouts[eff].cols);
     root.style.setProperty('--frame-w', sel === 'auto' ? '100%' : config.layouts[sel].width + 'px');
     root.lang = store.get('lang');
+    root.dataset.segment = store.get('segment');
   }
 
   /* ---------- shell ---------- */
@@ -59,6 +60,7 @@
     FE.$('#top').innerHTML = h`<a class="logo" href="#/"><b>FAR</b><span>EST</span></a>
       <nav class="topnav" aria-label="Main">${config.nav.map(n => navItem(n, 'navlink'))}</nav>
       <div class="top-actions">
+        ${FE.ui.segmented('segment', config.segments, store.get('segment'), 'set-segment')}
         <button class="icon-btn" data-action="phone" aria-label="${t('phone.title')}" aria-haspopup="dialog">${icon('phone')}</button>
         <button class="icon-btn" data-action="settings" aria-label="${t('settings.title')}" aria-haspopup="dialog">${icon('settings')}</button>
         <button class="icon-btn cart-btn" data-action="open-cart" aria-label="${t('cart.title')}">${icon('cart')}<span class="badge-dot" data-bind="cart-count" hidden></span></button>
@@ -67,7 +69,6 @@
     FE.$('#foot').innerHTML = h`<div class="foot-in"><div><b>${config.brand.legal}</b><p class="muted small">${t('foot.tag', { year: config.brand.since })}</p><p class="small"><a href="#/page/about">${t('foot.about')}</a> · <a href="#/page/warranty">${t('foot.warranty')}</a></p></div>
       <div><p class="muted small">${t('phone.hours')}</p><p><a href="tel:${FE.db.callCenter[0].replace(/\s/g, '')}">${FE.db.callCenter[0]}</a></p></div>
       <p class="muted small">${t('foot.mock')}</p></div>`.toString();
-    FE.skin?.shell?.();
     markActive(); badge();
   }
   const badge = () => { const n = FE.cart.count(), el = FE.$('[data-bind=cart-count]'); if (el) { el.hidden = !n; el.textContent = n; } };
@@ -109,6 +110,10 @@
   A('set-surface', (el, ev, d) => store.set({ surface: d.value }));
   A('set-bars', (el, ev, d) => store.set({ bars: d.value }));
   A('set-lang', (el, ev, d) => store.set({ lang: d.value }));
+  A('set-segment', (el, ev, d) => store.set({ segment: d.value }));
+  /* the address stays shareable: ?b2b while the b2b segment is on, nothing for the household default */
+  const segmentUrl = () => { const q = new URLSearchParams(location.search); q.delete('b2b'); q.delete('b2c'); const rest = q.toString().replace(/=(&|$)/g, '$1');
+    const search = [store.get('segment') === 'b2b' ? 'b2b' : '', rest].filter(Boolean).join('&'); history.replaceState(history.state, '', (search ? '?' + search : location.pathname) + location.hash); };
 
   /* hovering a photo card tints the ambient light with that photo; leaving restores the page picture */
   const hover = (ev, enter) => { const el = ev.target.closest?.('[data-pic]'); if (!el || !el.dataset.pic) return; if (enter ? true : !el.contains(ev.relatedTarget)) FE.ambient.setPicture(enter ? el.dataset.pic : FE.ambient.rest()); };
@@ -117,8 +122,9 @@
 
   /* ---------- wiring ---------- */
   store.on((s, prev, patch) => {
-    if ('theme' in patch || 'layout' in patch || 'lang' in patch || 'surface' in patch || 'slowUntil' in patch) applyEnv();
-    if ('lang' in patch) { drawShell(); FE.router.start(); }
+    if ('theme' in patch || 'layout' in patch || 'lang' in patch || 'surface' in patch || 'slowUntil' in patch || 'segment' in patch) applyEnv();
+    if ('segment' in patch) segmentUrl();
+    if ('lang' in patch || 'segment' in patch) { drawShell(); FE.router.start(); }
     if ('cart' in patch) badge();
     if ('context' in patch) markActive();
   });

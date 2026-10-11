@@ -171,6 +171,8 @@
   });
 
   /* ---------- level 1: cart drawer ---------- */
+  const b2b = () => FE.store.get('segment') === 'b2b';
+  const withVat = n => t('trade.withVat', { pct: Math.round(FE.config.catalog.vat * 100), amount: FE.moneyGross(n) });
   FE.flows.cart = () => {
     FE.store.set({ context: 'cart' });
     return FE.overlay.open({
@@ -191,7 +193,8 @@
                 ${FE.variantsOf(p).sides.length ? h`<button class="btn link small" data-action="edit-line" data-i="${i}">${t('action.edit')}</button>` : ''}</div></li>`; })}</ul>
             <div class="free ${left ? '' : 'done'}"><span class="meter" style="--v:${Math.min(1, total / FE.config.catalog.freeDeliveryFrom)}"><i></i></span>
               <small>${left ? t('cart.freeLeft', { amount: money(left) }) : t('cart.freeDone')}</small></div>
-            <div class="row spread footer-bar"><div><div class="muted">${t('cart.total')}</div><div class="price big">${money(total)}</div></div>
+            ${b2b() ? h`<button class="btn ghost block" data-action="trade-quote">${t('trade.quote')}</button>` : ''}
+            <div class="row spread footer-bar"><div><div class="muted">${t('cart.total')}</div><div class="price big">${money(total)}</div>${b2b() ? h`<div class="muted small">${withVat(total)}</div>` : ''}</div>
               <button class="btn primary lg" data-action="checkout">${t('cart.checkout')}</button></div>`.toString();
         };
         draw();
@@ -209,14 +212,15 @@
     title: t('callback.title'), size: 'sm',
     render(body, ov) {
       body.innerHTML = h`<form class="stack" novalidate><p class="muted">${t('callback.lead')}</p>
-        ${ui.field('cb-phone', t('form.phone'), 'name="phone" type="tel" autocomplete="tel" inputmode="tel" required autofocus')}
+        ${ui.field('cb-phone', t('form.phone'), 'type="tel" autocomplete="tel" inputmode="tel" required autofocus')}
         <p class="error" role="alert" data-bind="err" hidden></p>
         <button class="btn primary lg" type="submit">${t('callback.send')}</button></form>`.toString();
       const form = FE.$('form', body), err = FE.$('[data-bind=err]', body);
       form.addEventListener('submit', async e => {
         e.preventDefault();
-        const r = await FE.api.post('/requests', { phone: form.phone.value });
-        if (!r.ok) { err.hidden = false; err.textContent = t('form.error'); form.phone.setAttribute('aria-invalid', 'true'); return; }
+        const phone = form.elements['cb-phone']; /* ui.field names the input after its id */
+        const r = await FE.api.post('/requests', { phone: phone.value });
+        if (!r.ok) { err.hidden = false; err.textContent = t('form.error'); phone.setAttribute('aria-invalid', 'true'); return; }
         ov.close(); FE.toast(t('callback.ok', { ref: r.data.ref }));
       });
     }
@@ -236,6 +240,7 @@
       const draw = () => {
         const s = FE.store;
         body.innerHTML = h`<div class="stack">
+          <div><div class="muted small">${t('segment.label')}</div>${seg('segment', FE.config.segments, s.get('segment'), 'set-segment')}</div>
           <div><div class="muted small">${t('settings.theme.label')}</div>${seg('settings.theme', FE.config.themes, s.get('theme'), 'set-theme')}</div>
           <div><div class="muted small">${t('settings.layout.label')}</div>${seg('settings.layout', ['auto', ...Object.keys(FE.config.layouts)], s.get('layout'), 'set-layout')}</div>
           <div><div class="muted small">${t('settings.ambient.label')}</div>${seg('settings.ambient', FE.config.ambientModes, s.get('ambient'), 'set-ambient')}</div>

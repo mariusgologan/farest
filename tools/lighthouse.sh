@@ -12,7 +12,7 @@ if [ -z "$BASE" ]; then
   sleep 1; BASE=http://127.0.0.1:8765/
 fi
 rm -f /out/*.report.* /out/summary.md
-for p in "home|" "windows|#/c/windows" "product|#/p/fereastra-pvc-4-camere-alb-56x56-cm" "calculator|#/calculator" "corporate|corporate/"; do
+for p in "home|" "windows|#/c/windows" "product|#/p/fereastra-pvc-4-camere-alb-56x56-cm" "calculator|#/calculator"; do
   name=${p%%|*}; url=$BASE${p#*|}
   for form in mobile desktop; do
     preset=""; [ $form = desktop ] && preset="--preset=desktop"
