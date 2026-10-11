@@ -4,6 +4,22 @@ html[data-bars="hidden"] #top { transform: translateY(-110%); opacity: 0; pointe
 html[data-bars="hidden"][data-nav="tabs"] #tabs { transform: translateY(110%); opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { #top, #tabs { transition: none !important; } }
 
+/* Topic strip (js/ui/topic.js): once the page title has scrolled away, a thin row under the header names the page, section and item in view;
+   with the menus hidden it rises to the top of the screen, with the same slide */
+.topic { position: fixed; left: 0; right: 0; top: var(--top-h); z-index: var(--z-nav); height: 30px; border-width: 0 0 1px; border-radius: 0; box-shadow: var(--e-1);
+  opacity: 0; visibility: hidden; transform: translateY(-6px); pointer-events: none;
+  transition: opacity var(--dur-2) var(--ease), transform var(--dur-bars) var(--ease-ambient), visibility 0s linear var(--dur-2); }
+.topic[data-on] { opacity: 1; visibility: visible; transform: none; transition: opacity var(--dur-2) var(--ease), transform var(--dur-bars) var(--ease-ambient); }
+html[data-bars="hidden"] .topic[data-on] { transform: translateY(calc(-1 * var(--top-h))); }
+.topic-in { max-width: 1240px; height: 100%; margin: 0 auto; padding: 0 var(--s-5); display: flex; align-items: center; gap: var(--s-2); font-size: var(--fs-sm); color: var(--text-2); white-space: nowrap; overflow: hidden; }
+html[data-eff="compact"] .topic-in { padding: 0 var(--s-4); }
+.topic-in span { min-width: 2.5em; flex-shrink: 1000; overflow: hidden; text-overflow: ellipsis; } /* the page and section give way first, the item keeps its name */
+.topic-in span + span::before { content: "\203A"; margin-right: var(--s-2); }
+.topic-in .now { flex-shrink: 1; min-width: 0; color: var(--text); font-weight: 600; animation: topic-now var(--dur-2) var(--ease); }
+@keyframes topic-now { from { opacity: 0; transform: translateY(3px); } }
+@media (prefers-reduced-motion: reduce) { .topic, .topic-in .now { transition: none !important; animation: none !important; } }
+@media print { .topic { display: none; } }
+
 /* Pull to refresh (js/ui/pull.js): #frame scrolls, so the browser's own gesture and bounce are replaced by this indicator */
 #frame { overscroll-behavior-y: none; }
 .pull { position: fixed; top: calc(var(--top-h) - 48px); left: 50%; z-index: calc(var(--z-nav) + 1); width: 44px; height: 44px; margin-left: -22px;
