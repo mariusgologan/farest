@@ -15,13 +15,8 @@ var w=innerWidth,l=s.layout||'auto',e=l!=='auto'?l:w>=1100?'wide':w>=700?'regula
 d.dataset.layout=l;d.dataset.eff=e;d.dataset.nav=e==='compact'?'tabs':'bar';d.style.setProperty('--cols',{compact:1,regular:2,wide:3}[e]);d.style.setProperty('--frame-w',l==='auto'?'100%':W[l]+'px');})();</script>
 <link rel="manifest" href="manifest.webmanifest">
 <!-- boot data (FE.config.content, read by FE.loadAll): fetched in parallel with the scripts instead of after them -->
-<link rel="preload" href="content/products.csv" as="fetch" crossorigin>
-<link rel="preload" href="content/configurator.json" as="fetch" crossorigin>
-<link rel="preload" href="content/api-contract.json" as="fetch" crossorigin>
-<link rel="preload" href="content/shops.yaml" as="fetch" crossorigin>
-<link rel="preload" href="content/offers.json" as="fetch" crossorigin>
-<link rel="preload" href="content/faq.yaml" as="fetch" crossorigin>
-<link rel="preload" href="content/site-images.yaml" as="fetch" crossorigin>
+<script>/* Safari (WebKit) does not reuse fetch preloads for fetch() and downloads them twice, so they are added only elsewhere */
+if(!/^Apple/.test(navigator.vendor))['products.csv','configurator.json','api-contract.json','shops.yaml','offers.json','faq.yaml','site-images.yaml'].forEach(function(f){var l=document.createElement('link');l.rel='preload';l.as='fetch';l.crossOrigin='';l.href='content/'+f;document.head.appendChild(l);});</script>
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon.svg">
 <link rel="stylesheet" href="css/fonts.css">

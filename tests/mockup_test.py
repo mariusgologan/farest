@@ -357,6 +357,17 @@ with sync_playwright() as pw:
     ok('ambient: a later explicit "on" is kept', page.evaluate('FE.store.get("ambient")') == 'on')
     ctx.close()
 
+    # ---------------- prose links and preloads ----------------
+    ctx = browser.new_context(service_workers='block', viewport={'width': 412, 'height': 846}, has_touch=True, is_mobile=True)
+    page = ctx.new_page(); errs = []; watch(page, errs)
+    ok('preloads: added for the boot data on non-Apple browsers', page.goto(BASE) and page.locator('link[rel=preload][as=fetch]').count() == 7)
+    for r in ('/page/about', '/page/warranty'):
+        boot(page, r); page.wait_for_function('!document.querySelector("#view").hasAttribute("aria-busy")')
+        small = page.evaluate("[...document.querySelectorAll('#view a')].filter(e => { const b = e.getBoundingClientRect(); return b.width && b.height < 24; }).map(e => e.textContent)")
+        ok(f'{r}: links are at least 24px tall', not small, small)
+    ok('prose links: no console errors', not errs, '; '.join(errs[:5]))
+    ctx.close()
+
     # ---------------- accessibility of the new states ----------------
     ctx = browser.new_context(service_workers='block')
     page = ctx.new_page(); errs = []; watch(page, errs)

@@ -138,6 +138,8 @@ html[data-eff="wide"] .prose-band { grid-template-columns: 1fr 1fr; align-items:
 .prose h2 { font-size: var(--fs-xl); margin: var(--s-4) 0 var(--s-2); } .prose h2:first-child { margin-top: 0; }
 .prose p, .prose ul, .prose ol, .prose blockquote { margin: 0 0 var(--s-3); } .prose ul, .prose ol { padding-left: var(--s-5); }
 .prose blockquote { padding: var(--s-3) var(--s-4); border-left: 4px solid var(--brand); background: var(--brand-soft); border-radius: var(--r-sm); }
+/* inline links: 2px of vertical padding brings the tap area to 24px without moving the line */
+.prose a { padding-block: 2px; }
 .prose-page { padding: var(--s-6); border-radius: var(--r-lg); max-width: 760px; display: grid; gap: var(--s-4); }
 .faq { display: grid; gap: var(--s-2); }
 .faq details { border-radius: var(--r-md); padding: 0 var(--s-4); }
