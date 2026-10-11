@@ -6,9 +6,9 @@
   --glow-b: radial-gradient(closest-side, var(--amb-b), color-mix(in srgb, var(--amb-b) 45%, transparent) 45%, color-mix(in srgb, var(--amb-b) 12%, transparent) 75%, transparent); }
 .ambient i { transition: --amb-a var(--dur-ambient) var(--ease-ambient), --amb-b var(--dur-ambient) var(--ease-ambient); }
 .ambient i { position: absolute; width: 80vmax; height: 80vmax; opacity: var(--amb-opacity); }
-.ambient i:nth-child(1) { background: var(--glow-a); top: -35vmax; left: -25vmax; }
-.ambient i:nth-child(2) { background: var(--glow-b); bottom: -40vmax; right: -30vmax; }
-.ambient i:nth-child(3) { background: var(--glow-a); width: 50vmax; height: 50vmax; top: 25%; left: 45%; opacity: calc(var(--amb-opacity) * .5); }
+.ambient i:nth-child(1) { background: var(--glow-a); top: calc(42% - 40vmax); left: calc(50% - 40vmax); }
+.ambient i:nth-child(2) { background: var(--glow-b); top: calc(78% - 40vmax); left: calc(50% - 40vmax); }
+.ambient i:nth-child(3) { background: var(--glow-a); width: 50vmax; height: 50vmax; top: calc(50% - 25vmax); left: calc(50% - 25vmax); opacity: calc(var(--amb-opacity) * .5); }
 :root[data-ambient="off"] .ambient { display: none; }
 
 /* Frosted acrylic: sheen gradient over a translucent fill, heavy blur + saturation, grain, light edge, inner glow, elevation. */
