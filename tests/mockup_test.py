@@ -490,6 +490,25 @@ with sync_playwright() as pw:
     ok('callback: the request is sent', not errs, '; '.join(errs[:3]))
     ctx.close()
 
+    # ---------------- topic strip: page, section and item follow the scroll ----------------
+    ctx = browser.new_context(service_workers='block', viewport={'width': 1280, 'height': 800})
+    page = ctx.new_page(); errs = []; watch(page, errs)
+    boot(page, '/c/windows'); page.wait_for_selector('#view .card[data-id]')
+    ok('topic: hidden at the top of the page', not page.evaluate("document.querySelector('#topic').hasAttribute('data-on')"))
+    page.evaluate("document.querySelector('#frame').style.scrollBehavior = 'auto'; document.querySelector('#frame').scrollTo(0, 700)"); page.wait_for_timeout(400)
+    first = page.evaluate("document.querySelector('#topic').textContent")
+    card = page.evaluate("(() => { const line = document.querySelector('#topic').getBoundingClientRect().bottom + 8; return [...document.querySelectorAll('#view .card')].find(c => c.getBoundingClientRect().bottom > line + 24).querySelector('.card-title').textContent.trim(); })()")
+    ok('topic: shows the page and the card in view', page.evaluate("document.querySelector('#topic').hasAttribute('data-on')") and first.startswith('Ferestre PVC') and card in first, first)
+    page.evaluate("document.querySelector('#frame').scrollTo(0, 1400)"); page.wait_for_timeout(1300)
+    ok('topic: changes while scrolling', page.evaluate("document.querySelector('#topic').textContent") != first)
+    ok('topic: rises to the top when the menus hide', page.evaluate("document.documentElement.dataset.bars") == 'hidden' and page.evaluate("document.querySelector('#topic').getBoundingClientRect().top") < 5)
+    page.evaluate("document.querySelector('#frame').scrollTo(0, 0)"); page.wait_for_timeout(400)
+    ok('topic: leaves again at the top', not page.evaluate("document.querySelector('#topic').hasAttribute('data-on')"))
+    boot(page, f'/p/{PID}'); page.wait_for_selector('#view .buybox h1'); page.evaluate("document.querySelector('#frame').scrollTo(0, 900)"); page.wait_for_timeout(400)
+    ok('topic: a product page keeps its name in view', page.evaluate("document.querySelector('#topic').textContent").startswith(page.evaluate("document.querySelector('#view h1').textContent.trim()")))
+    ok('topic: no console errors', not errs, '; '.join(errs[:3]))
+    ctx.close()
+
     # ---------------- accessibility of the new states ----------------
     ctx = browser.new_context(service_workers='block')
     page = ctx.new_page(); errs = []; watch(page, errs)
