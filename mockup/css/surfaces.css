@@ -1,8 +1,10 @@
 /* Ambient layer: a soft wash over the whole page in the context colours (route, product colour, picture in view): the first colour
-   from the top, the second (the other temperature) from the bottom, a neutral stone in the middle so text keeps its contrast. Gradients only, no blur filter. */
+   from the top, its analogous neighbour from the bottom, a grey tinted with the first colour in the middle (one temperature throughout),
+   so text keeps its contrast. Gradients only, no blur filter. */
 .ambient { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
 /* the colours change at once on :root (one style pass) and glide only on the three layers: a transition of an inherited
    property on :root would restyle every element on every frame for --dur-ambient */
+:root, .ambient i { --amb-n: color-mix(in oklab, var(--amb-a) 16%, var(--amb-grey)); } /* on .ambient i too, so it glides with --amb-a */
 .ambient i { transition: --amb-a var(--dur-ambient) var(--ease-ambient), --amb-b var(--dur-ambient) var(--ease-ambient); }
 .ambient i { position: absolute; inset: 0; opacity: var(--amb-opacity); }
 .ambient i:nth-child(1) { background: radial-gradient(130% 75% at 50% 0%, color-mix(in srgb, var(--amb-a) 70%, transparent), color-mix(in srgb, var(--amb-a) 22%, transparent) 55%, transparent 100%); }

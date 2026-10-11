@@ -3,7 +3,7 @@
    proportional to how colourful it is (white windows nudge a little, walnut doors and shop photos pull strongly).
    A hovered/selected swatch (calculator) overrides; time of day shifts the hue. */
 (() => {
-  const root = document.documentElement, cfgI = FE.config.ambientImage;
+  const root = document.documentElement, cfgI = FE.config.ambientImage, GREY = '#9ea3a8';
 
   const hex2rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
   const rgb2hex = c => '#' + c.map(v => Math.round(FE.clamp(v, 0, 255)).toString(16).padStart(2, '0')).join('');
@@ -21,6 +21,9 @@
     const [r, g, b] = [[c, x, 0], [x, c, 0], [0, c, x], [0, x, c], [x, 0, c], [c, 0, x]][Math.floor(h / 60) % 6];
     return rgb2hex([(r + m) * 255, (g + m) * 255, (b + m) * 255]);
   }
+
+  /* a neighbour on the colour wheel, a little lighter: the second colour when only one is known (one temperature) */
+  const analog = hex => { const [h, s, l] = rgb2hsl(hex2rgb(hex)); return hsl2hex((h + cfgI.shift) % 360, s, Math.min(l + 0.08, 0.8)); };
 
   /* palette of a same-origin picture: hue histogram weighted by chroma, background (near white/black) ignored */
   const cache = new Map();
@@ -42,8 +45,10 @@
           if (!used) return resolve(null);
           bins.sort((a, b) => b.w - a.w);
           const tot = bins.reduce((s, b) => s + b.w, 0), pick = b => { const c = b.rgb.map(v => v / b.w), [h, s] = rgb2hsl(c); return hsl2hex(h, Math.max(s, cfgI.boostSat), cfgI.light); };
-          const a = pick(bins[0]), second = bins.slice(1).find(b => b.w / tot > cfgI.minShare && Math.abs(rgb2hsl(b.rgb.map(v => v / b.w))[0] - rgb2hsl(bins[0].rgb.map(v => v / bins[0].w))[0]) > 30);
-          resolve({ a, b: second ? pick(second) : null, k: FE.clamp(0.35 + (chroma / used) * 1.6, 0.35, cfgI.maxPull) });
+          const hue = b => rgb2hsl(b.rgb.map(v => v / b.w))[0], h0 = hue(bins[0]), [lo, hi] = cfgI.analog;
+          const apart = b => { const d = Math.abs(hue(b) - h0) % 360; return Math.min(d, 360 - d); };
+          const a = pick(bins[0]), second = bins.slice(1).find(b => b.w / tot > cfgI.minShare && apart(b) >= lo && apart(b) <= hi);
+          resolve({ a, b: second ? pick(second) : analog(a), k: FE.clamp(0.35 + (chroma / used) * 1.6, 0.35, cfgI.maxPull) });
         } catch { resolve(null); }
       };
       img.onerror = () => resolve(null);
@@ -56,9 +61,10 @@
     const s = FE.store, ctx = FE.config.ambient[s.get('context')] || FE.config.ambient.home, sw = s.get('swatch'), pic = s.get('picture');
     root.dataset.ambient = s.get('ambient');
     let [a, b] = ctx;
-    /* the picture pulls the first colour; the second only follows a distinct second hue, and half as far, so the context's counter-temperature stays */
-    if (pic) { a = mix(a, pic.a, pic.k); if (pic.b) b = mix(b, pic.b, pic.k * .5); }
-    if (sw) a = sw;
+    /* hues are never mixed across the wheel (blue + orange makes mud): a colourful picture replaces both colours, its strength (k) only
+       shading them toward grey; a plain one (white windows) leaves the context. A swatch brings its own analogous pair */
+    if (pic && pic.k >= cfgI.minPull) { a = mix(GREY, pic.a, pic.k); b = mix(GREY, pic.b, pic.k); }
+    if (sw) { a = sw; b = analog(sw); }
     root.style.setProperty('--amb-a', a);
     root.style.setProperty('--amb-b', b);
   }

@@ -1,7 +1,7 @@
 /* Offline shell. Same-origin only: app files are cache-first, content files stale-while-revalidate,
    prices (products.csv) and configurator rates network-first, revalidated past the HTTP cache, the cached copy only offline.
    Bump VERSION when shipping, old caches are dropped. Paths are relative so any GitHub Pages sub-path works. */
-const VERSION = 'farest-v54';
+const VERSION = 'farest-v55';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon.svg',
   'css/fonts.css', 'css/configurator.css', 'css/glass.css', 'js/ui/glass.js', 'css/chrome.css', 'js/ui/chrome.js', 'js/ui/pull.js', 'css/motion.css', 'js/ui/motion.js', 'fonts/inter-latin.woff2', 'fonts/inter-latin-ext.woff2', 'fonts/plus-jakarta-sans-latin.woff2', 'fonts/plus-jakarta-sans-latin-ext.woff2', 'css/tokens.css', 'css/base.css', 'css/surfaces.css', 'css/layout.css', 'css/components.css', 'css/overlays.css',
   'data/config.js', 'data/catalog.js', 'data/content.js',
