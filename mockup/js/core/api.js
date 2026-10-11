@@ -5,6 +5,7 @@
 
   /* shop prices are fixed per SKU (lei, VAT included); variants do not change the listed price */
   const priceOf = product => product.price;
+  const ref = n => Array.from({ length: n }, () => '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.random() * 36 | 0]).join('');
 
   const routes = {
     'GET /categories': () => ({ data: db().categories }),
@@ -64,16 +65,23 @@
       const q = +b.quantity; if (!(Number.isInteger(q) && q >= 1 && q <= P.maxQty)) return { status: 422, error: 'out_of_range' };
       return { data: r.available ? { ...r, total: r.unit * q, version: P.version } : { ...r, version: P.version } };
     },
-    'POST /requests': b => (!b.phone || b.phone.replace(/\D/g, '').length < 9)
-      ? { status: 422, error: 'invalid_phone' } : { status: 201, data: { ref: 'CB-' + Math.random().toString(36).slice(2, 7).toUpperCase() } },
-    'POST /orders': b => (b.name && b.phone && b.items?.length)
-      ? { status: 201, data: { ref: 'FE-' + Math.random().toString(36).slice(2, 8).toUpperCase() } } : { status: 422, error: 'invalid_order' }
+    'POST /requests': b => b.phone.replace(/\D/g, '').length < 9
+      ? { status: 422, error: 'invalid_phone' } : { status: 201, data: { ref: 'CB-' + ref(5) } },
+    /* the order is repriced here from the current price list; the client's totals are only a display */
+    'POST /orders': b => {
+      const lines = b.items.map(l => ({ l, p: byId(db().products, l.pid) }));
+      if (lines.some(x => !x.p) || b.phone.replace(/\D/g, '').length < 9) return { status: 422, error: 'invalid_order' };
+      const sum = lines.reduce((s, { l, p }) => s + priceOf(p) * l.qty, 0), install = b.install ? Math.round(sum * cfg.catalog.installPct) : 0;
+      return { status: 201, data: { ref: 'FE-' + ref(6), total: sum + install, install, lines: lines.map(({ l, p }) => ({ pid: p.id, qty: l.qty, unit: priceOf(p) })) } };
+    }
   };
 
   const compiled = Object.entries(routes).map(([k, fn]) => {
     const [method, path] = k.split(' ');
-    return { method, re: new RegExp('^' + path.replace(/:(\w+)/g, '(?<$1>[^/]+)') + '$'), fn };
+    return { key: k, method, re: new RegExp('^' + path.replace(/:(\w+)/g, '(?<$1>[^/]+)') + '$'), fn };
   });
+
+  const reply = (status, error, detail) => ({ status, ok: false, data: null, meta: {}, error, ...(detail ? { detail } : {}) });
 
   FE.api = {
     priceOf,
@@ -85,14 +93,21 @@
       await FE.sleep(min + Math.random() * (max - min));
       /* a route that started loading this data is no longer the current one: stop its view before it writes into the new page */
       if (!FE.router.alive(gen)) throw Object.assign(new Error('superseded'), { superseded: true });
-      for (const r of compiled) {
-        const m = r.method === method && path.match(r.re);
-        if (m) {
-          const res = await r.fn(method === 'GET' ? query : body, m.groups || {});
-          return { status: 200, meta: {}, ...res, ok: (res.status || 200) < 400 };
-        }
-      }
-      return { status: 404, ok: false, error: 'no_route' };
+      const hit = compiled.map(r => [r, r.method === method && path.match(r.re)]).find(([, m]) => m);
+      if (!hit) return reply(404, 'no_route');
+      const [r, m] = hit, c = FE.contract.route(r.key), params = { ...m.groups };
+      if (!c) return reply(500, 'contract_violation', `no contract for ${r.key}`);
+      /* a copy crosses the boundary both ways, as over a network: callers cannot change the data behind the API */
+      const input = method === 'GET' ? query : structuredClone(body ?? {});
+      const bad = (c.params && FE.contract.check(c.params, params, 'params')) || (c.query && FE.contract.check(c.query, input, 'query')) || (c.body && FE.contract.check(c.body, input, 'body'));
+      if (bad) return reply(422, c.invalid || 'invalid_request', bad);
+      let res;
+      try { res = await r.fn(input, params); } catch (e) { console.error(`api ${r.key}:`, e); return reply(500, 'server_error'); }
+      const status = res.status || 200;
+      if (status >= 400) return reply(status, res.error);
+      const off = (c.data && FE.contract.check(c.data, res.data, 'data')) || (c.meta && FE.contract.check(c.meta, res.meta ?? {}, 'meta'));
+      if (off && cfg.api.strict) { console.error(`api ${r.key} broke its contract: ${off}`); return reply(500, 'contract_violation', off); }
+      return { status, ok: true, data: structuredClone(res.data ?? null), meta: structuredClone(res.meta ?? {}) };
     },
     get: url => FE.api.request('GET', url),
     post: (url, body) => FE.api.request('POST', url, body)

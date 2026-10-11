@@ -11,6 +11,9 @@ CLAUDE.md
 docker-compose.yml
 README.md
 
+# Downloaded test tools (make test)
+.cache/
+
 # OS / editor
 .DS_Store
 *.swp

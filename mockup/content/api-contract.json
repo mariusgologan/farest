@@ -1,0 +1,142 @@
+{
+  "version": 1,
+  "note": "Contract of FE.api (js/core/api.js), a JSON Schema subset checked by js/core/contract.js: type, enum, required, properties, additionalProperties, items, minItems, maxItems, minLength, maxLength, pattern, minimum, maximum, anyOf, $ref. Requests that break it get 422 with the route's `invalid` code; responses that break it become 500 contract_violation. A real backend must keep this contract.",
+  "envelope": {
+    "success": "{ status: 2xx, ok: true, data, meta: {} }",
+    "error": "{ status: 4xx|5xx, ok: false, data: null, meta: {}, error: <code>, detail?: <first failing path> }",
+    "errors": ["no_route", "invalid_request", "not_found", "invalid_config", "out_of_range", "invalid_phone", "invalid_order", "server_error", "contract_violation"]
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$", "maxLength": 200 },
+    "text": { "type": ["string", "object"] },
+    "count": { "type": "integer", "minimum": 0 },
+    "money": { "type": "number", "minimum": 0 },
+    "stock": { "enum": ["in", "low", "order"] },
+    "product": {
+      "type": "object",
+      "required": ["id", "cat", "group", "kind", "name", "w", "h", "price", "stock", "images"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "cat": { "enum": ["windows", "doors", "accessories"] },
+        "group": { "type": "string" },
+        "kind": { "enum": ["window", "door", "part"] },
+        "name": { "type": "string", "minLength": 1 },
+        "w": { "type": "number", "minimum": 0 },
+        "h": { "type": "number", "minimum": 0 },
+        "price": { "$ref": "#/$defs/money" },
+        "stock": { "$ref": "#/$defs/stock" },
+        "producer": { "type": ["string", "null"] },
+        "profile": { "type": ["string", "null"] },
+        "chambers": { "type": ["number", "null"] },
+        "mm": { "type": ["number", "null"] },
+        "colour": { "type": ["string", "null"] },
+        "uf": { "type": ["number", "null"] },
+        "images": { "type": "array", "items": {
+          "type": "object", "required": ["src", "side", "mesh"],
+          "properties": { "src": { "type": "string", "minLength": 1 }, "side": { "enum": ["left", "right", null] }, "mesh": { "type": "boolean" } } } }
+      }
+    },
+    "profile": { "type": "object", "required": ["id", "name", "mm", "tier"], "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "mm": { "type": "number" }, "tier": { "type": "integer" } } },
+    "page": { "type": "object", "required": ["meta", "html"], "properties": { "meta": { "type": "object" }, "html": { "type": "string" } } },
+    "phone": { "type": "string", "pattern": "^[0-9 +()./-]*$", "maxLength": 40 }
+  },
+  "routes": {
+    "GET /categories": {
+      "data": { "type": "array", "items": { "type": "object", "required": ["id", "ambient"] } }
+    },
+    "GET /products": {
+      "query": {
+        "type": "object", "additionalProperties": false,
+        "properties": {
+          "q": { "type": "string", "maxLength": 100 },
+          "cat": { "enum": ["windows", "doors", "accessories"] },
+          "group": { "$ref": "#/$defs/id" },
+          "stock": { "$ref": "#/$defs/stock" },
+          "max": { "type": "string", "pattern": "^[0-9]{1,7}$" },
+          "sort": { "enum": ["featured", "price-asc", "price-desc", "size"] },
+          "page": { "type": "string", "pattern": "^[1-9][0-9]{0,3}$" }
+        }
+      },
+      "data": { "type": "array", "items": { "$ref": "#/$defs/product" } },
+      "meta": { "type": "object", "required": ["total", "page", "pages", "size"],
+        "properties": { "total": { "$ref": "#/$defs/count" }, "page": { "type": "integer", "minimum": 1 }, "pages": { "$ref": "#/$defs/count" }, "size": { "type": "integer", "minimum": 1 } } }
+    },
+    "GET /products/:id": {
+      "params": { "type": "object", "properties": { "id": { "$ref": "#/$defs/id" } } },
+      "data": { "$ref": "#/$defs/product", "required": ["profileData"], "properties": { "profileData": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/profile" }] } } },
+      "errors": ["not_found"]
+    },
+    "GET /configurator": {
+      "data": { "type": "object", "required": ["version", "products", "series", "colours", "glass", "types", "pricing"] }
+    },
+    "GET /profiles": {
+      "data": { "type": "array", "items": { "$ref": "#/$defs/profile" } }
+    },
+    "GET /profiles/:id": {
+      "params": { "type": "object", "properties": { "id": { "$ref": "#/$defs/id" } } },
+      "data": { "$ref": "#/$defs/profile" },
+      "errors": ["not_found"]
+    },
+    "GET /shops": {
+      "data": { "type": "array", "items": { "type": "object", "required": ["id", "name", "address", "phone", "maps_query"],
+        "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "$ref": "#/$defs/text" }, "address": { "$ref": "#/$defs/text" }, "phone": { "type": "string" }, "maps_query": { "type": "string" } } } }
+    },
+    "GET /offers": {
+      "data": { "type": "array", "items": { "type": "object", "required": ["id", "title", "text"], "properties": { "id": { "$ref": "#/$defs/id" }, "title": { "$ref": "#/$defs/text" }, "text": { "$ref": "#/$defs/text" } } } }
+    },
+    "GET /faq": {
+      "data": { "type": "array", "items": { "type": "object", "required": ["q", "a"], "properties": { "q": { "$ref": "#/$defs/text" }, "a": { "$ref": "#/$defs/text" } } } }
+    },
+    "GET /welcome": {
+      "data": { "$ref": "#/$defs/page" }
+    },
+    "GET /pages/:slug": {
+      "params": { "type": "object", "properties": { "slug": { "$ref": "#/$defs/id" } } },
+      "data": { "$ref": "#/$defs/page" },
+      "errors": ["not_found"]
+    },
+    "POST /price": {
+      "body": { "type": "object", "required": ["id"], "properties": { "id": { "$ref": "#/$defs/id" } } },
+      "data": { "type": "object", "required": ["unit"], "properties": { "unit": { "$ref": "#/$defs/money" } } },
+      "errors": ["not_found"]
+    },
+    "POST /quote": {
+      "invalid": "invalid_config",
+      "body": { "type": "object", "anyOf": [
+        { "type": "object", "required": ["panel"], "properties": { "panel": { "type": "object", "required": ["series", "colour", "components"],
+          "properties": { "series": { "type": "string" }, "colour": { "type": "string" }, "components": { "type": "array", "minItems": 1, "maxItems": 6, "items": { "type": "object", "required": ["type", "glass", "width", "height"] } } } } } },
+        { "type": "object", "required": ["type", "series", "colour", "glass", "width", "height", "quantity"],
+          "properties": { "type": { "type": "string" }, "series": { "type": "string" }, "colour": { "type": "string" }, "glass": { "type": "string" },
+            "width": { "type": ["number", "string"] }, "height": { "type": ["number", "string"] }, "quantity": { "type": ["number", "string"] } } }
+      ] },
+      "data": { "type": "object", "required": ["available", "version"],
+        "properties": { "available": { "type": "boolean" }, "version": { "type": ["string", "number"] }, "unit": { "$ref": "#/$defs/money" }, "total": { "$ref": "#/$defs/money" },
+          "area": { "type": "number", "minimum": 0 }, "message": { "$ref": "#/$defs/text" }, "parts": { "type": "array", "items": { "$ref": "#/$defs/money" } } } },
+      "errors": ["invalid_config", "out_of_range"]
+    },
+    "POST /requests": {
+      "invalid": "invalid_phone",
+      "status": 201,
+      "body": { "type": "object", "required": ["phone"], "properties": { "phone": { "$ref": "#/$defs/phone" } } },
+      "data": { "type": "object", "required": ["ref"], "properties": { "ref": { "type": "string", "pattern": "^CB-[A-Z0-9]{5}$" } } },
+      "errors": ["invalid_phone"]
+    },
+    "POST /orders": {
+      "invalid": "invalid_order",
+      "status": 201,
+      "body": { "type": "object", "required": ["name", "phone", "items"],
+        "properties": {
+          "name": { "type": "string", "pattern": "\\S", "maxLength": 120 },
+          "phone": { "$ref": "#/$defs/phone" },
+          "addr": { "type": "string", "maxLength": 300 },
+          "install": { "type": ["string", "boolean"] },
+          "items": { "type": "array", "minItems": 1, "maxItems": 100, "items": { "type": "object", "required": ["pid", "qty"],
+            "properties": { "pid": { "$ref": "#/$defs/id" }, "qty": { "type": "integer", "minimum": 1, "maximum": 99 } } } }
+        } },
+      "data": { "type": "object", "required": ["ref", "total", "install", "lines"],
+        "properties": { "ref": { "type": "string", "pattern": "^FE-[A-Z0-9]{6}$" }, "total": { "$ref": "#/$defs/money" }, "install": { "$ref": "#/$defs/money" },
+          "lines": { "type": "array", "items": { "type": "object", "required": ["pid", "qty", "unit"], "properties": { "pid": { "$ref": "#/$defs/id" }, "qty": { "type": "integer" }, "unit": { "$ref": "#/$defs/money" } } } } } },
+      "errors": ["invalid_order"]
+    }
+  }
+}
