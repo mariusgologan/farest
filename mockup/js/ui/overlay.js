@@ -74,7 +74,8 @@
       render(body, api);
       refresh();
       if (anchor && kind === 'popover') position(layer, anchor);
-      requestAnimationFrame(() => { el.classList.add('in'); (FE.$('[autofocus]', el) || FE.$(FOCUSABLE, FE.$('.panel-body', el)) || FE.$('.icon-btn', el)).focus({ preventScroll: true }); });
+      /* first focus waits a frame; a field the user already reached in that time (a click, fast typing) keeps it */
+      requestAnimationFrame(() => { el.classList.add('in'); if (!el.contains(document.activeElement)) (FE.$('[autofocus]', el) || FE.$(FOCUSABLE, FE.$('.panel-body', el)) || FE.$('.icon-btn', el)).focus({ preventScroll: true }); });
       return closed;
     }
   };
