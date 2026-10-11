@@ -30,8 +30,9 @@
     </svg>`;
   };
 
-  ui.stock = s => h`<span class="badge" data-tone="${{ in: 'ok', low: 'warn', order: 'info' }[s]}">${t(`stock.${s}`)}</span>`;
-  ui.price = n => h`<span class="price">${money(n)}</span><span class="vat muted">${t('product.vat')}</span>`;
+  /* id tags the element with its SKU, so js/core/prices.js can patch it when the price list changes */
+  ui.stock = (s, id) => h`<span class="badge" ${raw(id ? `data-stock-of="${FE.esc(id)}"` : '')} data-tone="${{ in: 'ok', low: 'warn', order: 'info' }[s]}">${t(`stock.${s}`)}</span>`;
+  ui.price = (n, id) => h`<span class="price" ${raw(id ? `data-price-of="${FE.esc(id)}"` : '')}>${money(n)}</span><span class="vat muted">${t('product.vat')}</span>`;
   ui.chip = (label, extra = '') => h`<span class="chip ${extra}">${label}</span>`;
   ui.specs = p => {
     if (p.kind === 'part') return '';
@@ -43,7 +44,7 @@
     <div class="card-body">
       <h2 class="card-title clamp"><a href="#/p/${p.id}">${p.name}</a></h2>
       <div class="row chips">${ui.specs(p)}</div>
-      <div class="row spread"><div class="price-block">${ui.price(p.price)}</div>${ui.stock(p.stock)}</div>
+      <div class="row spread"><div class="price-block">${ui.price(p.price, p.id)}</div>${ui.stock(p.stock, p.id)}</div>
       <div class="row card-actions">
         <button class="btn ghost" data-action="quickview" data-id="${p.id}">${t('action.quickview')}</button>
         <button class="btn primary" data-action="add" data-id="${p.id}">${icon('cart', 18)} ${t('action.add')}</button>

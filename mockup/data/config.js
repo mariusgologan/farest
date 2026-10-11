@@ -2,11 +2,14 @@
 window.FE = window.FE || {};
 FE.config = {
   brand: { name: 'FAR EST', legal: 'FAR EST WINDOWS SRL', since: 1991, factory: 2007, currency: 'lei', vatIncluded: true },
-  content: { products: 'content/products.csv', shops: 'content/shops.yaml', offers: 'content/offers.json', faq: 'content/faq.yaml', welcome: 'content/welcome', pages: 'content/pages', site: 'content/site-images.yaml', configurator: 'content/configurator.json' },
+  content: { products: 'content/products.csv', shops: 'content/shops.yaml', offers: 'content/offers.json', faq: 'content/faq.yaml', welcome: 'content/welcome', pages: 'content/pages', site: 'content/site-images.yaml', configurator: 'content/configurator.json', contract: 'content/api-contract.json' },
   /* keyless Google Maps: embed iframe (loaded on demand) and universal links */
   maps: { embed: 'https://www.google.com/maps?output=embed&q=', search: 'https://www.google.com/maps/search/?api=1&query=', route: 'https://www.google.com/maps/dir/?api=1&destination=' },
   storageKey: 'farest.mock.v1',
-  api: { base: '/api', latency: [120, 380] },
+  /* strict: a response that breaks content/api-contract.json becomes a 500 instead of reaching the page */
+  api: { base: '/api', latency: [120, 380], strict: true },
+  /* live shop prices: products.csv is re-read on focus, on reconnect and every pollMs (± jitter) while the page is visible */
+  prices: { pollMs: 300000, jitter: 0.2 },
   defaults: { theme: 'auto', layout: 'auto', ambient: 'on', bars: 'auto', lang: 'ro' },
   langs: ['ro', 'en'],
   themes: ['auto', 'light', 'dark'],

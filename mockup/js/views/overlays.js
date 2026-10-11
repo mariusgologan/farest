@@ -6,6 +6,8 @@
   const product = async id => (await FE.api.get(`/products/${id}`)).data;
   const cartCount = () => FE.store.get('cart').reduce((n, l) => n + l.qty, 0);
   const lineTotal = l => byId(FE.db.products, l.pid).price * l.qty;
+  /* a line remembers the price it was added at, so a later price change is shown, never applied silently */
+  const repriced = l => l.seen != null && l.seen !== byId(FE.db.products, l.pid).price;
 
   /* variants come from the shop photos: hinge side and insect screen */
   FE.variantsOf = p => ({
@@ -19,10 +21,12 @@
   const cart = FE.cart = {
     count: cartCount,
     total: () => FE.store.get('cart').reduce((s, l) => s + lineTotal(l), 0),
+    repriced: () => FE.store.get('cart').some(repriced),
     add(line) {
       const list = [...FE.store.get('cart')];
+      line = { ...line, seen: byId(FE.db.products, line.pid).price };
       const same = list.find(l => l.pid === line.pid && l.side === line.side && l.mesh === line.mesh);
-      same ? same.qty += line.qty : list.push(line);
+      same ? Object.assign(same, { qty: same.qty + line.qty, seen: line.seen }) : list.push(line);
       FE.store.set({ cart: list });
     },
     update(i, fn) { const list = FE.store.get('cart').map((l, j) => j === i ? fn({ ...l }) : l).filter(l => l.qty > 0); FE.store.set({ cart: list }); },
@@ -82,7 +86,7 @@
               ${p.profile ? h`<button type="button" class="btn link" data-action="open-profile" data-id="${p.profile}">${icon('layers', 18)} ${t('configure.profile')}</button>` : ''}
               ${p.kind === 'part' ? '' : h`<button type="button" class="btn link" data-action="open-measure">${icon('sliders', 18)} ${t('configure.measure')}</button>`}
             </div>
-            <div class="row spread footer-bar"><div><div class="muted">${t('configure.unit')}</div><div class="price big">${money(p.price)}</div></div>
+            <div class="row spread footer-bar"><div><div class="muted">${t('configure.unit')}</div><div class="price big" data-price-of="${p.id}">${money(p.price)}</div></div>
               <button type="submit" class="btn primary lg">${editing ? t('action.update') : t('action.add')}</button></div>
           </form></div>`.toString();
         show();
@@ -107,7 +111,7 @@
         body.innerHTML = h`<div class="split"><div class="preview">${ui.img(p)}</div>
           <div class="stack">
             <div class="row chips">${ui.specs(p)}</div>
-            <div class="row spread"><div class="price-block">${ui.price(p.price)}</div>${ui.stock(p.stock)}</div>
+            <div class="row spread"><div class="price-block">${ui.price(p.price, p.id)}</div>${ui.stock(p.stock, p.id)}</div>
             <ul class="ticks"><li>${icon('truck', 18)} ${t('trust.delivery')}</li><li>${icon('shield', 18)} ${t('trust.warranty')}</li></ul>
             <div class="row">
               ${v.sides.length ? h`<button class="btn primary" data-action="configure" data-id="${p.id}">${icon('sliders', 18)} ${t('action.configure')}</button>` : h`<button class="btn primary" data-action="add" data-id="${p.id}">${icon('cart', 18)} ${t('action.add')}</button>`}
@@ -131,17 +135,28 @@
   FE.flows.checkout = () => FE.overlay.open({
     title: t('checkout.title'), size: 'md',
     render(body) {
-      const total = cart.total(), inst = Math.round(total * FE.config.catalog.installPct);
+      const sums = () => { const total = cart.total(); return { total, inst: Math.round(total * FE.config.catalog.installPct) }; };
+      let { total, inst } = sums();
       body.innerHTML = h`<form class="stack" data-form="checkout" novalidate>
         ${ui.field('name', t('form.name'), 'autocomplete="name" required autofocus')}
         ${ui.field('phone', t('form.phone'), 'type="tel" autocomplete="tel" required inputmode="tel"', t('form.phoneHint'))}
         ${ui.field('addr', t('form.address'), 'autocomplete="street-address"')}
-        <label class="check"><input type="checkbox" name="install"><span>${t('checkout.install')}</span><b>+${money(inst)}</b></label>
+        <label class="check"><input type="checkbox" name="install"><span>${t('checkout.install')}</span><b data-bind="inst">+${money(inst)}</b></label>
+        <p class="callout" role="status" data-bind="repriced" ${raw(cart.repriced() ? '' : 'hidden')}>${t('checkout.repriced')}</p>
         <p class="error" role="alert" data-bind="err" hidden></p>
         <div class="row spread footer-bar"><div><div class="muted">${t('cart.total')}</div><div class="price big" data-bind="tot">${money(total)}</div></div>
           <button class="btn primary lg" type="submit">${t('checkout.place')}</button></div></form>`.toString();
       const form = FE.$('form', body), tot = FE.$('[data-bind=tot]', body), err = FE.$('[data-bind=err]', body);
-      form.addEventListener('change', () => tot.textContent = money(total + (form.install.checked ? inst : 0)));
+      const paint = () => { tot.textContent = money(total + (form.install.checked ? inst : 0)); };
+      form.addEventListener('change', paint);
+      const off = FE.store.on((s, prev, patch) => {
+        if (!body.isConnected) return off();
+        if (!('prices' in patch)) return;
+        const was = total; ({ total, inst } = sums());
+        FE.$('[data-bind=inst]', body).textContent = '+' + money(inst);
+        FE.$('[data-bind=repriced]', body).hidden = !cart.repriced();
+        if (total !== was) { paint(); FE.motion?.pulse(tot); }
+      });
       form.addEventListener('submit', async e => {
         e.preventDefault();
         const f = Object.fromEntries(new FormData(form));
@@ -169,6 +184,7 @@
               <div class="thumb">${im ? h`<img class="photo" src="${im.src}" alt="">` : ui.windowSvg(p)}</div>
               <div class="grow"><b class="clamp">${p.name}</b>
                 <div class="muted small">${[l.side && t(`side.${l.side}`), l.mesh && t('configure.mesh')].filter(Boolean).join(' · ')}</div>
+                ${repriced(l) ? h`<span class="badge" data-tone="warn" data-bind="repriced">${t('cart.repriced', { amount: money(l.seen) })}</span>` : ''}
                 <div class="row spread"><div class="qty" role="group" aria-label="${t('cart.qty')}"><button class="icon-btn sm" data-action="qty" data-i="${i}" data-d="-1" aria-label="−">−</button><output>${l.qty}</output><button class="icon-btn sm" data-action="qty" data-i="${i}" data-d="1" aria-label="+">+</button></div>
                 <b>${money(lineTotal(l))}</b></div>
                 ${FE.variantsOf(p).sides.length ? h`<button class="btn link small" data-action="edit-line" data-i="${i}">${t('action.edit')}</button>` : ''}</div></li>`; })}</ul>
@@ -178,7 +194,7 @@
               <button class="btn primary lg" data-action="checkout">${t('cart.checkout')}</button></div>`.toString();
         };
         draw();
-        const off = FE.store.on((s, p, patch) => { if (!body.isConnected) return off(); if ('cart' in patch) draw(); });
+        const off = FE.store.on((s, p, patch) => { if (!body.isConnected) return off(); if ('cart' in patch || 'prices' in patch) draw(); });
         body.addEventListener('click', e => {
           const b = e.target.closest('[data-action=qty]'); if (b) cart.update(+b.dataset.i, l => (l.qty += +b.dataset.d, l));
         });

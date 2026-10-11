@@ -118,8 +118,8 @@
         </section>
         <section class="buybox acrylic thick e-3">
           <h1 class="long">${p.name}</h1>
-          <div class="row">${ui.stock(p.stock)}${p.colour ? ui.chip(p.colour) : ''}</div>
-          <div class="price-block big">${ui.price(p.price)}</div>
+          <div class="row">${ui.stock(p.stock, p.id)}${p.colour ? ui.chip(p.colour) : ''}</div>
+          <div class="price-block big">${ui.price(p.price, p.id)}</div>
           <div class="row"><button class="btn primary lg grow" data-action="${v.sides.length ? 'configure' : 'add'}" data-id="${p.id}">${v.sides.length ? icon('sliders', 20) : icon('cart', 20)} ${t(v.sides.length ? 'action.configure' : 'action.add')}</button>${v.sides.length ? h`<button class="btn ghost lg" data-action="add" data-id="${p.id}">${icon('cart', 20)}<span class="sr-only">${t('action.add')}</span></button>` : ''}</div>
           <button class="btn link" data-action="callback">${icon('phone', 18)} ${t('product.askCall')}</button>
           <ul class="ticks"><li>${icon('truck', 18)} ${t('trust.delivery')}</li><li>${icon('shield', 18)} ${t('trust.warranty')}</li></ul>
