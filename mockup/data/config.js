@@ -17,10 +17,12 @@ FE.config = {
   themes: ['auto', 'light', 'dark'],
   ambientModes: ['auto', 'on', 'off'],
   barModes: ['auto', 'always'],
-  /* glass or flat panes; auto goes flat when the device lacks backdrop-filter, asks for less transparency, or draws slowly:
-     after boot, frames are timed for probeMs and a median over slowFrameMs marks the device slow (remembered) */
+  /* glass or flat panes; auto goes flat when the device lacks backdrop-filter, asks for less transparency, is low-end
+     (deviceMemory or CPU cores at most lowEnd), or draws glass slowly. Two probes judge the drawing: probeMs of frames after boot,
+     and the first scrollFrames frames of real scrolling (the heavy case: blurred panes moving). Slow is a median frame over
+     slowFrameMs, or more than jankShare of frames over twice that. The verdict holds for retestDays, then glass gets a new trial. */
   surfaceModes: ['auto', 'glass', 'flat'],
-  flat: { probeMs: 2000, slowFrameMs: 45 },
+  flat: { probeMs: 2000, scrollFrames: 90, slowFrameMs: 45, jankShare: 0.25, lowEnd: 2, retestDays: 14 },
   /* menus hide after scrolling down this far (px) and return on any upward movement of this size */
   bars: { hideAfter: 90, downDelta: 6, upDelta: 3, showAbove: 40 },
   /* forced layouts render inside a frame of this width; "auto" follows the window */

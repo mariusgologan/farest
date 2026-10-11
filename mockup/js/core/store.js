@@ -1,6 +1,6 @@
 /* Single observable state. Persisted keys survive reload; everything else is session only. */
 (() => {
-  const persisted = ['theme', 'layout', 'ambient', 'ambientV', 'surface', 'slow', 'bars', 'lang', 'cart'];
+  const persisted = ['theme', 'layout', 'ambient', 'ambientV', 'surface', 'slowUntil', 'bars', 'lang', 'cart'];
   const saved = FE.storage.get(FE.config.storageKey, {});
   if (saved.ambient === 'on' && !saved.ambientV) saved.ambient = 'auto'; /* once: "on" saved before auto existed was the old default */
   const state = { ...FE.config.defaults, cart: [], route: '/', context: 'home', swatch: null, picture: null, ambientV: 1, ...saved };

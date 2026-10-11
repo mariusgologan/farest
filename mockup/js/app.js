@@ -13,18 +13,33 @@
     const b = config.layoutBreakpoints, at = px => matchMedia(`(min-width: ${px}px)`).matches;
     return at(b.wide) ? 'wide' : at(b.regular) ? 'regular' : 'compact';
   }
-  /* glass or flat (config.surfaceModes): auto is flat where glass is unsupported, unwanted or too slow to draw */
+  /* glass or flat (config.surfaceModes, config.flat): auto is flat where glass is unsupported, unwanted, on a low-end device, or drew too slowly */
   const glassOk = CSS.supports('backdrop-filter', 'blur(1px)') || CSS.supports('-webkit-backdrop-filter', 'blur(1px)');
   const lessGlass = matchMedia('(prefers-reduced-transparency: reduce)');
-  const isFlat = () => { const m = store.get('surface'); return m === 'auto' ? !glassOk || lessGlass.matches || !!store.get('slow') : m === 'flat'; };
+  const lowEnd = () => Math.min(navigator.deviceMemory || 99, navigator.hardwareConcurrency || 99) <= config.flat.lowEnd;
+  const slow = () => (store.get('slowUntil') || 0) > Date.now();
+  const isFlat = () => { const m = store.get('surface'); return m === 'auto' ? !glassOk || lessGlass.matches || lowEnd() || slow() : m === 'flat'; };
+  /* frame-time probes, only while auto shows glass, the page is visible and the browser is not automated (software rendering is not the device) */
+  const judging = () => store.get('surface') === 'auto' && !isFlat() && !navigator.webdriver && document.visibilityState === 'visible';
+  function verdict(ds) {
+    const f = config.flat; if (!judging() || ds.length < 10) return;
+    ds.sort((a, b) => a - b);
+    if (ds[ds.length >> 1] > f.slowFrameMs || ds.filter(d => d > 2 * f.slowFrameMs).length / ds.length > f.jankShare) store.set({ slowUntil: Date.now() + f.retestDays * 864e5 });
+  }
   function probe() {
-    if (store.get('surface') !== 'auto' || isFlat() || navigator.webdriver) return; /* automated browsers render in software: never judge them */
-    const f = config.flat, ds = []; let last = 0;
-    const tick = now => { if (last) ds.push(now - last); last = now; if (ds.length && ds.reduce((a, b) => a + b, 0) >= f.probeMs) return judge(); requestAnimationFrame(tick); };
-    const judge = () => { if (document.visibilityState !== 'visible') return; ds.sort((a, b) => a - b); if (ds[ds.length >> 1] > f.slowFrameMs) store.set({ slow: true }); };
+    if (!judging()) return;
+    const ds = []; let last = 0;
+    const tick = now => { if (last) ds.push(now - last); last = now; if (ds.reduce((a, b) => a + b, 0) >= config.flat.probeMs) return verdict(ds); requestAnimationFrame(tick); };
     requestAnimationFrame(tick);
   }
-  FE.surface = { isFlat, probe };
+  /* while the visitor scrolls, time each frame (gaps after a pause are not frames); judge once scrollFrames are in */
+  function probeScroll() {
+    const ds = [], frame = FE.$('#frame'); let last = 0, stop = 0, run = false;
+    const tick = now => { if (last) ds.push(now - last); last = now; if (ds.length >= config.flat.scrollFrames) { frame.removeEventListener('scroll', on); return verdict(ds); } if (run) requestAnimationFrame(tick); else last = 0; };
+    const on = () => { if (!judging()) return frame.removeEventListener('scroll', on); clearTimeout(stop); stop = setTimeout(() => (run = false), 150); if (!run) { run = true; requestAnimationFrame(tick); } };
+    frame.addEventListener('scroll', on, { passive: true });
+  }
+  FE.surface = { isFlat, probe, probeScroll };
   function applyEnv() {
     const theme = store.get('theme'), sel = store.get('layout'), eff = effectiveLayout();
     const scheme = theme === 'auto' ? (mq.matches ? 'dark' : 'light') : theme;
@@ -102,7 +117,7 @@
 
   /* ---------- wiring ---------- */
   store.on((s, prev, patch) => {
-    if ('theme' in patch || 'layout' in patch || 'lang' in patch || 'surface' in patch || 'slow' in patch) applyEnv();
+    if ('theme' in patch || 'layout' in patch || 'lang' in patch || 'surface' in patch || 'slowUntil' in patch) applyEnv();
     if ('lang' in patch) { drawShell(); FE.router.start(); }
     if ('cart' in patch) badge();
     if ('context' in patch) markActive();
@@ -114,7 +129,7 @@
   /* the shell needs only static data, so it is drawn first: the bars, footer and layout attributes are in place before the content files arrive (nothing moves later) */
   applyEnv(); drawShell(); FE.ambient.apply();
   FE.loadAll().then(() => { FE.prices.start(); return FE.router.start(); })
-    .then(() => setTimeout(probe, 1000))
+    .then(() => { setTimeout(probe, 1000); probeScroll(); })
     .catch(err => { FE.$('#view').removeAttribute('aria-busy'); FE.$('#view').innerHTML = `<div class="empty center stack"><h1>${t('error.load')}</h1><p class="muted">${t('error.loadHint')}</p><code>${FE.esc(err.message)}</code></div>`; });
   applyEnv();
   if (FE.config.registerSw !== false && 'serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
