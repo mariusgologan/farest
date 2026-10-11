@@ -40,22 +40,25 @@ FE.config = {
     { id: 'calc',    route: '/calculator',       icon: 'calc' },
     { id: 'shops',   route: '/shops',            icon: 'pin' }
   ],
-  /* contextual ambient: two colours per context, one cool and one warm (the second from the bottom), so no page is all cold or all warm;
-     a neutral stone layer (--amb-n, css/tokens.css) sits between them. Tuned for both schemes by opacity tokens */
+  /* contextual ambient: two analogous colours per context (hues 15-40° apart, one temperature: cool pages stay cool, warm pages warm),
+     so the wash never crosses the wheel through a muddy grey; the neutral middle (--amb-n, css/surfaces.css) is a grey tinted with the
+     first colour, the same temperature again. Tuned for both schemes by opacity tokens */
   ambient: {
-    home:    ['#2a6fb8', '#d9a46a'],
-    windows: ['#3d8bd0', '#d8b48a'],
-    doors:   ['#b8742a', '#7f9ab4'],
-    acc:     ['#2f9a8a', '#d49a76'],
-    calc:    ['#6b5bd6', '#dcae6a'],
-    shops:   ['#d6202e', '#7aa6cc'],
-    cart:    ['#2a6fb8', '#d6202e']
+    home:    ['#2a6fb8', '#4f9fd4'],
+    windows: ['#3d8bd0', '#5cb6d8'],
+    doors:   ['#b8742a', '#d49a52'],
+    acc:     ['#2f9a8a', '#4fb59a'],
+    calc:    ['#6b5bd6', '#5a7fd8'],
+    shops:   ['#d6202e', '#e2603c'],
+    cart:    ['#2a6fb8', '#5a7fd8']
   },
   catalog: { pageSize: 8, featured: ["fereastra-pvc-4-camere-alb-56x56-cm", "fereastra-pvc-4-camere-alb-116x116-cm", "usa-exterior-din-pvc-cu-geam-termopan-pentru-terasa-osciloculisanta-5-camere-stanga-alb-180-x-210-cm"], groups: { windows: ['ferestre', 'ferestre-duble'], doors: ['usi-interior-exterior-pvc', 'usi-osciloculisante'], accessories: ['oferte'] }, sorts: ['featured', 'price-asc', 'price-desc', 'size'], freeDeliveryFrom: 1500, installPct: 0.12, vat: 0.21 },
-  /* ambient from pictures: sample size, thresholds on saturation/lightness, hue buckets */
+  /* ambient from pictures: sample size, thresholds on saturation/lightness, hue buckets; a photo below minPull (mostly white or grey)
+     leaves the context colours alone, a colourful one replaces them (hue never mixed across the wheel). The second colour is a second
+     hue of the photo only when analogous (analog: degrees apart), else the first shifted by shift° */
   /* ms the scroll must settle before the ambient light follows the photo section in view */
   ambientFollowMs: 180,
-  ambientImage: { size: 36, minSat: 0.22, minLight: 0.12, maxLight: 0.92, buckets: 12, minShare: 0.035, boostSat: 0.45, light: 0.55, maxPull: 0.75 },
+  ambientImage: { size: 36, minSat: 0.22, minLight: 0.12, maxLight: 0.92, buckets: 12, minShare: 0.035, boostSat: 0.45, light: 0.55, maxPull: 0.75, minPull: 0.5, analog: [15, 60], shift: 25 },
   overlay: { maxDepth: 4, exitMs: 220, coveredScale: .965, coveredShift: -14 },
   toastMs: 3200
 };

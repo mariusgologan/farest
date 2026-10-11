@@ -312,6 +312,11 @@ with sync_playwright() as pw:
     ctx = browser.new_context(service_workers='block', viewport={'width': 412, 'height': 823}, is_mobile=True, has_touch=True)
     page = ctx.new_page(); errs = []; watch(page, errs)
     boot(page, '/')
+    hues = page.evaluate("""() => { const hue = x => { const [r, g, b] = [1, 3, 5].map(i => parseInt(x.slice(i, i + 2), 16) / 255), mx = Math.max(r, g, b), d = mx - Math.min(r, g, b);
+        return d ? (mx === r ? ((g - b) / d + 6) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4) * 60 : 0; };
+      const apart = (x, y) => { const d = Math.abs(hue(x) - hue(y)) % 360; return Math.round(Math.min(d, 360 - d)); };
+      return Object.entries(FE.config.ambient).map(([k, [a, b]]) => [k, apart(a, b)]); }""")
+    ok('ambient: every context pairs analogous colours (one temperature, no muddy blend)', all(d <= 45 for _, d in hues), hues)
     ok('ambient: auto is the default mode', page.evaluate('FE.store.get("ambient")') == 'auto')
     pic = lambda: page.evaluate('FE.store.get("picture") && FE.store.get("picture").a')
     pal = lambda sel: page.evaluate(f"FE.ambient.palette(document.querySelector('{sel}').dataset.pic).then(p => p && p.a)")
