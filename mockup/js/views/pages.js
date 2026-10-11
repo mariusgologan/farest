@@ -18,7 +18,7 @@
     const wide = document.documentElement.dataset.eff !== 'compact';
     FE.ambient.page = site.hero || null; FE.ambient.setPicture(FE.ambient.page);
     set(host, h`
-      <section class="hero acrylic e-3">
+      <section class="hero acrylic e-3" data-pic="${site.hero || ''}">
         <div class="hero-copy">
           <p class="eyebrow">${m.eyebrow}</p>
           <h1>${m.title}</h1>
@@ -107,7 +107,7 @@
     const rel = (await FE.api.get(`/products?cat=${p.cat}&group=${p.group}&sort=price-asc`)).data.filter(x => x.id !== p.id).slice(0, 3);
     const show = i => {
       const img = p.images[i]; if (!img) return;
-      FE.$('[data-bind=hero] img', host).src = img.src;
+      const plate = FE.$('[data-bind=hero]', host); FE.$('img', plate).src = img.src; plate.dataset.pic = img.src; if (plate.hasAttribute('data-glow')) FE.ambient.glowColour(plate);
       FE.$$('.thumbs button', host).forEach((b, k) => b.setAttribute('aria-current', k === i));
       FE.ambient.page = img.src; FE.ambient.setPicture(img.src);
     };
@@ -115,7 +115,7 @@
       <nav class="breadcrumb" aria-label="${t('a11y.path')}"><a href="#/">${t('nav.home')}</a> › <a href="#/c/${p.cat}">${t(`cat.${p.cat}.title`)}</a> › <span>${p.name}</span></nav>
       <div class="pdp">
         <section class="pdp-art acrylic e-2">
-          <div class="photo-plate" data-bind="hero">${p.images[0] ? h`<img class="photo" src="${p.images[0].src}" alt="${p.name}" fetchpriority="high" width="550" height="550">` : ui.windowSvg(p)}</div>
+          <div class="photo-plate" data-bind="hero" data-pic="${p.images[0]?.src || ''}">${p.images[0] ? h`<img class="photo" src="${p.images[0].src}" alt="${p.name}" fetchpriority="high" width="550" height="550">` : ui.windowSvg(p)}</div>
           ${p.images.length > 1 ? h`<div class="thumbs" role="group" aria-label="${t('product.gallery')}">${p.images.map((im, i) => h`<button data-action="gallery" data-i="${i}" aria-current="${i === 0}" aria-label="${t('product.photo', { n: i + 1 })}"><img src="${im.src}" alt="" loading="lazy"></button>`)}</div>` : ''}
         </section>
         <section class="buybox acrylic thick e-3">

@@ -43,7 +43,7 @@
           bins.sort((a, b) => b.w - a.w);
           const tot = bins.reduce((s, b) => s + b.w, 0), pick = b => { const c = b.rgb.map(v => v / b.w), [h, s] = rgb2hsl(c); return hsl2hex(h, Math.max(s, cfgI.boostSat), cfgI.light); };
           const a = pick(bins[0]), second = bins.slice(1).find(b => b.w / tot > cfgI.minShare && Math.abs(rgb2hsl(b.rgb.map(v => v / b.w))[0] - rgb2hsl(bins[0].rgb.map(v => v / bins[0].w))[0]) > 30);
-          resolve({ a, b: second ? pick(second) : mix(a, '#ffffff', 0.45), k: FE.clamp(0.35 + (chroma / used) * 1.6, 0.35, 0.95) });
+          resolve({ a, b: second ? pick(second) : null, k: FE.clamp(0.35 + (chroma / used) * 1.6, 0.35, cfgI.maxPull) });
         } catch { resolve(null); }
       };
       img.onerror = () => resolve(null);
@@ -56,7 +56,8 @@
     const s = FE.store, ctx = FE.config.ambient[s.get('context')] || FE.config.ambient.home, sw = s.get('swatch'), pic = s.get('picture');
     root.dataset.ambient = s.get('ambient');
     let [a, b] = ctx;
-    if (pic) { a = mix(a, pic.a, pic.k); b = mix(b, pic.b, pic.k); }
+    /* the picture pulls the first colour; the second only follows a distinct second hue, and half as far, so the context's counter-temperature stays */
+    if (pic) { a = mix(a, pic.a, pic.k); if (pic.b) b = mix(b, pic.b, pic.k * .5); }
     if (sw) a = sw;
     root.style.setProperty('--amb-a', a);
     root.style.setProperty('--amb-b', b);
@@ -74,7 +75,8 @@
      settles on a different one the light follows it, and when none is there the page picture comes back. Touch screens
      have no hover, so this is how they get the card tint. */
   const spy = { seen: new Set(), pic: null, timer: 0, el: null };
-  const glow = el => { if (spy.el === el) return; spy.el?.removeAttribute('data-glow'); spy.el = el; el?.setAttribute('data-glow', ''); };
+  const glowColour = el => palette(el.dataset.pic).then(p => p && el.style.setProperty('--glow-c', p.a));
+  const glow = el => { if (spy.el === el) return; spy.el?.removeAttribute('data-glow'); spy.el = el; if (el) { glowColour(el); el.setAttribute('data-glow', ''); } };
   const auto = () => FE.store.get('ambient') === 'auto';
   const rest = () => (auto() && spy.pic) || FE.ambient.page || null;
   function follow() {
@@ -103,7 +105,7 @@
     FE.store.on((s, p, patch) => { if ('route' in patch) { spy.seen.clear(); spy.pic = null; glow(null); } });
   }
 
-  FE.ambient = { apply, setPicture, palette, rest, auto };
+  FE.ambient = { apply, setPicture, palette, rest, auto, glowColour };
   FE.store.on((st, prev, patch) => {
     if ('context' in patch || 'swatch' in patch || 'picture' in patch || 'ambient' in patch) apply();
     if ('ambient' in patch && !+root.dataset.overlayDepth) { spy.pic = null; follow(); if (patch.ambient !== 'auto') setPicture(rest()); }
