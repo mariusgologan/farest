@@ -15,7 +15,7 @@
     const ps = FE.projects.list().sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     if (!ps.length) return h`<p class="muted">${t('trade.projects.none')}</p><a class="btn ghost" href="#/calculator">${icon('calc', 18)} ${t('trade.projects.create')}</a>`;
     return h`<div class="t-scroll"><table class="t-table"><thead><tr><th scope="col">${t('trade.projects.name')}</th><th scope="col">${t('trade.projects.status')}</th><th scope="col" class="num">${t('cfg.pcs')}</th><th scope="col" class="num">${t('trade.projects.total')}</th><td></td></tr></thead>
-      <tbody>${ps.map(p => h`<tr><th scope="row">${p.name}</th><td>${t(`cfg.status.${FE.projects.state(p)}`)}</td><td class="num">${FE.projects.pieces(p)}</td><td class="num">${money(FE.projects.total(p))}</td>
+      <tbody>${ps.map(p => h`<tr><th scope="row">${p.name}</th><td data-label="${t('trade.projects.status')}">${t(`cfg.status.${FE.projects.state(p)}`)}</td><td class="num" data-label="${t('cfg.pcs')}">${FE.projects.pieces(p)}</td><td class="num" data-label="${t('trade.projects.total')}">${money(FE.projects.total(p))}</td>
         <td><button class="btn link small" data-action="trade-project" data-id="${p.id}">${t('trade.projects.open')} ${icon('chevron', 16)}</button></td></tr>`)}</tbody></table></div>`;
   };
 
@@ -42,7 +42,7 @@
         <div class="grid t-who">${c.who.items.map(([i, ti, li]) => h`<div class="fact acrylic e-1"><span class="fact-ico">${icon(i, 24)}</span><b>${ti}</b><span class="muted">${li}</span></div>`)}</div></section>
       <section class="t-band acrylic e-1"><div class="row spread"><div><h2>${t('trade.systems.title')}</h2><p class="muted">${t('trade.systems.lead')}</p></div></div>
         <div class="t-scroll"><table class="t-table"><thead><tr>${['name', 'depth', 'chambers', 'seals', 'thermal'].map(k => h`<th scope="col">${t(`trade.systems.${k}`)}</th>`)}<td></td></tr></thead>
-          <tbody>${FE.db.profiles.map(p => h`<tr><th scope="row">${p.name}</th><td>${p.mm ? p.mm + ' mm' : '–'}</td><td>${p.chambers ?? '–'}</td><td>${p.seals ?? '–'}</td><td>${thermal(p)}</td>
+          <tbody>${FE.db.profiles.map(p => h`<tr><th scope="row">${p.name}</th><td data-label="${t('trade.systems.depth')}">${p.mm ? p.mm + ' mm' : '–'}</td><td data-label="${t('trade.systems.chambers')}">${p.chambers ?? '–'}</td><td data-label="${t('trade.systems.seals')}">${p.seals ?? '–'}</td><td data-label="${t('trade.systems.thermal')}">${thermal(p)}</td>
             <td><button class="btn link small" data-action="open-profile" data-id="${p.id}">${t('trade.systems.sheet')} ${icon('chevron', 16)}</button></td></tr>`)}</tbody></table></div>
         <p class="muted small">${t('trade.systems.note')}</p></section>
       <section><h2>${t('trade.steps.title')}</h2>

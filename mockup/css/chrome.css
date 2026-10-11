@@ -13,9 +13,11 @@ html[data-bars="hidden"][data-nav="tabs"] #tabs { transform: translateY(110%); o
 html[data-bars="hidden"] .topic[data-on] { transform: translateY(calc(-1 * var(--top-h))); }
 .topic-in { max-width: 1240px; height: 100%; margin: 0 auto; padding: 0 var(--s-5); display: flex; align-items: center; gap: var(--s-2); font-size: var(--fs-sm); color: var(--text-2); white-space: nowrap; overflow: hidden; }
 html[data-eff="compact"] .topic-in { padding: 0 var(--s-4); }
-.topic-in span { min-width: 2.5em; flex-shrink: 1000; overflow: hidden; text-overflow: ellipsis; } /* the page and section give way first, the item keeps its name */
+.topic-in span { flex: 0 1 auto; min-width: 0; max-width: 28%; overflow: hidden; text-overflow: ellipsis; } /* the page and section stay short, the item keeps its name */
 .topic-in span + span::before { content: "\203A"; margin-right: var(--s-2); }
-.topic-in .now { flex-shrink: 1; min-width: 0; color: var(--text); font-weight: 600; animation: topic-now var(--dur-2) var(--ease); }
+.topic-in .now { max-width: none; color: var(--text); font-weight: 600; animation: topic-now var(--dur-2) var(--ease); }
+/* phones: only the item in view, without the path */
+html[data-eff="compact"] .topic-in span:not(.now), html[data-eff="compact"] .topic-in .now::before { display: none; }
 @keyframes topic-now { from { opacity: 0; transform: translateY(3px); } }
 @media (prefers-reduced-motion: reduce) { .topic, .topic-in .now { transition: none !important; animation: none !important; } }
 @media print { .topic { display: none; } }
