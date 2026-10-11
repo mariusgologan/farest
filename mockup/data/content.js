@@ -34,7 +34,7 @@ FE.content = {
       title: 'Aspect',
       theme: { label: 'Temă', auto: 'Auto', light: 'Luminos', dark: 'Întunecat' },
       layout: { label: 'Layout', auto: 'Auto', compact: 'Telefon', regular: 'Tabletă', wide: 'Desktop' },
-      ambient: { label: 'Lumină ambientală', on: 'Pornită', off: 'Oprită' },
+      ambient: { label: 'Lumină ambientală', auto: 'Auto', on: 'Pornită', off: 'Oprită' },
       bars: { label: 'Meniuri la derulare', auto: 'Se ascund', always: 'Mereu vizibile' },
       lang: { label: 'Limbă', ro: 'Română', en: 'English' }
     },
@@ -123,7 +123,7 @@ FE.content = {
       title: 'Appearance',
       theme: { label: 'Theme', auto: 'Auto', light: 'Light', dark: 'Dark' },
       layout: { label: 'Layout', auto: 'Auto', compact: 'Phone', regular: 'Tablet', wide: 'Desktop' },
-      ambient: { label: 'Ambient light', on: 'On', off: 'Off' },
+      ambient: { label: 'Ambient light', auto: 'Auto', on: 'On', off: 'Off' },
       bars: { label: 'Menus while scrolling', auto: 'Auto-hide', always: 'Always visible' },
       lang: { label: 'Language', ro: 'Română', en: 'English' }
     },

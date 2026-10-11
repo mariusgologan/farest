@@ -12,10 +12,10 @@ FE.config = {
   prices: { pollMs: 300000, jitter: 0.2 },
   /* pull to refresh (touch): px of indicator travel needed to reload; finger travel = px / resistance */
   pull: { threshold: 70, max: 100, resistance: 0.5 },
-  defaults: { theme: 'auto', layout: 'auto', ambient: 'on', bars: 'auto', lang: 'ro' },
+  defaults: { theme: 'auto', layout: 'auto', ambient: 'auto', bars: 'auto', lang: 'ro' },
   langs: ['ro', 'en'],
   themes: ['auto', 'light', 'dark'],
-  ambientModes: ['on', 'off'],
+  ambientModes: ['auto', 'on', 'off'],
   barModes: ['auto', 'always'],
   /* menus hide after scrolling down this far (px) and return on any upward movement of this size */
   bars: { hideAfter: 90, downDelta: 6, upDelta: 3, showAbove: 40 },
@@ -46,6 +46,8 @@ FE.config = {
   },
   catalog: { pageSize: 8, featured: ["fereastra-pvc-4-camere-alb-56x56-cm", "fereastra-pvc-4-camere-alb-116x116-cm", "usa-exterior-din-pvc-cu-geam-termopan-pentru-terasa-osciloculisanta-5-camere-stanga-alb-180-x-210-cm"], groups: { windows: ['ferestre', 'ferestre-duble'], doors: ['usi-interior-exterior-pvc', 'usi-osciloculisante'], accessories: ['oferte'] }, sorts: ['featured', 'price-asc', 'price-desc', 'size'], freeDeliveryFrom: 1500, installPct: 0.12, vat: 0.21 },
   /* ambient from pictures: sample size, thresholds on saturation/lightness, hue buckets */
+  /* ms the scroll must settle before the ambient light follows the photo section in view */
+  ambientFollowMs: 180,
   ambientImage: { size: 36, minSat: 0.22, minLight: 0.12, maxLight: 0.92, buckets: 12, minShare: 0.035, boostSat: 0.55, light: 0.55 },
   overlay: { maxDepth: 4, exitMs: 220, coveredScale: .965, coveredShift: -14 },
   toastMs: 3200

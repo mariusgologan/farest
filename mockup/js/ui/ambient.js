@@ -1,4 +1,4 @@
-/* Contextual ambient light.
+/* Contextual ambient light. Modes: auto (follows the content in view and the open object), on (page and hover only), off.
    Colours come from the route context; a picture (product photo, hero, shop) pulls them toward its own palette,
    proportional to how colourful it is (white windows nudge a little, walnut doors and shop photos pull strongly).
    A hovered/selected swatch (calculator) overrides; time of day shifts the hue. */
@@ -69,6 +69,41 @@
     const p = await palette(src);
     if (t === token) FE.store.set({ picture: p });
   }
-  FE.ambient = { apply, setPicture, palette };
-  FE.store.on((st, prev, patch) => { if ('context' in patch || 'swatch' in patch || 'picture' in patch || 'ambient' in patch) apply(); });
+  /* ---------- follow the content: the photo section nearest the middle of the screen tints the light ----------
+     Elements with data-pic (cards, bands, tiles) are watched through a band across the middle of #frame; when scrolling
+     settles on a different one the light follows it, and when none is there the page picture comes back. Touch screens
+     have no hover, so this is how they get the card tint. */
+  const spy = { seen: new Set(), pic: null, timer: 0 };
+  const auto = () => FE.store.get('ambient') === 'auto';
+  const rest = () => (auto() && spy.pic) || FE.ambient.page || null;
+  function follow() {
+    clearTimeout(spy.timer);
+    spy.timer = setTimeout(() => {
+      if (!auto()) return;
+      const f = FE.$('#frame'), mid = f.getBoundingClientRect().top + f.clientHeight / 2;
+      let best = null, bd = Infinity;
+      for (const el of spy.seen) {
+        if (!el.isConnected) { spy.seen.delete(el); continue; }
+        const b = el.getBoundingClientRect(), d = Math.abs((b.top + b.bottom) / 2 - mid);
+        if (d < bd) { bd = d; best = el; }
+      }
+      const pic = best?.dataset.pic || null;
+      if (pic === spy.pic) return;
+      spy.pic = pic;
+      if (!+root.dataset.overlayDepth) setPicture(rest());
+    }, FE.config.ambientFollowMs);
+  }
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => { es.forEach(e => e.isIntersecting ? spy.seen.add(e.target) : spy.seen.delete(e.target)); follow(); },
+      { root: FE.$('#frame'), rootMargin: '-35% 0px -35% 0px' });
+    const watch = n => { if (n.nodeType !== 1) return; if (n.dataset?.pic) io.observe(n); n.querySelectorAll?.('[data-pic]').forEach(e => io.observe(e)); };
+    new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(watch))).observe(FE.$('#view'), { childList: true, subtree: true });
+    FE.store.on((s, p, patch) => { if ('route' in patch) { spy.seen.clear(); spy.pic = null; } });
+  }
+
+  FE.ambient = { apply, setPicture, palette, rest, auto };
+  FE.store.on((st, prev, patch) => {
+    if ('context' in patch || 'swatch' in patch || 'picture' in patch || 'ambient' in patch) apply();
+    if ('ambient' in patch && !+root.dataset.overlayDepth) { spy.pic = null; follow(); if (patch.ambient !== 'auto') setPicture(rest()); }
+  });
 })();

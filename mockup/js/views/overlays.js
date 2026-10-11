@@ -58,7 +58,7 @@
         body.addEventListener('click', e => { const b = e.target.closest('[data-action="profile-pick"]'); if (b) draw(b.dataset.value); });
         draw(id);
       }
-    }).then(() => FE.ambient.setPicture(FE.ambient.page));
+    }).then(() => FE.ambient.setPicture(FE.ambient.rest()));
   };
 
   /* ---------- level 3: measuring guide ---------- */
@@ -99,7 +99,7 @@
           FE.flows.cart();
         });
       }
-    }).then(() => FE.ambient.setPicture(FE.ambient.page));
+    }).then(() => FE.ambient.setPicture(FE.ambient.rest()));
   };
 
   /* ---------- level 1: quick view ---------- */
@@ -119,7 +119,7 @@
             </div></div></div>`.toString();
         FE.ambient.setPicture(p.images[0]?.src || null);
       }
-    }).then(() => FE.ambient.setPicture(FE.ambient.page));
+    }).then(() => FE.ambient.setPicture(FE.ambient.rest()));
   };
 
   /* ---------- level 3: confirmation ---------- */
@@ -180,6 +180,7 @@
           const list = FE.store.get('cart');
           if (!list.length) { body.innerHTML = h`<div class="empty center stack">${icon('cart', 48)}<p>${t('cart.empty')}</p><a class="btn primary" href="#/c/windows" data-action="overlay-all-close">${t('cart.browse')}</a></div>`.toString(); return; }
           const total = cart.total(), left = Math.max(0, FE.config.catalog.freeDeliveryFrom - total);
+          const first = list[0]; if (FE.ambient.auto()) FE.ambient.setPicture(FE.imageFor(byId(FE.db.products, first.pid), first)?.src || null); /* the light follows what is being bought */
           body.innerHTML = h`<ul class="lines">${list.map((l, i) => { const p = byId(FE.db.products, l.pid), im = FE.imageFor(p, l); return h`<li class="line">
               <div class="thumb">${im ? h`<img class="photo" src="${im.src}" alt="">` : ui.windowSvg(p)}</div>
               <div class="grow"><b class="clamp">${p.name}</b>
@@ -199,7 +200,7 @@
           const b = e.target.closest('[data-action=qty]'); if (b) cart.update(+b.dataset.i, l => (l.qty += +b.dataset.d, l));
         });
       }
-    }).then(() => FE.store.set({ context: ctxFor(FE.store.get('route')) }));
+    }).then(() => { FE.store.set({ context: ctxFor(FE.store.get('route')) }); FE.ambient.setPicture(FE.ambient.rest()); });
   };
   const ctxFor = route => FE.contextFor ? FE.contextFor(route) : 'home';
 
@@ -251,9 +252,12 @@
   });
 
   /* ---------- level 1: store map (Google Maps loads only after the visitor asks) ---------- */
+  /* an object that brings its own colour (the shops' red) for as long as it is open */
+  const tinted = (context, open) => { if (FE.ambient.auto()) FE.store.set({ context }); return open().then(() => { FE.store.set({ context: ctxFor(FE.store.get('route')) }); FE.ambient.setPicture(FE.ambient.rest()); }); };
+
   FE.flows.map = id => {
     const sh = byId(FE.db.shops, id), q = encodeURIComponent(sh.maps_query), m = FE.config.maps;
-    FE.overlay.open({
+    return tinted('shops', () => FE.overlay.open({
       title: FE.loc(sh.name), size: 'lg',
       render(body) {
         body.innerHTML = h`<p class="muted">${FE.loc(sh.address)}</p>
@@ -266,6 +270,6 @@
           FE.$('[data-bind=map]', body).innerHTML = h`<iframe title="${FE.loc(sh.name)}" src="${m.embed + q}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`.toString();
         });
       }
-    });
+    }));
   };
 })();
