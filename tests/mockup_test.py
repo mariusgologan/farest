@@ -460,6 +460,10 @@ with sync_playwright() as pw:
     r = api(page, 'POST', '/trade-requests', {'company': 'X', 'cui': 'RO123', 'name': 'Y', 'phone': '0722000111', 'email': 'a@b.ro', 'type': 'reseller', 'quantity': 5, 'items': [{'pid': 'nope', 'qty': 1}]})
     ok('b2b: the API refuses unknown products in a quote', r['status'] == 422 and r['error'] == 'invalid_trade', str(r))
     page.evaluate('FE.overlay.closeAll()'); page.wait_for_timeout(300)
+    # a slow device: the user reaches a field before the panel's first frame; the first focus must not pull them back to the top field
+    page.evaluate("void FE.flows.tradeQuote(); document.querySelector('#tq-name').focus()"); page.wait_for_timeout(300)
+    ok('overlay: a field reached before the first frame keeps the focus', page.evaluate('document.activeElement.id') == 'tq-name', page.evaluate('document.activeElement.id'))
+    page.evaluate('FE.overlay.closeAll()'); page.wait_for_timeout(300)
     page.click('[data-action=settings]'); page.click('.layer [data-action=set-segment][data-value=b2c]')
     ok('b2b: Settings switches back to B2C and the address drops ?b2b', page.evaluate('document.documentElement.dataset.segment') == 'b2c' and page.evaluate('location.search') == '')
     ctx.close()
