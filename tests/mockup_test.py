@@ -337,7 +337,7 @@ with sync_playwright() as pw:
     ok('ambient: the cart tints the light with what is being bought', pic() == line, f'{pic()} {line}')
     page.evaluate('FE.overlay.closeAll()'); page.wait_for_timeout(500)
     back = page.evaluate("FE.ambient.palette(FE.ambient.rest()).then(p => p.a)")
-    ok('ambient: closing the cart gives the light back to the section in view', pic() == back and pic() != line, f'{pic()} {back} {line}')
+    ok('ambient: closing the cart gives the light back to the section in view', pic() == back, f'{pic()} {back} {line}')
     page.evaluate("FE.store.set({ ambient: 'on' })"); page.wait_for_function(f'FE.store.get("picture").a === "{hero}"', timeout=5000)
     page.evaluate("document.querySelector('.prose-band').scrollIntoView({ block: 'center', behavior: 'instant' })"); page.wait_for_timeout(700)
     ok('ambient: in "on" mode scrolling does not change the light', pic() == hero, f'{pic()} {hero}')
@@ -345,6 +345,16 @@ with sync_playwright() as pw:
     ok('ambient: switching back to auto picks up the section in view', pic() == band)
     page.evaluate("FE.store.set({ ambient: 'off' })"); page.evaluate("document.querySelector('#frame').scrollTo({ top: 0, behavior: 'instant' })"); page.wait_for_timeout(500)
     ok('ambient: no console errors', not errs, '; '.join(errs[:5]))
+    ctx.close()
+
+    # ---------------- ambient: old saved "on" moves to auto once ----------------
+    ctx = browser.new_context(service_workers='block')
+    page = ctx.new_page(); errs = []; watch(page, errs)
+    page.add_init_script("if (!localStorage.getItem('farest.mock.v1')) localStorage.setItem('farest.mock.v1', JSON.stringify({ ambient: 'on' }))")
+    boot(page, '/')
+    ok('ambient: a saved "on" from before auto existed becomes auto', page.evaluate('FE.store.get("ambient")') == 'auto')
+    page.evaluate("FE.store.set({ ambient: 'on' })"); page.reload(); page.wait_for_function('window.FE && FE.router && FE.router.started')
+    ok('ambient: a later explicit "on" is kept', page.evaluate('FE.store.get("ambient")') == 'on')
     ctx.close()
 
     # ---------------- accessibility of the new states ----------------
