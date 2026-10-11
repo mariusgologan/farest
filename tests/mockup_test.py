@@ -338,9 +338,13 @@ with sync_playwright() as pw:
     page.evaluate('FE.overlay.closeAll()'); page.wait_for_timeout(500)
     back = page.evaluate("FE.ambient.palette(FE.ambient.rest()).then(p => p.a)")
     ok('ambient: closing the cart gives the light back to the section in view', pic() == back, f'{pic()} {back} {line}')
+    glowing = page.evaluate("[...document.querySelectorAll('[data-glow]')].map(e => e.className)")
+    ok('ambient: the section in view glows, and only it', len(glowing) == 1 and page.evaluate("document.querySelector('[data-glow]').dataset.pic === FE.ambient.rest()"), glowing)
+    page.mouse.move(1, 1)  # hover tints in "on" mode too; keep the pointer off the cards
     page.evaluate("FE.store.set({ ambient: 'on' })"); page.wait_for_function(f'FE.store.get("picture").a === "{hero}"', timeout=5000)
     page.evaluate("document.querySelector('.prose-band').scrollIntoView({ block: 'center', behavior: 'instant' })"); page.wait_for_timeout(700)
     ok('ambient: in "on" mode scrolling does not change the light', pic() == hero, f'{pic()} {hero}')
+    ok('ambient: no section glow outside auto mode', page.locator('[data-glow]').count() == 0)
     page.evaluate("FE.store.set({ ambient: 'auto' })"); page.wait_for_function(f'FE.store.get("picture").a === "{band}"', timeout=5000)
     ok('ambient: switching back to auto picks up the section in view', pic() == band)
     page.evaluate("FE.store.set({ ambient: 'off' })"); page.evaluate("document.querySelector('#frame').scrollTo({ top: 0, behavior: 'instant' })"); page.wait_for_timeout(500)

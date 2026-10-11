@@ -1,14 +1,13 @@
-/* Ambient layer: soft radial colour fields (gradients, no blur filter) that follow the context (route, product colour, picture). */
+/* Ambient layer: a soft wash over the whole page in the context colours (route, product colour, picture in view): the first colour
+   from the top, the second from the bottom, a quiet middle so text keeps its contrast. Gradients only, no blur filter. */
 .ambient { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-/* the colours change at once on :root (one style pass) and glide only on the three light blobs: a transition of an inherited
+/* the colours change at once on :root (one style pass) and glide only on the three layers: a transition of an inherited
    property on :root would restyle every element on every frame for --dur-ambient */
-.ambient i { --glow-a: radial-gradient(closest-side, var(--amb-a), color-mix(in srgb, var(--amb-a) 45%, transparent) 45%, color-mix(in srgb, var(--amb-a) 12%, transparent) 75%, transparent);
-  --glow-b: radial-gradient(closest-side, var(--amb-b), color-mix(in srgb, var(--amb-b) 45%, transparent) 45%, color-mix(in srgb, var(--amb-b) 12%, transparent) 75%, transparent); }
 .ambient i { transition: --amb-a var(--dur-ambient) var(--ease-ambient), --amb-b var(--dur-ambient) var(--ease-ambient); }
-.ambient i { position: absolute; width: 80vmax; height: 80vmax; opacity: var(--amb-opacity); }
-.ambient i:nth-child(1) { background: var(--glow-a); top: calc(42% - 40vmax); left: calc(50% - 40vmax); }
-.ambient i:nth-child(2) { background: var(--glow-b); top: calc(78% - 40vmax); left: calc(50% - 40vmax); }
-.ambient i:nth-child(3) { background: var(--glow-a); width: 50vmax; height: 50vmax; top: calc(50% - 25vmax); left: calc(50% - 25vmax); opacity: calc(var(--amb-opacity) * .5); }
+.ambient i { position: absolute; inset: 0; opacity: var(--amb-opacity); }
+.ambient i:nth-child(1) { background: radial-gradient(130% 75% at 50% 0%, color-mix(in srgb, var(--amb-a) 70%, transparent), color-mix(in srgb, var(--amb-a) 22%, transparent) 55%, transparent 100%); }
+.ambient i:nth-child(2) { background: radial-gradient(130% 70% at 50% 100%, color-mix(in srgb, var(--amb-b) 65%, transparent), color-mix(in srgb, var(--amb-b) 18%, transparent) 55%, transparent 100%); }
+.ambient i:nth-child(3) { background: linear-gradient(180deg, color-mix(in srgb, var(--amb-a) 14%, transparent), color-mix(in srgb, var(--amb-b) 14%, transparent)); }
 :root[data-ambient="off"] .ambient { display: none; }
 
 /* Frosted acrylic: sheen gradient over a translucent fill, heavy blur + saturation, grain, light edge, inner glow, elevation. */
@@ -23,5 +22,5 @@
 
 .e-1 { box-shadow: var(--e-1); } .e-2 { box-shadow: var(--e-2); } .e-3 { box-shadow: var(--e-3); }
 .e-4 { box-shadow: var(--e-4); } .e-5 { box-shadow: var(--e-5); }
-.lift { transition: transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease); }
+.lift { transition: transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease), background-color var(--dur-ambient) var(--ease-ambient); }
 .lift:hover { transform: translateY(-3px); box-shadow: var(--e-4); }

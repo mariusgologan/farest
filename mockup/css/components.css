@@ -154,7 +154,7 @@ html[data-eff="wide"] .prose-band { grid-template-columns: 1fr 1fr; align-items:
 :root[data-theme="dark"] .photo { filter: brightness(.93); }
 .clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .long { font-size: var(--fs-xl); }
-.photo-plate { display: grid; place-items: center; background: #fff; border-radius: var(--r-md); padding: var(--s-3); box-shadow: var(--e-2); }
+.photo-plate { display: grid; place-items: center; background: #fff; border-radius: var(--r-md); padding: var(--s-3); box-shadow: var(--e-2), var(--glow, 0 0 transparent); }
 .photo-plate .photo, .pdp-art .photo { max-height: 440px; width: auto; max-width: 100%; box-shadow: none; }
 .pdp-art { gap: var(--s-3); align-content: start; }
 .thumbs { display: flex; gap: var(--s-2); flex-wrap: wrap; justify-content: center; }

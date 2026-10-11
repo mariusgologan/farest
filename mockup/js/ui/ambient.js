@@ -73,13 +73,14 @@
      Elements with data-pic (cards, bands, tiles) are watched through a band across the middle of #frame; when scrolling
      settles on a different one the light follows it, and when none is there the page picture comes back. Touch screens
      have no hover, so this is how they get the card tint. */
-  const spy = { seen: new Set(), pic: null, timer: 0 };
+  const spy = { seen: new Set(), pic: null, timer: 0, el: null };
+  const glow = el => { if (spy.el === el) return; spy.el?.removeAttribute('data-glow'); spy.el = el; el?.setAttribute('data-glow', ''); };
   const auto = () => FE.store.get('ambient') === 'auto';
   const rest = () => (auto() && spy.pic) || FE.ambient.page || null;
   function follow() {
     clearTimeout(spy.timer);
     spy.timer = setTimeout(() => {
-      if (!auto()) return;
+      if (!auto()) return glow(null);
       const f = FE.$('#frame'), mid = f.getBoundingClientRect().top + f.clientHeight / 2;
       let best = null, bd = Infinity;
       for (const el of spy.seen) {
@@ -88,6 +89,7 @@
         if (d < bd) { bd = d; best = el; }
       }
       const pic = best?.dataset.pic || null;
+      glow(pic ? best : null);
       if (pic === spy.pic) return;
       spy.pic = pic;
       if (!+root.dataset.overlayDepth) setPicture(rest());
@@ -98,7 +100,7 @@
       { root: FE.$('#frame'), rootMargin: '-35% 0px -35% 0px' });
     const watch = n => { if (n.nodeType !== 1) return; if (n.dataset?.pic) io.observe(n); n.querySelectorAll?.('[data-pic]').forEach(e => io.observe(e)); };
     new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(watch))).observe(FE.$('#view'), { childList: true, subtree: true });
-    FE.store.on((s, p, patch) => { if ('route' in patch) { spy.seen.clear(); spy.pic = null; } });
+    FE.store.on((s, p, patch) => { if ('route' in patch) { spy.seen.clear(); spy.pic = null; glow(null); } });
   }
 
   FE.ambient = { apply, setPicture, palette, rest, auto };
