@@ -18,7 +18,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: make ci
+      - name: make ci
+        shell: bash
+        run: make ci 2>&1 | tee ci.log
+      - name: Summary
+        if: always()
+        shell: bash
+        run: |
+          lint=$(grep -m1 '^lint:' ci.log || echo 'lint: failed, see the log')
+          total=$(grep -m1 -E '^[0-9]+/[0-9]+ passed' ci.log || echo 'did not finish, see the log')
+          fails=$(grep '^FAIL ' ci.log || true)
+          {
+            echo "## Tests: ${{ job.status == 'success' && '✅ green' || '❌ failed' }}"
+            echo
+            echo "| Step | Result |"
+            echo "| --- | --- |"
+            echo "| Lint | \`$lint\` |"
+            echo "| Playwright (tests/mockup_test.py) | $total |"
+            if [ -n "$fails" ]; then printf '\n### Failures\n```\n%s\n```\n' "$fails"; fi
+            if ! grep -qE '^[0-9]+/[0-9]+ passed' ci.log; then printf '\n### Last log lines\n```\n%s\n```\n' "$(tail -n 30 ci.log)"; fi
+            printf '\n<details><summary>All checks</summary>\n\n```\n%s\n```\n</details>\n' "$(grep -E '^(PASS|FAIL) ' ci.log)"
+          } >> "$GITHUB_STEP_SUMMARY"
   deploy:
     needs: test
     runs-on: ubuntu-latest
@@ -33,3 +53,21 @@ jobs:
           path: mockup
       - id: deployment
         uses: actions/deploy-pages@v4
+      - name: Summary
+        if: always()
+        shell: bash
+        env:
+          URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          want=$(grep -o 'farest-v[0-9]*' mockup/sw.js)
+          live=''
+          if [ -n "$URL" ]; then for i in $(seq 1 12); do live=$(curl -fsS "${URL}sw.js" 2>/dev/null | grep -o 'farest-v[0-9]*' || true); [ "$live" = "$want" ] && break; sleep 5; done; fi
+          {
+            echo "## Deploy: ${{ job.status == 'success' && '✅ live' || '❌ failed' }}"
+            echo
+            echo "| | |"
+            echo "| --- | --- |"
+            echo "| Site | ${URL:-not deployed} |"
+            echo "| Commit | \`${GITHUB_SHA::7}\` $(git log -1 --format=%s | sed 's/|/\\|/g') |"
+            echo "| sw.js VERSION | $want (live: ${live:-unreachable}) $([ "$live" = "$want" ] && echo ✅ || echo ⚠️) |"
+          } >> "$GITHUB_STEP_SUMMARY"
