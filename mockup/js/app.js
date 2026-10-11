@@ -79,7 +79,7 @@
   A('set-lang', (el, ev, d) => store.set({ lang: d.value }));
 
   /* hovering a photo card tints the ambient light with that photo; leaving restores the page picture */
-  const hover = (ev, enter) => { const el = ev.target.closest?.('[data-pic]'); if (!el || !el.dataset.pic) return; if (enter ? true : !el.contains(ev.relatedTarget)) FE.ambient.setPicture(enter ? el.dataset.pic : FE.ambient.page); };
+  const hover = (ev, enter) => { const el = ev.target.closest?.('[data-pic]'); if (!el || !el.dataset.pic) return; if (enter ? true : !el.contains(ev.relatedTarget)) FE.ambient.setPicture(enter ? el.dataset.pic : FE.ambient.rest()); };
   document.addEventListener('pointerover', ev => hover(ev, true));
   document.addEventListener('pointerout', ev => hover(ev, false));
 
