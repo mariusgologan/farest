@@ -108,6 +108,8 @@
       { root: FE.$('#frame'), rootMargin: '-35% 0px -35% 0px' });
     const watch = n => { if (n.nodeType !== 1) return; if (n.dataset?.pic) io.observe(n); n.querySelectorAll?.('[data-pic]').forEach(e => io.observe(e)); };
     new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(watch))).observe(FE.$('#view'), { childList: true, subtree: true });
+    /* a scroll can end nearer another card in the band without any card entering or leaving it: settle again on every scroll */
+    FE.$('#frame').addEventListener('scroll', () => auto() && follow(), { passive: true });
     FE.store.on((s, p, patch) => { if ('route' in patch) { spy.seen.clear(); spy.pic = null; glow(null); } });
   }
 
