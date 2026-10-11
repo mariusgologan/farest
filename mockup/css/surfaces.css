@@ -1,12 +1,14 @@
-/* Ambient layer: blurred colour fields that follow the context (route, product colour, picture). */
+/* Ambient layer: soft radial colour fields (gradients, no blur filter) that follow the context (route, product colour, picture). */
 .ambient { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
 /* the colours change at once on :root (one style pass) and glide only on the three light blobs: a transition of an inherited
    property on :root would restyle every element on every frame for --dur-ambient */
+.ambient i { --glow-a: radial-gradient(closest-side, var(--amb-a), color-mix(in srgb, var(--amb-a) 45%, transparent) 45%, color-mix(in srgb, var(--amb-a) 12%, transparent) 75%, transparent);
+  --glow-b: radial-gradient(closest-side, var(--amb-b), color-mix(in srgb, var(--amb-b) 45%, transparent) 45%, color-mix(in srgb, var(--amb-b) 12%, transparent) 75%, transparent); }
 .ambient i { transition: --amb-a var(--dur-ambient) var(--ease-ambient), --amb-b var(--dur-ambient) var(--ease-ambient); }
-.ambient i { position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; filter: blur(var(--blur-ambient)); opacity: var(--amb-opacity); }
-.ambient i:nth-child(1) { background: var(--amb-a); top: -25vmax; left: -15vmax; }
-.ambient i:nth-child(2) { background: var(--amb-b); bottom: -30vmax; right: -20vmax; }
-.ambient i:nth-child(3) { background: var(--amb-a); width: 35vmax; height: 35vmax; top: 35%; left: 55%; opacity: calc(var(--amb-opacity) * .5); }
+.ambient i { position: absolute; width: 80vmax; height: 80vmax; opacity: var(--amb-opacity); }
+.ambient i:nth-child(1) { background: var(--glow-a); top: -35vmax; left: -25vmax; }
+.ambient i:nth-child(2) { background: var(--glow-b); bottom: -40vmax; right: -30vmax; }
+.ambient i:nth-child(3) { background: var(--glow-a); width: 50vmax; height: 50vmax; top: 25%; left: 45%; opacity: calc(var(--amb-opacity) * .5); }
 :root[data-ambient="off"] .ambient { display: none; }
 
 /* Frosted acrylic: sheen gradient over a translucent fill, heavy blur + saturation, grain, light edge, inner glow, elevation. */
