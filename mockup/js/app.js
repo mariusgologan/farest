@@ -9,8 +9,9 @@
   function effectiveLayout() {
     const sel = store.get('layout');
     if (sel !== 'auto') return sel;
-    const w = innerWidth, b = config.layoutBreakpoints;
-    return w >= b.wide ? 'wide' : w >= b.regular ? 'regular' : 'compact';
+    /* media queries, not innerWidth: reading innerWidth right after a DOM change forces a full layout */
+    const b = config.layoutBreakpoints, at = px => matchMedia(`(min-width: ${px}px)`).matches;
+    return at(b.wide) ? 'wide' : at(b.regular) ? 'regular' : 'compact';
   }
   function applyEnv() {
     const theme = store.get('theme'), sel = store.get('layout'), eff = effectiveLayout();
@@ -24,7 +25,7 @@
   /* ---------- shell ---------- */
   const navItem = (n, cls) => h`<a class="${cls}" href="#${n.route}" aria-label="${t(`nav.${n.id}`)}" data-nav="${n.id}" data-ctx="${n.id}">${icon(n.icon, 22)}<span>${t(`nav.${n.id}`)}</span></a>`;
   function drawShell() {
-    FE.$('#top').innerHTML = h`<a class="logo" href="#/" aria-label="${config.brand.name}"><b>FAR</b><span>EST</span></a>
+    FE.$('#top').innerHTML = h`<a class="logo" href="#/"><b>FAR</b><span>EST</span></a>
       <nav class="topnav" aria-label="Main">${config.nav.map(n => navItem(n, 'navlink'))}</nav>
       <div class="top-actions">
         <button class="icon-btn" data-action="phone" aria-label="${t('phone.title')}" aria-haspopup="dialog">${icon('phone')}</button>

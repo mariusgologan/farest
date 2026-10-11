@@ -14,6 +14,8 @@
     const [{ data: top }, { data: w }, { data: offers }, { data: faq }, { data: shops }] = await Promise.all(
       ['/products?sort=featured&page=1', '/welcome', '/offers', '/faq', '/shops'].map(u => FE.api.get(u)));
     const picks = top.slice(0, 3), m = w.meta, site = FE.data.site;
+    /* the hero art is hidden on compact layouts (css/components.css): fetch its photos first only where it shows */
+    const wide = document.documentElement.dataset.eff !== 'compact';
     FE.ambient.page = site.hero || null; FE.ambient.setPicture(FE.ambient.page);
     set(host, h`
       <section class="hero acrylic e-3">
@@ -27,7 +29,7 @@
           </div>
           <p class="muted small row">${icon('shield', 16)} ${t('home.reassure')}</p>
         </div>
-        <div class="hero-art" aria-hidden="true">${site.hero ? h`<img class="hero-photo" src="${site.hero}" alt="">` : ''}${picks.map((p, i) => h`<div class="float f${i} acrylic e-3">${ui.img(p)}</div>`)}</div>
+        <div class="hero-art" aria-hidden="true">${site.hero ? h`<img class="hero-photo" src="${site.hero}" alt="" ${raw(wide ? 'fetchpriority="high"' : 'loading="lazy"')} width="1200" height="430">` : ''}${picks.map((p, i) => h`<div class="float f${i} acrylic e-3">${ui.img(p, 0, '', wide)}</div>`)}</div>
       </section>
       <section class="grid offers" aria-label="${t('home.offers')}">${offers.map(o => h`
         <a class="offer acrylic lift e-1" ${raw(o.cta.startsWith('/') ? `href="#${o.cta}"` : `href="#" data-action="${o.cta}"`)}>
@@ -113,7 +115,7 @@
       <nav class="breadcrumb" aria-label="${t('a11y.path')}"><a href="#/">${t('nav.home')}</a> › <a href="#/c/${p.cat}">${t(`cat.${p.cat}.title`)}</a> › <span>${p.name}</span></nav>
       <div class="pdp">
         <section class="pdp-art acrylic e-2">
-          <div class="photo-plate" data-bind="hero">${p.images[0] ? h`<img class="photo" src="${p.images[0].src}" alt="${p.name}">` : ui.windowSvg(p)}</div>
+          <div class="photo-plate" data-bind="hero">${p.images[0] ? h`<img class="photo" src="${p.images[0].src}" alt="${p.name}" fetchpriority="high" width="550" height="550">` : ui.windowSvg(p)}</div>
           ${p.images.length > 1 ? h`<div class="thumbs" role="group" aria-label="${t('product.gallery')}">${p.images.map((im, i) => h`<button data-action="gallery" data-i="${i}" aria-current="${i === 0}" aria-label="${t('product.photo', { n: i + 1 })}"><img src="${im.src}" alt="" loading="lazy"></button>`)}</div>` : ''}
         </section>
         <section class="buybox acrylic thick e-3">

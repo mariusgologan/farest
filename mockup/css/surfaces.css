@@ -1,6 +1,8 @@
 /* Ambient layer: blurred colour fields that follow the context (route, product colour, picture). */
 .ambient { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-:root { transition: --amb-a var(--dur-ambient) var(--ease-ambient), --amb-b var(--dur-ambient) var(--ease-ambient); }
+/* the colours change at once on :root (one style pass) and glide only on the three light blobs: a transition of an inherited
+   property on :root would restyle every element on every frame for --dur-ambient */
+.ambient i { transition: --amb-a var(--dur-ambient) var(--ease-ambient), --amb-b var(--dur-ambient) var(--ease-ambient); }
 .ambient i { position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; filter: blur(var(--blur-ambient)); opacity: var(--amb-opacity); }
 .ambient i:nth-child(1) { background: var(--amb-a); top: -25vmax; left: -15vmax; }
 .ambient i:nth-child(2) { background: var(--amb-b); bottom: -30vmax; right: -20vmax; }

@@ -12,6 +12,14 @@
 var w=innerWidth,l=s.layout||'auto',e=l!=='auto'?l:w>=1100?'wide':w>=700?'regular':'compact',W={compact:420,regular:860,wide:1280};
 d.dataset.layout=l;d.dataset.eff=e;d.dataset.nav=e==='compact'?'tabs':'bar';d.style.setProperty('--cols',{compact:1,regular:2,wide:3}[e]);d.style.setProperty('--frame-w',l==='auto'?'100%':W[l]+'px');})();</script>
 <link rel="manifest" href="manifest.webmanifest">
+<!-- boot data (FE.config.content, read by FE.loadAll): fetched in parallel with the scripts instead of after them -->
+<link rel="preload" href="content/products.csv" as="fetch" crossorigin>
+<link rel="preload" href="content/configurator.json" as="fetch" crossorigin>
+<link rel="preload" href="content/api-contract.json" as="fetch" crossorigin>
+<link rel="preload" href="content/shops.yaml" as="fetch" crossorigin>
+<link rel="preload" href="content/offers.json" as="fetch" crossorigin>
+<link rel="preload" href="content/faq.yaml" as="fetch" crossorigin>
+<link rel="preload" href="content/site-images.yaml" as="fetch" crossorigin>
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon.svg">
 <link rel="stylesheet" href="css/fonts.css">
@@ -39,33 +47,33 @@ d.dataset.layout=l;d.dataset.eff=e;d.dataset.nav=e==='compact'?'tabs':'bar';d.st
   <div id="overlays"></div>
   <div id="toasts" aria-live="polite"></div>
 </div>
-<script src="data/config.js"></script>
-<script src="data/catalog.js"></script>
-<script src="data/content.js"></script>
-<script src="js/core/util.js"></script>
-<script src="js/core/parse.js"></script>
-<script src="js/core/store.js"></script>
-<script src="js/core/loader.js"></script>
-<script src="js/core/contract.js"></script>
-<script src="js/core/i18n.js"></script>
-<script src="js/core/api.js"></script>
-<script src="js/core/prices.js"></script>
-<script src="js/core/router.js"></script>
-<script src="js/core/actions.js"></script>
-<script src="js/ui/icons.js"></script>
-<script src="js/ui/ambient.js"></script>
-<script src="js/ui/glass.js"></script>
-<script src="js/ui/chrome.js"></script>
-<script src="js/ui/motion.js"></script>
-<script src="js/ui/toast.js"></script>
-<script src="js/ui/overlay.js"></script>
-<script src="js/ui/components.js"></script>
-<script src="js/views/overlays.js"></script>
-<script src="js/cfg/rules.js"></script>
-<script src="js/cfg/draw.js"></script>
-<script src="js/cfg/projects.js"></script>
-<script src="js/views/pages.js"></script>
-<script src="js/views/configurator.js"></script>
-<script src="js/app.js"></script>
+<script defer src="data/config.js"></script>
+<script defer src="data/catalog.js"></script>
+<script defer src="data/content.js"></script>
+<script defer src="js/core/util.js"></script>
+<script defer src="js/core/parse.js"></script>
+<script defer src="js/core/store.js"></script>
+<script defer src="js/core/loader.js"></script>
+<script defer src="js/core/contract.js"></script>
+<script defer src="js/core/i18n.js"></script>
+<script defer src="js/core/api.js"></script>
+<script defer src="js/core/prices.js"></script>
+<script defer src="js/core/router.js"></script>
+<script defer src="js/core/actions.js"></script>
+<script defer src="js/ui/icons.js"></script>
+<script defer src="js/ui/ambient.js"></script>
+<script defer src="js/ui/glass.js"></script>
+<script defer src="js/ui/chrome.js"></script>
+<script defer src="js/ui/motion.js"></script>
+<script defer src="js/ui/toast.js"></script>
+<script defer src="js/ui/overlay.js"></script>
+<script defer src="js/ui/components.js"></script>
+<script defer src="js/views/overlays.js"></script>
+<script defer src="js/cfg/rules.js"></script>
+<script defer src="js/cfg/draw.js"></script>
+<script defer src="js/cfg/projects.js"></script>
+<script defer src="js/views/pages.js"></script>
+<script defer src="js/views/configurator.js"></script>
+<script defer src="js/app.js"></script>
 </body>
 </html>

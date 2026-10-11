@@ -8,9 +8,9 @@
   ui.name = p => p.name;
   ui.profile = id => byId(FE.db.profiles, id);
 
-  /* the shop's own photo; falls back to a drawing when a SKU has none */
-  ui.img = (p, i = 0, extra = '') => p.images[i]
-    ? h`<img class="photo ${extra}" src="${p.images[i].src}" alt="${p.name}" loading="lazy" decoding="async" width="550" height="550">`
+  /* the shop's own photo; falls back to a drawing when a SKU has none. eager: likely above the fold (LCP), fetched at once */
+  ui.img = (p, i = 0, extra = '', eager = false) => p.images[i]
+    ? h`<img class="photo ${extra}" src="${p.images[i].src}" alt="${p.name}" ${raw(eager ? 'fetchpriority="high"' : 'loading="lazy"')} decoding="async" width="550" height="550">`
     : ui.windowSvg(p);
 
   /* fallback drawing (also the calculator preview): proportional tilt-and-turn window or door */
@@ -39,8 +39,9 @@
     return h`${p.mm ? ui.chip(`${p.mm} mm`) : ''}${p.chambers ? ui.chip(t('profile.chambers', { n: p.chambers })) : ''}${p.uf ? ui.chip(`K ${FE.num(p.uf)}`) : ''}`;
   };
 
-  ui.card = p => h`<article class="card acrylic lift" data-id="${p.id}" data-pic="${p.images[0]?.src || ''}">
-    <a class="card-art" href="#/p/${p.id}" aria-label="${p.name}" tabindex="-1">${ui.img(p)}</a>
+  /* k: position in its grid (map index); the first two cards load their photo eagerly */
+  ui.card = (p, k = 9) => h`<article class="card acrylic lift" data-id="${p.id}" data-pic="${p.images[0]?.src || ''}">
+    <a class="card-art" href="#/p/${p.id}" aria-label="${p.name}" tabindex="-1">${ui.img(p, 0, '', k < 2)}</a>
     <div class="card-body">
       <h2 class="card-title clamp"><a href="#/p/${p.id}">${p.name}</a></h2>
       <div class="row chips">${ui.specs(p)}</div>
