@@ -1,0 +1,32 @@
+# Lighthouse on the live site: after every successful Pages deploy, or on demand (Actions > lighthouse > Run workflow,
+# any URL). Never blocks a deploy. Scores go to the job summary, the HTML reports to the run's artifacts.
+name: lighthouse
+on:
+  workflow_run:
+    workflows: [pages]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Site to audit (trailing slash)
+        default: https://farest.scrollout.net/
+permissions:
+  contents: read
+jobs:
+  lighthouse:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: make lighthouse
+        run: make lighthouse URL="${{ inputs.url || 'https://farest.scrollout.net/' }}"
+      - name: Summary
+        if: always()
+        run: cat .cache/lighthouse/summary.md >> "$GITHUB_STEP_SUMMARY" || echo "## Lighthouse did not finish, see the log" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .cache/lighthouse/*.report.html
+          retention-days: 14

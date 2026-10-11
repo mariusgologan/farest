@@ -225,7 +225,8 @@ with sync_playwright() as pw:
     if not page.evaluate('!!navigator.serviceWorker.controller'):
         page.reload(); boot(page)
     page.wait_for_function('navigator.serviceWorker.controller', timeout=15000)
-    ok('service worker is v45', 'farest-v45' in page.evaluate("caches.keys().then(k => k.join(','))"))
+    sw_version = re.search(r"VERSION = '([^']+)'", open(os.path.join(SITE, 'sw.js'), encoding='utf-8').read()).group(1)
+    ok(f'service worker cache is {sw_version}', sw_version in page.evaluate("caches.keys().then(k => k.join(','))"))
     page.evaluate("fetch('content/products.csv'); fetch('content/configurator.json')")
     time.sleep(0.5)
     set_row(PID, price=PRICE0 + 333)
@@ -262,6 +263,9 @@ with sync_playwright() as pw:
         page.click('#view .card [data-action=quickview]'); page.wait_for_selector('.layer [data-price-of]')
         ok(f'{skin}: quick view price is tagged', page.locator('.layer [data-price-of]').count() >= 1)
         ok(f'{skin}: FE.prices is running', page.evaluate('typeof FE.prices.check') == 'function')
+        missing = page.evaluate("""() => Promise.all([...new Set([...FE.db.products.flatMap(p => p.images.map(i => i.src)), ...JSON.stringify(FE.data.site).match(/images\\/[\\w.-]+/g)])]
+          .map(src => fetch(src).then(r => r.ok && /^image\\//.test(r.headers.get('content-type')) ? null : src))).then(l => l.filter(Boolean))""")
+        ok(f'{skin}: every product and site image exists', not missing, str(missing[:5]))
         ok(f'{skin}: no console errors or failed requests across all routes', not errs, '; '.join(errs[:5]))
         ctx.close()
 

@@ -33,7 +33,7 @@
         <span class="u-lang" role="group" aria-label="${t('corp.util.lang')}">${config.langs.map(l => h`<button type="button" data-action="set-lang" data-value="${l}" aria-pressed="${l === lang()}">${l.toUpperCase()}</button>`)}</span>
       </div></div>
       <div class="m-bar"><div class="wrap">
-        <a class="logo" href="#/" aria-label="${config.brand.name}"><b>FAR</b><span>EST</span></a>
+        <a class="logo" href="#/"><b>FAR</b><span>EST</span></a>
         <nav class="m-nav" aria-label="Main"><ul>
           ${trigger('windows', 'windows', t('corp.menu.windows'))}${trigger('doors', 'doors', t('corp.menu.doors'))}${plain('acc', '/c/accessories', t('corp.menu.acc'))}${plain('calc', '/calculator', t('corp.menu.calc'))}${trigger('company', 'shops', t('corp.menu.company'))}
         </ul></nav>
@@ -53,7 +53,7 @@
     const phone = FE.db.callCenter[0], f = k => t('corp.foot.' + k);
     FE.$('#foot').innerHTML = h`
       <div class="wrap f-grid">
-        <div class="f-brand"><a class="logo" href="#/" aria-label="${config.brand.name}"><b>FAR</b><span>EST</span></a>
+        <div class="f-brand"><a class="logo" href="#/"><b>FAR</b><span>EST</span></a>
           <p>${config.brand.legal}</p><p class="muted small">${t('foot.tag', { year: config.brand.since })}</p></div>
         <div><h2>${f('products')}</h2><ul>
           <li><a href="#/c/windows">${t('corp.menu.windows')}</a></li><li><a href="#/c/doors">${t('corp.menu.doors')}</a></li><li><a href="#/c/accessories">${t('corp.menu.acc')}</a></li><li><a href="#/calculator">${t('corp.menu.calc')}</a></li></ul></div>
